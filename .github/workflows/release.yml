@@ -1,0 +1,43 @@
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/**'
+      - 'pnpm-lock.yaml'
+      - 'package.json'
+      - 'vite.config.ts'
+      - '.github/workflows/release.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}   # checkout the correct branch name
+          fetch-depth: 0                # fetch the whole repo history
+
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          run_install: false
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build project
+        run: pnpm build
+
+      - name: Commit dist
+        uses: EndBug/add-and-commit@v9
+        with:
+          message: 'add built dist files'
+          add: 'dist/ --force'
