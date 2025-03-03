@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         j-archive-play-along
 // @namespace    https://github.com/NickPancakes/j-archive-play-along
-// @version      0.0.1
+// @version      0.0.2
 // @author       NickPancakes
 // @description  Transforms J! Archive games UI to play along.
 // @iconURL      https://www.google.com/s2/favicons?sz=16&domain=j-archive.com
@@ -13,12 +13,204 @@
 // @grant        GM_addStyle
 // ==/UserScript==
 
-(e=>{if(typeof GM_addStyle=="function"){GM_addStyle(e);return}const t=document.createElement("style");t.textContent=e,document.head.append(t)})(' @import"https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap";@import"https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght,YOPQ@100..900,40..300&display=swap";@import"https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap";:root{--clue-depth-bottom: #000088;--clue-depth-left: #0000ee;--clue-depth-right: #000099;--clue-depth-top: #0000ff}.clue_cell.svelte-178msfy{border-width:.2rem;border-style:outset;display:grid;place-content:center;place-items:center;text-align:center;background-color:var(--clue-screen-blue);border-bottom-color:var(--clue-depth-bottom);border-left-color:var(--clue-depth-left);border-right-color:var(--clue-depth-right);border-top-color:var(--clue-depth-top);grid-template-columns:10% 80% 10%;grid-template-rows:10% 80% 10%;grid-template-areas:"tl tc tr" "ml main mr" "bl bc br"}.order_text.svelte-178msfy{font-size:clamp(1rem,1cqmin,9rem);color:var(--black);text-align:center;vertical-align:middle;font-weight:700;grid-area:tr}.value_text.svelte-178msfy{font-family:Swiss911 Cm BT,Open Sans,helvetica,arial,verdana,sans-serif;font-size:clamp(1rem,5cqmin,12rem);background-color:var(--clue-screen-blue);color:var(--font-yellow);text-shadow:.1em .1em 0px #000000;text-align:center;vertical-align:middle;font-weight:800;grid-area:main;border-style:none;padding:0}div.category_cell.svelte-10hs687{border-width:.2rem;border-style:outset;display:grid;place-content:center;place-items:center;color:var(--white);text-align:center;vertical-align:middle;font-weight:700;background-color:var(--clue-screen-blue);border-bottom-color:var(--clue-depth-bottom);border-left-color:var(--clue-depth-left);border-right-color:var(--clue-depth-right);border-top-color:var(--clue-depth-top);grid-row:1;grid-template-columns:3% 94% 3%;grid-template-rows:3% 94% 3%;grid-template-areas:"tl tc tr" "ml main mr" "bl bc br"}button.category.svelte-10hs687{width:100%;height:100%;background-color:var(--clue-screen-blue);border-style:none;grid-area:main;padding:0;color:var(--white)}div.category_name.svelte-10hs687{font-family:Swiss911 Cm BT,Open Sans,helvetica,arial,verdana,sans-serif;font-size:clamp(.25rem,2cqmin,9rem);text-shadow:.1em .1em 0px #000000;text-align:center;text-wrap:balance;vertical-align:middle;font-weight:700}div.final.svelte-10hs687{font-size:clamp(1rem,4vmin,9rem)}div.category_comments.svelte-10hs687{text-align:center;vertical-align:middle;font-weight:700;font-size:clamp(1rem,1.5cqmin,9rem);text-wrap:balance;grid-area:main}.ico-extra.svelte-10hs687{width:100%;height:100%;color:var(--white);grid-area:tl;font-size:clamp(1rem,1cqmin,9rem);font-family:arial,sans-serif;text-align:center;vertical-align:center;text-shadow:-1px 0 black,0 1px black,1px 0 black,0 -1px black}div.board.svelte-frh5zp{height:100%;width:100%;display:grid;gap:.1rem;place-content:center;grid-auto-flow:row dense;grid-template-columns:repeat(6,minmax(0,1fr));grid-template-rows:repeat(1,minmax(0,.9fr)) repeat(5,minmax(0,1fr))}div.scores.svelte-frh5zp{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}div.board.svelte-15pq1e1{height:50%;width:100%;display:grid;gap:.1rem;place-content:center;grid-auto-flow:row dense;grid-template-columns:minmax(0,.5fr) minmax(0,1fr) minmax(0,.5fr);grid-template-rows:minmax(0,1fr)}div.scores.svelte-15pq1e1{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}dialog.clue_modal.svelte-61upa4{width:90%;height:90%;position:fixed;border-width:1em;border-style:outset;background-color:var(--clue-screen-blue);border-bottom-color:var(--clue-depth-bottom);border-left-color:var(--clue-depth-left);border-right-color:var(--clue-depth-right);border-top-color:var(--clue-depth-top)}.modal_content.svelte-61upa4{width:100%;height:100%;display:grid;grid-template-columns:5% 90% 5%;grid-template-rows:5% 85% 10%;grid-template-areas:"tl tc tr" "ml main mr" "bl bc br";place-content:center;place-items:center}.modal_main.svelte-61upa4{grid-area:main;color:var(--white);text-align:center;font-weight:700;vertical-align:middle;text-wrap:pretty;line-height:1.25}.daily_double.svelte-61upa4{text-transform:uppercase;font-family:Futura,Kumbh Sans,Century Gothic,sans-serif;font-weight:800;font-size:clamp(1rem,24vmin,30rem);text-shadow:.3rem .3rem 0px #000000}.clue.svelte-61upa4{text-transform:uppercase;font-family:ITC Korinna Std,Libre Baskerville,Times New Roman,serif;font-size:clamp(1rem,7vmin,9rem);text-shadow:.3rem .3rem 0px #000000}.correct_response.svelte-61upa4{text-transform:uppercase;color:var(--aqua-blue);font-family:ITC Korinna Std,Libre Baskerville,Times New Roman,serif;font-size:clamp(1rem,7vmin,9rem);text-shadow:.3rem .3rem 0px #000000}.extra.svelte-61upa4{text-transform:none;text-shadow:none;font-size:clamp(1rem,4vmin,9rem)}.responders.svelte-61upa4{grid-area:bc;display:flex;font-size:clamp(1rem,3vmin,9rem);text-align:center;vertical-align:middle;flex-direction:row}.responder[data-state=correct].svelte-61upa4{color:var(--lime-green)}.responder[data-state=incorrect].svelte-61upa4{color:var(--error-red)}.extra.svelte-61upa4{font-size:clamp(1rem,3vmin,9rem);color:var(--white);text-align:center;vertical-align:middle}.ico-close.svelte-61upa4{width:100%;height:100%;color:var(--white);grid-area:tr;font-size:clamp(1rem,3vmin,9rem);font-family:arial,sans-serif;text-align:center;vertical-align:center;text-shadow:.3rem .3rem 0px #000000}.ico-extra.svelte-61upa4{width:100%;height:100%;color:var(--white);grid-area:tl;font-size:clamp(1rem,5vmin,9rem);font-family:arial,sans-serif;text-align:center;vertical-align:center;text-shadow:.3rem .3rem 0px #000000}dialog.svelte-61upa4::backdrop{background:#0000004d}dialog[open].svelte-61upa4{animation:svelte-61upa4-zoom .3s cubic-bezier(.34,1.56,.64,1)}@keyframes svelte-61upa4-zoom{0%{transform:scale(.95)}to{transform:scale(1)}}dialog[open].svelte-61upa4::backdrop{animation:svelte-61upa4-fade .2s ease-out}@keyframes svelte-61upa4-fade{0%{opacity:0}to{opacity:1}}div.tabs.svelte-2d0ooi{height:100%;width:100%}div.round-tabs-list.svelte-2d0ooi{flex:auto;width:100%;display:flex;flex-direction:row;justify-content:center;border-bottom-width:.25em;border-bottom-style:outset;border-bottom-color:var(--background-dark-blue)}div.round-tabs-content.svelte-2d0ooi{height:100vh;width:100%}button.round-tab.svelte-2d0ooi{flex:1;display:flex;flex-direction:row;place-content:center;border-width:.1em;border-style:outset;background-color:var(--clue-depth-bottom);border-bottom-color:var(--clue-depth-bottom);border-left-color:var(--clue-depth-left);border-right-color:var(--clue-depth-right);border-top-color:var(--clue-depth-top);color:var(--disclaimer-gray);text-shadow:2px 2px 0px #000000;font-size:clamp(1rem,3vmin,9rem);text-align:center;vertical-align:middle;font-weight:700}button.round-tab[data-state=active].svelte-2d0ooi{flex:1.5;background-color:var(--clue-screen-blue);color:var(--white)} ');
+(e=>{if(typeof GM_addStyle=="function"){GM_addStyle(e);return}const t=document.createElement("style");t.textContent=e,document.head.append(t)})(' @import"https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap";@import"https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght,YOPQ@100..900,40..300&display=swap";@import"https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap";:root{--clue-depth-bottom: #000088;--clue-depth-left: #0000ee;--clue-depth-right: #000099;--clue-depth-top: #0000ff}#content{max-width:unset;min-width:unset}.clue_cell.svelte-whch0{border-width:.2rem;border-style:outset;display:grid;place-content:center;place-items:center;text-align:center;background-color:var(--clue-screen-blue);border-bottom-color:var(--clue-depth-bottom);border-left-color:var(--clue-depth-left);border-right-color:var(--clue-depth-right);border-top-color:var(--clue-depth-top);grid-template-rows:15% 70% 15%;grid-template-columns:100%;grid-template-areas:"top" "main" "bottom"}.order_text.svelte-whch0{padding-top:.2rem;padding-right:.2rem;font-size:clamp(.1rem,1.5cqmin,9rem);color:var(--white);text-align:right;vertical-align:middle;grid-area:top}.value_text.svelte-whch0{font-family:Swiss911 Cm BT,Open Sans,helvetica,arial,verdana,sans-serif;font-size:clamp(1rem,7cqmin,12rem);background-color:var(--clue-screen-blue);color:var(--font-yellow);text-shadow:.1em .1em 0px #000000;text-align:center;vertical-align:middle;font-weight:800;grid-area:main;border-style:none;padding:0}div.category_cell.svelte-jiifq5{border-width:.2rem;border-style:outset;display:grid;place-content:center;place-items:center;color:var(--white);text-align:center;vertical-align:middle;font-weight:700;background-color:var(--clue-screen-blue);border-bottom-color:var(--clue-depth-bottom);border-left-color:var(--clue-depth-left);border-right-color:var(--clue-depth-right);border-top-color:var(--clue-depth-top);grid-row:1;grid-template-rows:15% 70% 15%;grid-template-columns:100%;grid-template-areas:"top" "main" "bottom"}button.category.svelte-jiifq5{width:100%;height:100%;background-color:var(--clue-screen-blue);border-style:none;grid-area:main;padding:0;color:var(--white)}div.category_name.svelte-jiifq5{font-family:Swiss911 Cm BT,Open Sans,helvetica,arial,verdana,sans-serif;font-size:clamp(.25rem,2.5cqmin,9rem);text-shadow:.1em .1em 0px #000000;text-align:center;text-wrap:balance;vertical-align:middle;font-weight:700}div.final.svelte-jiifq5{font-size:clamp(1rem,4vmin,9rem)}div.category_comments.svelte-jiifq5{text-align:center;vertical-align:middle;font-size:clamp(.2rem,2cqmin,8rem);text-wrap:balance;grid-area:main}.ico-extra.svelte-jiifq5{width:100%;height:100%;padding-top:.2rem;padding-left:.2rem;color:var(--white);grid-area:top;font-size:clamp(1rem,1cqmin,9rem);font-family:arial,sans-serif;text-align:left;vertical-align:center;text-shadow:-1px 0 black,0 1px black,1px 0 black,0 -1px black}div.board.svelte-17irm38{height:100%;width:100%;display:grid;gap:.1rem;place-content:center;grid-auto-flow:row dense;grid-template-columns:repeat(6,minmax(0,1fr));grid-template-rows:repeat(1,minmax(0,.9fr)) repeat(5,minmax(0,1fr))}div.final_board.svelte-17irm38{height:50%;width:100%;display:grid;gap:.1rem;place-content:center;grid-auto-flow:row dense;grid-template-columns:minmax(0,.5fr) minmax(0,1fr) minmax(0,.5fr);grid-template-rows:minmax(0,1fr)}dialog.clue_modal.svelte-r4f1vo{width:90%;height:90%;position:fixed;border-width:1em;border-style:outset;background-color:var(--clue-screen-blue);border-bottom-color:var(--clue-depth-bottom);border-left-color:var(--clue-depth-left);border-right-color:var(--clue-depth-right);border-top-color:var(--clue-depth-top)}.modal_content.svelte-r4f1vo{width:100%;height:100%;display:grid;grid-template-columns:5% 90% 5%;grid-template-rows:5% 85% 10%;grid-template-areas:"tl tc tr" "ml main mr" "bl bc br";place-content:center;place-items:center}.modal_main.svelte-r4f1vo{grid-area:main;color:var(--white);text-align:center;font-weight:700;vertical-align:middle;text-wrap:pretty;line-height:1.25}.daily_double.svelte-r4f1vo{text-transform:uppercase;font-family:Futura,Kumbh Sans,Century Gothic,sans-serif;font-weight:800;font-size:clamp(1rem,24vmin,30rem);text-shadow:.3rem .3rem 0px #000000}.clue.svelte-r4f1vo{text-transform:uppercase;font-family:ITC Korinna Std,Libre Baskerville,Times New Roman,serif;font-size:clamp(1rem,7vmin,9rem);text-shadow:.3rem .3rem 0px #000000}.correct_response.svelte-r4f1vo{text-transform:uppercase;color:var(--aqua-blue);font-family:ITC Korinna Std,Libre Baskerville,Times New Roman,serif;font-size:clamp(1rem,7vmin,9rem);text-shadow:.3rem .3rem 0px #000000}.response_comments.svelte-r4f1vo{text-transform:none;text-shadow:none;font-size:clamp(1rem,4vmin,9rem);color:var(--white);text-align:center;vertical-align:middle}.responders.svelte-r4f1vo{grid-area:bc;display:flex;font-size:clamp(1rem,3vmin,9rem);text-align:center;vertical-align:middle;flex-direction:row}.responder[data-state=correct].svelte-r4f1vo{color:var(--lime-green)}.responder[data-state=incorrect].svelte-r4f1vo{color:var(--error-red)}.ico-close.svelte-r4f1vo{width:100%;height:100%;color:var(--white);grid-area:tr;font-size:clamp(1rem,3vmin,9rem);font-family:arial,sans-serif;text-align:right;vertical-align:center;text-shadow:.3rem .3rem 0px #000000}.ico-extra.svelte-r4f1vo{width:100%;height:100%;color:var(--white);grid-area:tl;font-size:clamp(1rem,5vmin,9rem);font-family:arial,sans-serif;text-align:left;vertical-align:center;text-shadow:.3rem .3rem 0px #000000}dialog.svelte-r4f1vo::backdrop{background:#0000004d}dialog[open].svelte-r4f1vo{animation:svelte-r4f1vo-zoom .3s cubic-bezier(.34,1.56,.64,1)}@keyframes svelte-r4f1vo-zoom{0%{transform:scale(.95)}to{transform:scale(1)}}dialog[open].svelte-r4f1vo::backdrop{animation:svelte-r4f1vo-fade .2s ease-out}@keyframes svelte-r4f1vo-fade{0%{opacity:0}to{opacity:1}}div.tabs.svelte-2d0ooi{height:100%;width:100%}div.round-tabs-list.svelte-2d0ooi{flex:auto;width:100%;display:flex;flex-direction:row;justify-content:center;border-bottom-width:.25em;border-bottom-style:outset;border-bottom-color:var(--background-dark-blue)}div.round-tabs-content.svelte-2d0ooi{height:100vh;width:100%}button.round-tab.svelte-2d0ooi{flex:1;display:flex;flex-direction:row;place-content:center;border-width:.1em;border-style:outset;background-color:var(--clue-depth-bottom);border-bottom-color:var(--clue-depth-bottom);border-left-color:var(--clue-depth-left);border-right-color:var(--clue-depth-right);border-top-color:var(--clue-depth-top);color:var(--disclaimer-gray);text-shadow:2px 2px 0px #000000;font-size:clamp(1rem,3vmin,9rem);text-align:center;vertical-align:middle;font-weight:700}button.round-tab[data-state=active].svelte-2d0ooi{flex:1.5;background-color:var(--clue-screen-blue);color:var(--white)} ');
 
 (function () {
   'use strict';
 
-  var _a;
+  const RoundName = {
+    Jeopardy: "Jeopardy!",
+    DoubleJeopardy: "Double Jeopardy!",
+    TripleJeopardy: "Triple Jeopardy!",
+    FinalJeopardy: "Final Jeopardy!"
+  };
+  const ClueDisplayStates = {
+    Clue: 0,
+    CorrectResponse: 1,
+    FinalResponses: 2,
+    DailyDouble: 3
+  };
+  function roundIDToName(roundID) {
+    switch (roundID) {
+      case "jeopardy_round":
+        return RoundName.Jeopardy;
+      case "double_jeopardy_round":
+        return RoundName.DoubleJeopardy;
+      case "triple_jeopardy_round":
+        return RoundName.TripleJeopardy;
+      case "final_jeopardy_round":
+        return RoundName.FinalJeopardy;
+      default:
+        throw new Error("Unrecognized round ID: " + roundID);
+    }
+  }
+  function parseClueResponse(responseElm) {
+    let correctResponse = "";
+    let correctResponder = null;
+    let incorrectResponders = [];
+    let comments = [];
+    let sameLine = false;
+    for (let childNode of responseElm.childNodes) {
+      if (childNode.nodeType === Node.TEXT_NODE) {
+        if (childNode.textContent) {
+          if (sameLine) {
+            comments[comments.length - 1] += childNode.textContent;
+            sameLine = false;
+          } else {
+            comments.push(childNode.textContent);
+          }
+        }
+      } else {
+        const childElm = childNode;
+        if (childElm.tagName == "SPAN") {
+          comments[comments.length - 1] += childElm.textContent || "";
+          sameLine = true;
+        } else if (childElm.tagName == "EM") {
+          correctResponse = childElm.textContent || "";
+        } else if (childElm.tagName == "TABLE") {
+          const rightElm = childElm.querySelector("td.right");
+          if (rightElm && rightElm.textContent) {
+            correctResponder = rightElm.textContent;
+          }
+          for (var incorrectResponderElm of childElm.querySelectorAll("td.wrong")) {
+            if (incorrectResponderElm.textContent && incorrectResponderElm.textContent != "Triple Stumper") {
+              incorrectResponders.push(incorrectResponderElm.textContent);
+            }
+          }
+        }
+      }
+    }
+    return {
+      correctResponse,
+      comments,
+      incorrectResponders,
+      correctResponder
+    };
+  }
+  function parseClue(roundNum, categoryNum, clueNum, clueElm) {
+    var _a, _b;
+    let playOrder = "0";
+    let dailyDouble = false;
+    const headerElm = clueElm.querySelector("table.clue_header");
+    if (headerElm) {
+      playOrder = ((_a = headerElm == null ? void 0 : headerElm.querySelector("td.clue_order_number")) == null ? void 0 : _a.textContent) ?? "0";
+      const valueElm = headerElm.querySelector('[class^="clue_value"]');
+      dailyDouble = ((_b = valueElm == null ? void 0 : valueElm.textContent) == null ? void 0 : _b.startsWith("DD:")) ?? false;
+    }
+    const clueTextElms = clueElm.querySelectorAll("td.clue_text");
+    if (clueTextElms.length == 0) {
+      return {
+        roundNum,
+        categoryNum,
+        clueNum
+      };
+    }
+    const clueHTML = clueTextElms[0].innerHTML ?? "";
+    const responseElm = clueTextElms[1];
+    const clueResponse = parseClueResponse(responseElm);
+    return {
+      roundNum,
+      categoryNum,
+      clueNum,
+      value: 100 * (roundNum + 1) * (clueNum + 1),
+      playOrder: parseInt(playOrder),
+      clueHTML,
+      response: clueResponse,
+      dailyDouble,
+      dailyDoubleWager: null,
+      finalJeopardy: false,
+      finalJeopardyResponses: []
+    };
+  }
+  function parseCategory(roundNum, categoryNum, clues, categoryElm) {
+    const titleElm = categoryElm.querySelector(".category_name");
+    const commentsElm = categoryElm.querySelector(".category_comments");
+    return {
+      roundNum,
+      categoryNum,
+      clues,
+      title: (titleElm == null ? void 0 : titleElm.textContent) || "",
+      comments: (commentsElm == null ? void 0 : commentsElm.textContent) || ""
+    };
+  }
+  function parseFinalRound(roundNum, roundName, categoryRowElm, clueRowElm) {
+    const clueElm = clueRowElm.querySelector("td.clue");
+    if (!clueElm) {
+      throw new Error("Could not find td.clue in final round clue row");
+    }
+    const categoryElm = categoryRowElm.querySelector("td.category");
+    if (!categoryElm) {
+      throw new Error("Could not find td.category in final round category row");
+    }
+    const clue = parseClue(roundNum, 1, 0, clueElm);
+    const category = parseCategory(roundNum, 1, [clue], categoryElm);
+    return {
+      roundNum,
+      name: roundName,
+      categories: [category],
+      scoreBlocks: []
+    };
+  }
+  function parseNormalRound(roundNum, roundName, categoryRowElm, clueRowElms) {
+    let cluesPerCategory = [
+      [],
+      [],
+      [],
+      [],
+      [],
+      []
+    ];
+    for (let clueNum = 0; clueNum < clueRowElms.length; clueNum++) {
+      const clueElms = Array.from(clueRowElms[clueNum].querySelectorAll("td.clue"));
+      for (let categoryNum = 0; categoryNum < clueElms.length; categoryNum++) {
+        const clueElm = clueElms[categoryNum];
+        const clue = parseClue(roundNum, categoryNum, clueNum, clueElm);
+        cluesPerCategory[categoryNum][clueNum] = clue;
+      }
+    }
+    let categories = [];
+    const categoryElms = Array.from(categoryRowElm.querySelectorAll("td.category"));
+    for (let categoryNum = 0; categoryNum < categoryElms.length; categoryNum++) {
+      const categoryElm = categoryElms[categoryNum];
+      const category = parseCategory(roundNum, categoryNum, cluesPerCategory[categoryNum], categoryElm);
+      categories.push(category);
+    }
+    return {
+      roundNum,
+      name: roundName,
+      categories,
+      scoreBlocks: []
+    };
+  }
+  function parseRound(roundNum, roundElm) {
+    const roundName = roundIDToName(roundElm.id);
+    const tbodyElm = roundElm.querySelector("table > tbody");
+    if (!tbodyElm) {
+      throw new Error("Could not find table > tbody in round element");
+    }
+    const rowElms = Array.from(tbodyElm.children);
+    if (rowElms.length < 2) {
+      throw new Error("Not enough rows in table.round");
+    }
+    const categoryRowElm = rowElms[0];
+    const clueRowElms = rowElms.slice(1);
+    if (roundName == RoundName.FinalJeopardy) {
+      return parseFinalRound(roundNum, roundName, categoryRowElm, clueRowElms[0]);
+    }
+    return parseNormalRound(roundNum, roundName, categoryRowElm, clueRowElms);
+  }
+  function parseGame(contentElm2) {
+    const gameTitleElm = contentElm2.querySelector("#game_title");
+    const gameCommentsElm = contentElm2.querySelector("#game_comments");
+    contentElm2.querySelector("#contestants");
+    const roundElms = Array.from(contentElm2.querySelectorAll('[id$="_round"]'));
+    return {
+      title: (gameTitleElm == null ? void 0 : gameTitleElm.textContent) || "",
+      comments: (gameCommentsElm == null ? void 0 : gameCommentsElm.textContent) || "",
+      contestants: [],
+      rounds: roundElms.map((roundElm, roundNum) => parseRound(roundNum, roundElm))
+    };
+  }
   const DEV = false;
   var is_array = Array.isArray;
   var index_of = Array.prototype.indexOf;
@@ -83,6 +275,11 @@
       throw new Error(`https://svelte.dev/e/effect_update_depth_exceeded`);
     }
   }
+  function hydration_failed() {
+    {
+      throw new Error(`https://svelte.dev/e/hydration_failed`);
+    }
+  }
   function state_descriptors_fixed() {
     {
       throw new Error(`https://svelte.dev/e/state_descriptors_fixed`);
@@ -111,7 +308,16 @@
   const EACH_ITEM_IMMUTABLE = 1 << 4;
   const TEMPLATE_FRAGMENT = 1;
   const TEMPLATE_USE_IMPORT_NODE = 1 << 1;
+  const HYDRATION_START = "[";
+  const HYDRATION_START_ELSE = "[!";
+  const HYDRATION_END = "]";
+  const HYDRATION_ERROR = {};
   const UNINITIALIZED = Symbol();
+  function hydration_mismatch(location) {
+    {
+      console.warn(`https://svelte.dev/e/hydration_mismatch`);
+    }
+  }
   let component_context = null;
   function set_component_context(context) {
     component_context = context;
@@ -242,6 +448,66 @@
     }
   }
   let hydrating = false;
+  function set_hydrating(value) {
+    hydrating = value;
+  }
+  let hydrate_node;
+  function set_hydrate_node(node) {
+    if (node === null) {
+      hydration_mismatch();
+      throw HYDRATION_ERROR;
+    }
+    return hydrate_node = node;
+  }
+  function hydrate_next() {
+    return set_hydrate_node(
+      /** @type {TemplateNode} */
+      /* @__PURE__ */ get_next_sibling(hydrate_node)
+    );
+  }
+  function reset(node) {
+    if (!hydrating) return;
+    if (/* @__PURE__ */ get_next_sibling(hydrate_node) !== null) {
+      hydration_mismatch();
+      throw HYDRATION_ERROR;
+    }
+    hydrate_node = node;
+  }
+  function next(count = 1) {
+    if (hydrating) {
+      var i = count;
+      var node = hydrate_node;
+      while (i--) {
+        node = /** @type {TemplateNode} */
+        /* @__PURE__ */ get_next_sibling(node);
+      }
+      hydrate_node = node;
+    }
+  }
+  function remove_nodes() {
+    var depth = 0;
+    var node = hydrate_node;
+    while (true) {
+      if (node.nodeType === 8) {
+        var data = (
+          /** @type {Comment} */
+          node.data
+        );
+        if (data === HYDRATION_END) {
+          if (depth === 0) return node;
+          depth -= 1;
+        } else if (data === HYDRATION_START || data === HYDRATION_START_ELSE) {
+          depth += 1;
+        }
+      }
+      var next2 = (
+        /** @type {TemplateNode} */
+        /* @__PURE__ */ get_next_sibling(node)
+      );
+      node.remove();
+      node = next2;
+    }
+  }
   function proxy(value, parent = null, prev) {
     if (typeof value !== "object" || value === null || STATE_SYMBOL in value) {
       return value;
@@ -300,13 +566,13 @@
           return true;
         },
         get(target, prop2, receiver) {
-          var _a2;
+          var _a;
           if (prop2 === STATE_SYMBOL) {
             return value;
           }
           var s = sources.get(prop2);
           var exists = prop2 in target;
-          if (s === void 0 && (!exists || ((_a2 = get_descriptor(target, prop2)) == null ? void 0 : _a2.writable))) {
+          if (s === void 0 && (!exists || ((_a = get_descriptor(target, prop2)) == null ? void 0 : _a.writable))) {
             s = source(proxy(exists ? target[prop2] : UNINITIALIZED, metadata));
             sources.set(prop2, s);
           }
@@ -336,13 +602,13 @@
           return descriptor;
         },
         has(target, prop2) {
-          var _a2;
+          var _a;
           if (prop2 === STATE_SYMBOL) {
             return true;
           }
           var s = sources.get(prop2);
           var has = s !== void 0 && s.v !== UNINITIALIZED || Reflect.has(target, prop2);
-          if (s !== void 0 || active_effect !== null && (!has || ((_a2 = get_descriptor(target, prop2)) == null ? void 0 : _a2.writable))) {
+          if (s !== void 0 || active_effect !== null && (!has || ((_a = get_descriptor(target, prop2)) == null ? void 0 : _a.writable))) {
             if (s === void 0) {
               s = source(has ? proxy(target[prop2], metadata) : UNINITIALIZED);
               sources.set(prop2, s);
@@ -355,7 +621,7 @@
           return has;
         },
         set(target, prop2, value2, receiver) {
-          var _a2;
+          var _a;
           var s = sources.get(prop2);
           var has = prop2 in target;
           if (is_proxied_array && prop2 === "length") {
@@ -371,7 +637,7 @@
             }
           }
           if (s === void 0) {
-            if (!has || ((_a2 = get_descriptor(target, prop2)) == null ? void 0 : _a2.writable)) {
+            if (!has || ((_a = get_descriptor(target, prop2)) == null ? void 0 : _a.writable)) {
               s = source(void 0);
               set(s, proxy(value2, metadata));
               sources.set(prop2, s);
@@ -454,12 +720,26 @@
     return next_sibling_getter.call(node);
   }
   function child(node, is_text) {
-    {
+    if (!hydrating) {
       return /* @__PURE__ */ get_first_child(node);
     }
+    var child2 = (
+      /** @type {TemplateNode} */
+      /* @__PURE__ */ get_first_child(hydrate_node)
+    );
+    if (child2 === null) {
+      child2 = hydrate_node.appendChild(create_text());
+    } else if (is_text && child2.nodeType !== 3) {
+      var text = create_text();
+      child2 == null ? void 0 : child2.before(text);
+      set_hydrate_node(text);
+      return text;
+    }
+    set_hydrate_node(child2);
+    return child2;
   }
   function first_child(fragment, is_text) {
-    {
+    if (!hydrating) {
       var first = (
         /** @type {DocumentFragment} */
         /* @__PURE__ */ get_first_child(
@@ -470,16 +750,35 @@
       if (first instanceof Comment && first.data === "") return /* @__PURE__ */ get_next_sibling(first);
       return first;
     }
+    return hydrate_node;
   }
   function sibling(node, count = 1, is_text = false) {
-    let next_sibling = node;
+    let next_sibling = hydrating ? hydrate_node : node;
+    var last_sibling;
     while (count--) {
+      last_sibling = next_sibling;
       next_sibling = /** @type {TemplateNode} */
       /* @__PURE__ */ get_next_sibling(next_sibling);
     }
-    {
+    if (!hydrating) {
       return next_sibling;
     }
+    var type = next_sibling == null ? void 0 : next_sibling.nodeType;
+    if (is_text && type !== 3) {
+      var text = create_text();
+      if (next_sibling === null) {
+        last_sibling == null ? void 0 : last_sibling.after(text);
+      } else {
+        next_sibling.before(text);
+      }
+      set_hydrate_node(text);
+      return text;
+    }
+    set_hydrate_node(next_sibling);
+    return (
+      /** @type {TemplateNode} */
+      next_sibling
+    );
   }
   function clear_text_content(node) {
     node.textContent = "";
@@ -714,19 +1013,19 @@
     var effect2 = signal.first;
     signal.first = signal.last = null;
     while (effect2 !== null) {
-      var next = effect2.next;
+      var next2 = effect2.next;
       destroy_effect(effect2, remove_dom);
-      effect2 = next;
+      effect2 = next2;
     }
   }
   function destroy_block_effect_children(signal) {
     var effect2 = signal.first;
     while (effect2 !== null) {
-      var next = effect2.next;
+      var next2 = effect2.next;
       if ((effect2.f & BRANCH_EFFECT) === 0) {
         destroy_effect(effect2);
       }
-      effect2 = next;
+      effect2 = next2;
     }
   }
   function destroy_effect(effect2, remove_dom = true) {
@@ -735,12 +1034,12 @@
       var node = effect2.nodes_start;
       var end = effect2.nodes_end;
       while (node !== null) {
-        var next = node === end ? null : (
+        var next2 = node === end ? null : (
           /** @type {TemplateNode} */
           /* @__PURE__ */ get_next_sibling(node)
         );
         node.remove();
-        node = next;
+        node = next2;
       }
       removed = true;
     }
@@ -763,11 +1062,11 @@
   function unlink_effect(effect2) {
     var parent = effect2.parent;
     var prev = effect2.prev;
-    var next = effect2.next;
-    if (prev !== null) prev.next = next;
-    if (next !== null) next.prev = prev;
+    var next2 = effect2.next;
+    if (prev !== null) prev.next = next2;
+    if (next2 !== null) next2.prev = prev;
     if (parent !== null) {
-      if (parent.first === effect2) parent.first = next;
+      if (parent.first === effect2) parent.first = next2;
       if (parent.last === effect2) parent.last = prev;
     }
   }
@@ -890,7 +1189,7 @@
     return ++write_version;
   }
   function check_dirtiness(reaction) {
-    var _a2;
+    var _a;
     var flags = reaction.f;
     if ((flags & DIRTY) !== 0) {
       return true;
@@ -912,7 +1211,7 @@
           var parent = derived2.parent;
           for (i = 0; i < length; i++) {
             dependency = dependencies[i];
-            if (is_disconnected || !((_a2 = dependency == null ? void 0 : dependency.reactions) == null ? void 0 : _a2.includes(derived2))) {
+            if (is_disconnected || !((_a = dependency == null ? void 0 : dependency.reactions) == null ? void 0 : _a.includes(derived2))) {
               (dependency.reactions ?? (dependency.reactions = [])).push(derived2);
             }
           }
@@ -1008,7 +1307,7 @@
     }
   }
   function update_reaction(reaction) {
-    var _a2;
+    var _a;
     var previous_deps = new_deps;
     var previous_skipped_deps = skipped_deps;
     var previous_untracked_writes = untracked_writes;
@@ -1047,7 +1346,7 @@
         }
         if (!skip_reaction) {
           for (i = skipped_deps; i < deps.length; i++) {
-            ((_a2 = deps[i]).reactions ?? (_a2.reactions = [])).push(reaction);
+            ((_a = deps[i]).reactions ?? (_a.reactions = [])).push(reaction);
           }
         }
       } else if (deps !== null && skipped_deps < deps.length) {
@@ -1399,14 +1698,14 @@
     }
   }
   function handle_event_propagation(event2) {
-    var _a2;
+    var _a;
     var handler_element = this;
     var owner_document = (
       /** @type {Node} */
       handler_element.ownerDocument
     );
     var event_name = event2.type;
-    var path = ((_a2 = event2.composedPath) == null ? void 0 : _a2.call(event2)) || [];
+    var path = ((_a = event2.composedPath) == null ? void 0 : _a.call(event2)) || [];
     var current_target = (
       /** @type {null | Element} */
       path[0] || event2.target
@@ -1507,6 +1806,10 @@
     var node;
     var has_start = !content.startsWith("<!>");
     return () => {
+      if (hydrating) {
+        assign_nodes(hydrate_node, null);
+        return hydrate_node;
+      }
       if (node === void 0) {
         node = create_fragment_from_html(has_start ? content : "<!>" + content);
         if (!is_fragment) node = /** @type {Node} */
@@ -1532,7 +1835,24 @@
       return clone;
     };
   }
+  function comment() {
+    if (hydrating) {
+      assign_nodes(hydrate_node, null);
+      return hydrate_node;
+    }
+    var frag = document.createDocumentFragment();
+    var start = document.createComment("");
+    var anchor = create_text();
+    frag.append(start, anchor);
+    assign_nodes(start, anchor);
+    return frag;
+  }
   function append(anchor, dom) {
+    if (hydrating) {
+      active_effect.nodes_end = hydrate_node;
+      hydrate_next();
+      return;
+    }
     if (anchor === null) {
       return;
     }
@@ -1550,6 +1870,58 @@
   }
   function mount(component, options) {
     return _mount(component, options);
+  }
+  function hydrate(component, options) {
+    init_operations();
+    options.intro = options.intro ?? false;
+    const target = options.target;
+    const was_hydrating = hydrating;
+    const previous_hydrate_node = hydrate_node;
+    try {
+      var anchor = (
+        /** @type {TemplateNode} */
+        /* @__PURE__ */ get_first_child(target)
+      );
+      while (anchor && (anchor.nodeType !== 8 || /** @type {Comment} */
+      anchor.data !== HYDRATION_START)) {
+        anchor = /** @type {TemplateNode} */
+        /* @__PURE__ */ get_next_sibling(anchor);
+      }
+      if (!anchor) {
+        throw HYDRATION_ERROR;
+      }
+      set_hydrating(true);
+      set_hydrate_node(
+        /** @type {Comment} */
+        anchor
+      );
+      hydrate_next();
+      const instance = _mount(component, { ...options, anchor });
+      if (hydrate_node === null || hydrate_node.nodeType !== 8 || /** @type {Comment} */
+      hydrate_node.data !== HYDRATION_END) {
+        hydration_mismatch();
+        throw HYDRATION_ERROR;
+      }
+      set_hydrating(false);
+      return (
+        /**  @type {Exports} */
+        instance
+      );
+    } catch (error) {
+      if (error === HYDRATION_ERROR) {
+        if (options.recover === false) {
+          hydration_failed();
+        }
+        init_operations();
+        clear_text_content(target);
+        set_hydrating(false);
+        return mount(component, options);
+      }
+      throw error;
+    } finally {
+      set_hydrating(was_hydrating);
+      set_hydrate_node(previous_hydrate_node);
+    }
   }
   const document_listeners = /* @__PURE__ */ new Map();
   function _mount(Component, { target, anchor, props = {}, events, context, intro = true }) {
@@ -1588,13 +1960,23 @@
         if (events) {
           props.$$events = events;
         }
+        if (hydrating) {
+          assign_nodes(
+            /** @type {TemplateNode} */
+            anchor_node,
+            null
+          );
+        }
         component = Component(anchor_node, props) || {};
+        if (hydrating) {
+          active_effect.nodes_end = hydrate_node;
+        }
         if (context) {
           pop();
         }
       });
       return () => {
-        var _a2;
+        var _a;
         for (var event_name of registered_events) {
           target.removeEventListener(event_name, handle_event_propagation);
           var n = (
@@ -1610,7 +1992,7 @@
         }
         root_event_handles.delete(event_handle);
         if (anchor_node !== anchor) {
-          (_a2 = anchor_node.parentNode) == null ? void 0 : _a2.removeChild(anchor_node);
+          (_a = anchor_node.parentNode) == null ? void 0 : _a.removeChild(anchor_node);
         }
       };
     });
@@ -1619,6 +2001,9 @@
   }
   let mounted_components = /* @__PURE__ */ new WeakMap();
   function if_block(node, fn, elseif = false) {
+    if (hydrating) {
+      hydrate_next();
+    }
     var anchor = node;
     var consequent_effect = null;
     var alternate_effect = null;
@@ -1631,6 +2016,19 @@
     };
     const update_branch = (new_condition, fn2) => {
       if (condition === (condition = new_condition)) return;
+      let mismatch = false;
+      if (hydrating) {
+        const is_else = (
+          /** @type {Comment} */
+          anchor.data === HYDRATION_START_ELSE
+        );
+        if (!!condition === is_else) {
+          anchor = remove_nodes();
+          set_hydrate_node(anchor);
+          set_hydrating(false);
+          mismatch = true;
+        }
+      }
       if (condition) {
         if (consequent_effect) {
           resume_effect(consequent_effect);
@@ -1654,6 +2052,9 @@
           });
         }
       }
+      if (mismatch) {
+        set_hydrating(true);
+      }
     };
     block(() => {
       has_branch = false;
@@ -1662,6 +2063,9 @@
         update_branch(null, null);
       }
     }, flags);
+    if (hydrating) {
+      anchor = hydrate_node;
+    }
   }
   function index(_, i) {
     return i;
@@ -1707,7 +2111,13 @@
         /** @type {Element} */
         node
       );
-      anchor = parent_node.appendChild(create_text());
+      anchor = hydrating ? set_hydrate_node(
+        /** @type {Comment | Text} */
+        /* @__PURE__ */ get_first_child(parent_node)
+      ) : parent_node.appendChild(create_text());
+    }
+    if (hydrating) {
+      hydrate_next();
     }
     var fallback = null;
     var was_empty = false;
@@ -1722,7 +2132,53 @@
         return;
       }
       was_empty = length === 0;
-      {
+      let mismatch = false;
+      if (hydrating) {
+        var is_else = (
+          /** @type {Comment} */
+          anchor.data === HYDRATION_START_ELSE
+        );
+        if (is_else !== (length === 0)) {
+          anchor = remove_nodes();
+          set_hydrate_node(anchor);
+          set_hydrating(false);
+          mismatch = true;
+        }
+      }
+      if (hydrating) {
+        var prev = null;
+        var item;
+        for (var i = 0; i < length; i++) {
+          if (hydrate_node.nodeType === 8 && /** @type {Comment} */
+          hydrate_node.data === HYDRATION_END) {
+            anchor = /** @type {Comment} */
+            hydrate_node;
+            mismatch = true;
+            set_hydrating(false);
+            break;
+          }
+          var value = array[i];
+          var key = get_key(value, i);
+          item = create_item(
+            hydrate_node,
+            state2,
+            prev,
+            null,
+            value,
+            key,
+            i,
+            render_fn,
+            flags,
+            get_collection
+          );
+          state2.items.set(key, item);
+          prev = item;
+        }
+        if (length > 0) {
+          set_hydrate_node(remove_nodes());
+        }
+      }
+      if (!hydrating) {
         reconcile(array, state2, anchor, render_fn, flags, get_key, get_collection);
       }
       if (fallback_fn !== null) {
@@ -1738,11 +2194,17 @@
           });
         }
       }
+      if (mismatch) {
+        set_hydrating(true);
+      }
       get(each_array);
     });
+    if (hydrating) {
+      anchor = hydrate_node;
+    }
   }
   function reconcile(array, state2, anchor, render_fn, flags, get_key, get_collection) {
-    var _a2, _b, _c, _d;
+    var _a, _b, _c, _d;
     var is_animated = (flags & EACH_IS_ANIMATED) !== 0;
     var should_update = (flags & (EACH_ITEM_REACTIVE | EACH_INDEX_REACTIVE)) !== 0;
     var length = array.length;
@@ -1764,7 +2226,7 @@
         key = get_key(value, i);
         item = items.get(key);
         if (item !== void 0) {
-          (_a2 = item.a) == null ? void 0 : _a2.measure();
+          (_a = item.a) == null ? void 0 : _a.measure();
           (to_animate ?? (to_animate = /* @__PURE__ */ new Set())).add(item);
         }
       }
@@ -1880,10 +2342,10 @@
     }
     if (is_animated) {
       queue_micro_task(() => {
-        var _a3;
+        var _a2;
         if (to_animate === void 0) return;
         for (item of to_animate) {
-          (_a3 = item.a) == null ? void 0 : _a3.apply();
+          (_a2 = item.a) == null ? void 0 : _a2.apply();
         }
       });
     }
@@ -1904,7 +2366,7 @@
       item.i = index2;
     }
   }
-  function create_item(anchor, state2, prev, next, value, key, index2, render_fn, flags, get_collection) {
+  function create_item(anchor, state2, prev, next2, value, key, index2, render_fn, flags, get_collection) {
     var reactive = (flags & EACH_ITEM_REACTIVE) !== 0;
     var mutable = (flags & EACH_ITEM_IMMUTABLE) === 0;
     var v = reactive ? mutable ? /* @__PURE__ */ mutable_source(value) : source(value) : value;
@@ -1917,34 +2379,34 @@
       // @ts-expect-error
       e: null,
       prev,
-      next
+      next: next2
     };
     try {
       item.e = branch(() => render_fn(anchor, v, i, get_collection), hydrating);
       item.e.prev = prev && prev.e;
-      item.e.next = next && next.e;
+      item.e.next = next2 && next2.e;
       if (prev === null) {
         state2.first = item;
       } else {
         prev.next = item;
         prev.e.next = item.e;
       }
-      if (next !== null) {
-        next.prev = item;
-        next.e.prev = item.e;
+      if (next2 !== null) {
+        next2.prev = item;
+        next2.e.prev = item.e;
       }
       return item;
     } finally {
     }
   }
-  function move(item, next, anchor) {
+  function move(item, next2, anchor) {
     var end = item.next ? (
       /** @type {TemplateNode} */
       item.next.e.nodes_start
     ) : anchor;
-    var dest = next ? (
+    var dest = next2 ? (
       /** @type {TemplateNode} */
-      next.e.nodes_start
+      next2.e.nodes_start
     ) : anchor;
     var node = (
       /** @type {TemplateNode} */
@@ -1959,16 +2421,16 @@
       node = next_node;
     }
   }
-  function link(state2, prev, next) {
+  function link(state2, prev, next2) {
     if (prev === null) {
-      state2.first = next;
+      state2.first = next2;
     } else {
-      prev.next = next;
-      prev.e.next = next && next.e;
+      prev.next = next2;
+      prev.e.next = next2 && next2.e;
     }
-    if (next !== null) {
-      next.prev = prev;
-      next.e.prev = prev && prev.e;
+    if (next2 !== null) {
+      next2.prev = prev;
+      next2.e.prev = prev && prev.e;
     }
   }
   function html(node, get_value, svg, mathml, skip_warning) {
@@ -1977,6 +2439,9 @@
     var effect2;
     block(() => {
       if (value === (value = get_value() ?? "")) {
+        if (hydrating) {
+          hydrate_next();
+        }
         return;
       }
       if (effect2 !== void 0) {
@@ -1985,6 +2450,24 @@
       }
       if (value === "") return;
       effect2 = branch(() => {
+        if (hydrating) {
+          hydrate_node.data;
+          var next2 = hydrate_next();
+          var last = next2;
+          while (next2 !== null && (next2.nodeType !== 8 || /** @type {Comment} */
+          next2.data !== "")) {
+            last = next2;
+            next2 = /** @type {TemplateNode} */
+            /* @__PURE__ */ get_next_sibling(next2);
+          }
+          if (next2 === null) {
+            hydration_mismatch();
+            throw HYDRATION_ERROR;
+          }
+          assign_nodes(hydrate_node, last);
+          anchor = set_hydrate_node(next2);
+          return;
+        }
         var html2 = value + "";
         var node2 = create_fragment_from_html(html2);
         assign_nodes(
@@ -2021,6 +2504,12 @@
   }
   function set_attribute(element, attribute, value, skip_warning) {
     var attributes = element.__attributes ?? (element.__attributes = {});
+    if (hydrating) {
+      attributes[attribute] = element.getAttribute(attribute);
+      if (attribute === "src" || attribute === "srcset" || attribute === "href" && element.nodeName === "LINK") {
+        return;
+      }
+    }
     if (attributes[attribute] === (attributes[attribute] = value)) return;
     if (attribute === "style" && "__styles" in element) {
       element.__styles = {};
@@ -2058,15 +2547,19 @@
   function set_class(dom, value, hash) {
     var prev_class_name = dom.__className;
     var next_class_name = to_class(value, hash);
-    if (prev_class_name !== next_class_name || hydrating) {
-      {
+    if (hydrating && dom.className === next_class_name) {
+      dom.__className = next_class_name;
+    } else if (prev_class_name !== next_class_name || hydrating && dom.className !== next_class_name) {
+      if (value == null && !hash) {
+        dom.removeAttribute("class");
+      } else {
         dom.className = next_class_name;
       }
       dom.__className = next_class_name;
     }
   }
   function to_class(value, hash) {
-    return (value == null ? "" : value) + (" " + hash);
+    return (value == null ? "" : value) + (hash ? " " + hash : "");
   }
   function set_style(dom, key, value, important) {
     var styles = dom.__styles ?? (dom.__styles = {});
@@ -2152,13 +2645,7 @@
   const PUBLIC_VERSION = "5";
   if (typeof window !== "undefined")
     (window.__svelte || (window.__svelte = { v: /* @__PURE__ */ new Set() })).v.add(PUBLIC_VERSION);
-  const ClueDisplayStates = {
-    Clue: 0,
-    CorrectResponse: 1,
-    FinalResponses: 2,
-    DailyDouble: 3
-  };
-  const selectedClueState = proxy({
+  proxy({
     show: false,
     displayState: ClueDisplayStates.Clue,
     dailyDouble: false,
@@ -2171,146 +2658,128 @@
     correctResponder: "",
     finalResponsesHTML: ""
   });
-  const updateSelectedClueState = (newState) => {
-    selectedClueState.show = newState.show ?? false;
-    selectedClueState.displayState = newState.displayState ?? ClueDisplayStates.Clue;
-    selectedClueState.dailyDouble = newState.dailyDouble ?? false;
-    selectedClueState.stumper = newState.stumper ?? false;
-    selectedClueState.finalJeopardy = newState.finalJeopardy ?? false;
-    selectedClueState.clueHTML = newState.clueHTML ?? "";
-    selectedClueState.correctResponseHTML = newState.correctResponseHTML ?? "";
-    selectedClueState.correctResponseExtraHTML = newState.correctResponseExtraHTML ?? "";
-    selectedClueState.incorrectResponders = newState.incorrectResponders ?? [];
-    selectedClueState.correctResponder = newState.correctResponder ?? "";
-    selectedClueState.finalResponsesHTML = newState.finalResponsesHTML ?? "";
+  const clueDisplay = proxy({
+    show: false,
+    state: ClueDisplayStates.Clue,
+    clue: {
+      roundNum: 0,
+      categoryNum: 0,
+      clueNum: 0,
+      value: 0,
+      playOrder: 0,
+      dailyDouble: false,
+      finalJeopardy: false,
+      clueHTML: "",
+      response: {
+        correctResponse: "",
+        comments: [],
+        incorrectResponders: [],
+        correctResponder: null
+      },
+      dailyDoubleWager: null,
+      finalJeopardyResponses: []
+    }
+  });
+  function showModal(clue) {
+    clueDisplay.show = true;
+    clueDisplay.state = ClueDisplayStates.Clue;
+    clueDisplay.clue = clue;
+  }
+  var on_click$1 = (_, $$props) => {
+    if ("clueHTML" in $$props.clue) {
+      showModal($$props.clue);
+    }
   };
-  var root$5 = /* @__PURE__ */ template(`<div class="clue_cell svelte-178msfy"><div class="order_text svelte-178msfy"></div> <button class="value_text svelte-178msfy"></button></div>`);
+  var root_1$4 = /* @__PURE__ */ template(`<div class="order_text svelte-whch0"> </div> <div class="value_text svelte-whch0"> </div>`, 1);
+  var root$4 = /* @__PURE__ */ template(`<button class="clue_cell svelte-whch0"><!></button>`);
   function ClueCell($$anchor, $$props) {
-    var _a2, _b;
     push($$props, true);
-    const headerElm = $$props.clueCellElm.querySelector("table.clue_header");
-    const valueElm = headerElm == null ? void 0 : headerElm.querySelector('[class^="clue_value"]');
-    const orderNumber = ((_a2 = headerElm == null ? void 0 : headerElm.querySelector("td.clue_order_number")) == null ? void 0 : _a2.textContent) ?? "0";
-    const clueTextElms = $$props.clueCellElm.querySelectorAll("td.clue_text");
-    const clueTextElm = clueTextElms[0];
-    const responseElm = clueTextElms[1];
-    const clueText = clueTextElm.innerHTML ?? "";
-    function clueIDToGridPosition(clueID) {
-      const splitID = clueID.split("_");
-      const row2 = parseInt(splitID[3]) + 1;
-      const col2 = parseInt(splitID[2]);
-      switch (splitID[1].toUpperCase()) {
-        case "J":
-          return [1, row2, col2];
-        case "DJ":
-          return [2, row2, col2];
-        case "TJ":
-          return [3, row2, col2];
-        case "FJ":
-          return [4, 1, 1];
-      }
-      return [1, row2, col2];
-    }
-    const [round, row, col] = clueIDToGridPosition(clueTextElm.id);
-    const dailyDouble = ((_b = valueElm == null ? void 0 : valueElm.textContent) == null ? void 0 : _b.startsWith("DD:")) ?? false;
-    const value = "$" + (100 * round * (row - 1)).toString();
-    function showModal() {
-      var _a3;
-      let respCloneElm = responseElm.cloneNode(true);
-      let newClueState = {
-        show: true,
-        displayState: dailyDouble ? ClueDisplayStates.DailyDouble : ClueDisplayStates.Clue,
-        clueHTML: clueText,
-        dailyDouble
+    var button = root$4();
+    button.__click = [on_click$1, $$props];
+    var node = child(button);
+    {
+      var consequent = ($$anchor2) => {
+        var fragment = root_1$4();
+        const clueData = /* @__PURE__ */ derived(() => $$props.clue);
+        var div = first_child(fragment);
+        var text = child(div, true);
+        reset(div);
+        var div_1 = sibling(div, 2);
+        var text_1 = child(div_1, true);
+        reset(div_1);
+        template_effect(() => {
+          set_text(text, get(clueData).playOrder);
+          set_text(text_1, get(clueData).value);
+        });
+        append($$anchor2, fragment);
       };
-      const correctResponseElm = respCloneElm.querySelector("em.correct_response");
-      if (correctResponseElm) {
-        newClueState.correctResponseHTML = correctResponseElm.innerHTML ?? "";
-        respCloneElm.removeChild(correctResponseElm);
-      }
-      const responderTableElms = respCloneElm.querySelectorAll("table");
-      for (var responderTableElm of responderTableElms) {
-        newClueState.correctResponder = ((_a3 = responderTableElm.querySelector("td.right")) == null ? void 0 : _a3.textContent) ?? "";
-        const incorrectResponderElms = responderTableElm.querySelectorAll("td.wrong");
-        for (var incorrectResponderElm of incorrectResponderElms) {
-          if (incorrectResponderElm.textContent && incorrectResponderElm.textContent != "Triple Stumper") {
-            if (newClueState.incorrectResponders === void 0) {
-              newClueState.incorrectResponders = [];
-            }
-            newClueState.incorrectResponders.push(incorrectResponderElm.textContent);
-          }
-        }
-        respCloneElm.removeChild(responderTableElm);
-      }
-      if (respCloneElm.innerHTML != "<br><br>") {
-        newClueState.correctResponseExtraHTML = respCloneElm.innerHTML;
-      }
-      updateSelectedClueState(newClueState);
+      if_block(node, ($$render) => {
+        if ("clueHTML" in $$props.clue) $$render(consequent);
+      });
     }
-    var div = root$5();
-    set_style(div, "grid-row", row);
-    set_style(div, "grid-column", col);
-    var div_1 = child(div);
-    div_1.textContent = orderNumber;
-    var button = sibling(div_1, 2);
-    button.__click = showModal;
-    button.textContent = value;
-    append($$anchor, div);
+    reset(button);
+    template_effect(() => {
+      set_style(button, "grid-row", $$props.clue.clueNum + 2);
+      set_style(button, "grid-column", $$props.clue.categoryNum + 1);
+    });
+    append($$anchor, button);
     pop();
   }
   delegate(["click"]);
-  var root_1$2 = /* @__PURE__ */ template(`<div class="ico-extra svelte-10hs687">*</div>`);
-  var root_2$2 = /* @__PURE__ */ template(`<hr> <div class="category_comments svelte-10hs687"></div>`, 1);
-  var root$4 = /* @__PURE__ */ template(`<div class="category_cell svelte-10hs687" role="columnheader"><!> <button class="category svelte-10hs687"><div> </div> <!></button></div>`);
+  function noop() {
+    return;
+  }
+  var root_1$3 = /* @__PURE__ */ template(`<div class="ico-extra svelte-jiifq5">*</div>`);
+  var root_2$2 = /* @__PURE__ */ template(`<div class="category_comments svelte-jiifq5"> </div>`);
+  var root$3 = /* @__PURE__ */ template(`<div class="category_cell svelte-jiifq5" role="columnheader"><!> <button class="category svelte-jiifq5"><div> </div> <!></button></div>`);
   function CategoryCell($$anchor, $$props) {
-    var _a2, _b;
     push($$props, true);
-    function defaultOnClickFn() {
-      return;
-    }
-    let onclick = prop($$props, "onclick", 3, defaultOnClickFn), final = prop($$props, "final", 3, false);
+    let onclick = prop($$props, "onclick", 3, noop);
     let showComment = state(false);
-    let name = proxy((_a2 = $$props.categoryCellElm.querySelector("td.category_name")) == null ? void 0 : _a2.textContent);
-    const comments = ((_b = $$props.categoryCellElm.querySelector("td.category_comments")) == null ? void 0 : _b.textContent) ?? "";
-    const categoryNameClasses = final() ? "category_name final" : "category_name";
-    var div = root$4();
+    const categoryNameClasses = $$props.category.clues.length == 1 ? "category_name final" : "category_name";
+    var div = root$3();
     var node = child(div);
     {
       var consequent = ($$anchor2) => {
-        var div_1 = root_1$2();
+        var div_1 = root_1$3();
         append($$anchor2, div_1);
       };
       if_block(node, ($$render) => {
-        if (comments && !get(showComment)) $$render(consequent);
+        if ($$props.category.comments && !get(showComment)) $$render(consequent);
       });
     }
     var button = sibling(node, 2);
     button.__click = function(...$$args) {
-      var _a3;
-      (_a3 = onclick()) == null ? void 0 : _a3.apply(this, $$args);
+      var _a;
+      (_a = onclick()) == null ? void 0 : _a.apply(this, $$args);
     };
     var div_2 = child(button);
-    set_class(div_2, clsx(categoryNameClasses), "svelte-10hs687");
-    var text = child(div_2);
+    set_class(div_2, clsx(categoryNameClasses), "svelte-jiifq5");
+    var text = child(div_2, true);
+    reset(div_2);
     var node_1 = sibling(div_2, 2);
     {
       var consequent_1 = ($$anchor2) => {
-        var fragment = root_2$2();
-        var div_3 = sibling(first_child(fragment), 2);
-        div_3.textContent = comments;
-        append($$anchor2, fragment);
+        var div_3 = root_2$2();
+        var text_1 = child(div_3, true);
+        reset(div_3);
+        template_effect(() => set_text(text_1, $$props.category.comments));
+        append($$anchor2, div_3);
       };
       if_block(node_1, ($$render) => {
-        if (comments && get(showComment)) $$render(consequent_1);
+        if ($$props.category.comments && get(showComment)) $$render(consequent_1);
       });
     }
+    reset(button);
+    reset(div);
     template_effect(() => {
-      set_attribute(div, "tabindex", $$props.idx);
-      set_style(div, "grid-column", $$props.idx + 1);
-      set_text(text, name);
+      set_attribute(div, "tabindex", $$props.category.categoryNum);
+      set_style(div, "grid-column", $$props.category.categoryNum + 1);
+      set_style(div, "grid-row", 1);
+      set_text(text, $$props.category.title);
     });
     event("mouseenter", div, () => {
-      if (comments != "") {
+      if ($$props.category.comments) {
         set(showComment, true);
       }
     });
@@ -2319,170 +2788,77 @@
     pop();
   }
   delegate(["click"]);
-  var root$3 = /* @__PURE__ */ template(`<div class="board svelte-frh5zp" role="grid"><!> <!></div> <div class="scores svelte-frh5zp"><!></div>`, 1);
+  var root_1$2 = /* @__PURE__ */ template(`<!> <!>`, 1);
+  var root$2 = /* @__PURE__ */ template(`<div role="grid"></div>`);
   function Round($$anchor, $$props) {
     push($$props, true);
-    let categoryElms = state(proxy([]));
-    let clueElms = state(proxy([]));
-    const tableElm = $$props.roundElm.querySelector("table.round");
-    if (tableElm) {
-      const tableClone = tableElm.cloneNode(true);
-      set(categoryElms, proxy(Array.from(tableClone.querySelectorAll(".category"))));
-      set(clueElms, proxy(Array.from(tableClone.querySelectorAll(".clue"))));
-      $$props.roundElm.removeChild(tableElm);
-    }
-    const headerElm = $$props.roundElm.querySelector("h2");
-    if (headerElm) {
-      $$props.roundElm.removeChild(headerElm);
-    }
-    var fragment = root$3();
-    var div = first_child(fragment);
-    var node = child(div);
-    each(node, 17, () => get(categoryElms), index, ($$anchor2, categoryCellElm, idx) => {
-      CategoryCell($$anchor2, {
-        get categoryCellElm() {
-          return get(categoryCellElm);
+    const finalRound = $$props.round.categories[0].clues.length == 1;
+    const boardClasses = finalRound ? "final_board" : "board";
+    const categoryOnClick = finalRound ? () => {
+      console.log($$props.round.categories[0].clues[0]);
+      showModal($$props.round.categories[0].clues[0]);
+    } : noop;
+    var div = root$2();
+    set_class(div, clsx(boardClasses), "svelte-17irm38");
+    each(div, 21, () => $$props.round.categories, (category) => category.categoryNum, ($$anchor2, category) => {
+      var fragment = root_1$2();
+      var node = first_child(fragment);
+      CategoryCell(node, {
+        get category() {
+          return get(category);
         },
-        idx
+        onclick: categoryOnClick
       });
-    });
-    var node_1 = sibling(node, 2);
-    each(node_1, 17, () => get(clueElms), index, ($$anchor2, clueCellElm) => {
-      ClueCell($$anchor2, {
-        get clueCellElm() {
-          return get(clueCellElm);
-        }
-      });
-    });
-    var div_1 = sibling(div, 2);
-    var node_2 = child(div_1);
-    html(node_2, () => $$props.roundElm.innerHTML);
-    append($$anchor, fragment);
-    pop();
-  }
-  var root$2 = /* @__PURE__ */ template(`<div class="board svelte-15pq1e1" role="grid"><!></div> <div class="scores svelte-15pq1e1"><!></div>`, 1);
-  function FinalRound($$anchor, $$props) {
-    push($$props, true);
-    const tableElm = $$props.roundElm.querySelector("table.final_round");
-    const tableClone = tableElm.cloneNode(true);
-    const categoryCellElm = tableClone.querySelector(".category");
-    const clueCellElm = tableClone.querySelector(".clue");
-    const clueTextElms = clueCellElm.querySelectorAll("td.clue_text");
-    const clueTextElm = clueTextElms[0];
-    const responseElm = clueTextElms[1];
-    const clueText = clueTextElm.innerHTML ?? "";
-    $$props.roundElm.removeChild(tableElm);
-    const headerElm = $$props.roundElm.querySelector("h2");
-    if (headerElm) {
-      $$props.roundElm.removeChild(headerElm);
-    }
-    function parseCorrectResponseElm(responseElm2) {
-      let respCloneElm = responseElm2.cloneNode(true);
-      const correctResponseElm = respCloneElm.querySelector("em.correct_response");
-      if (correctResponseElm) {
-        selectedClueState.correctResponseHTML = correctResponseElm.innerHTML ?? "";
-        respCloneElm.removeChild(correctResponseElm);
+      var node_1 = sibling(node, 2);
+      {
+        var consequent = ($$anchor3) => {
+          var fragment_1 = comment();
+          var node_2 = first_child(fragment_1);
+          each(node_2, 17, () => get(category).clues, index, ($$anchor4, clue) => {
+            ClueCell($$anchor4, {
+              get clue() {
+                return get(clue);
+              }
+            });
+          });
+          append($$anchor3, fragment_1);
+        };
+        if_block(node_1, ($$render) => {
+          if (!finalRound) $$render(consequent);
+        });
       }
-      const playerWagers = proxy([
-        {
-          name: "Player 1",
-          response: "",
-          wager: "",
-          correct: false
-        },
-        {
-          name: "Player 2",
-          response: "",
-          wager: "",
-          correct: false
-        },
-        {
-          name: "Player 3",
-          response: "",
-          wager: "",
-          correct: false
-        }
-      ]);
-      const responseTableElm = respCloneElm.querySelector("table");
-      const responseRows = Array.from(responseTableElm.querySelectorAll("tr"));
-      for (const [i, trElm] of responseRows.entries()) {
-        let playerIdx = 0;
-        switch (i) {
-          case 2:
-          case 3:
-            playerIdx = 1;
-            break;
-          case 4:
-          case 5:
-            playerIdx = 2;
-            break;
-          default:
-            playerIdx = 0;
-            break;
-        }
-        if (i % 2 == 0) {
-          const tdElms = Array.from(trElm.querySelectorAll("td"));
-          playerWagers[playerIdx].name = tdElms[0].textContent ?? "";
-          playerWagers[playerIdx].correct = tdElms[0].classList.contains("right");
-          playerWagers[playerIdx].response = tdElms[1].textContent ?? "";
-        } else {
-          const tdElm = trElm.querySelector("td");
-          playerWagers[playerIdx].wager = (tdElm == null ? void 0 : tdElm.textContent) ?? "";
-        }
-      }
-      respCloneElm.removeChild(responseTableElm);
-      if (respCloneElm.innerHTML != "<br><br>") {
-        selectedClueState.correctResponseExtraHTML = respCloneElm.innerHTML;
-      } else {
-        selectedClueState.correctResponseExtraHTML = "";
-      }
-    }
-    function showModal() {
-      selectedClueState.show = true;
-      selectedClueState.finalJeopardy = true;
-      selectedClueState.clueHTML = clueText;
-      parseCorrectResponseElm(responseElm);
-    }
-    var fragment = root$2();
-    var div = first_child(fragment);
-    var node = child(div);
-    CategoryCell(node, {
-      categoryCellElm,
-      idx: 1,
-      final: true,
-      onclick: showModal
+      append($$anchor2, fragment);
     });
-    var div_1 = sibling(div, 2);
-    var node_1 = child(div_1);
-    html(node_1, () => $$props.roundElm.innerHTML);
-    append($$anchor, fragment);
+    reset(div);
+    append($$anchor, div);
     pop();
   }
   var on_click = (e, dialog) => {
-    var _a2;
-    if (e.target === get(dialog)) (_a2 = get(dialog)) == null ? void 0 : _a2.close();
+    var _a;
+    if (e.target === get(dialog)) (_a = get(dialog)) == null ? void 0 : _a.close();
   };
   var on_click_1 = (_, dialog) => {
-    var _a2;
-    return (_a2 = get(dialog)) == null ? void 0 : _a2.close();
+    var _a;
+    return (_a = get(dialog)) == null ? void 0 : _a.close();
   };
-  var root_2$1 = /* @__PURE__ */ template(`<div class="responder svelte-61upa4" data-state="incorrect"> </div>`);
-  var root_3 = /* @__PURE__ */ template(`<div class="responder svelte-61upa4" data-state="correct"> </div>`);
-  var root_4 = /* @__PURE__ */ template(`<div class="responder svelte-61upa4" data-state="incorrect">Triple Stumper</div>`);
-  var root_1$1 = /* @__PURE__ */ template(`<div class="responders svelte-61upa4"><!> <!></div>`);
-  var root$1 = /* @__PURE__ */ template(`<dialog class="clue_modal svelte-61upa4" aria-modal="true" tabindex="-1"><div class="modal_content svelte-61upa4"><div class="ico-close svelte-61upa4" aria-label="Close">&#x2716;</div> <div class="ico-extra svelte-61upa4">*</div> <!> <div class="modal_main svelte-61upa4"><div class="daily_double svelte-61upa4">Daily Double</div> <div class="clue svelte-61upa4"><!></div> <div class="correct_response svelte-61upa4"><!> <div class="extra svelte-61upa4"><hr> <!></div></div> <div class="final_responses"></div></div></div></dialog>`);
+  var root_2$1 = /* @__PURE__ */ template(`<div class="responder svelte-r4f1vo" data-state="incorrect"> </div>`);
+  var root_3$1 = /* @__PURE__ */ template(`<div class="responder svelte-r4f1vo" data-state="correct"> </div>`);
+  var root_4 = /* @__PURE__ */ template(`<div class="responder svelte-r4f1vo" data-state="incorrect">Triple Stumper</div>`);
+  var root_1$1 = /* @__PURE__ */ template(`<div class="responders svelte-r4f1vo"><!> <!></div>`);
+  var root_5 = /* @__PURE__ */ template(` <br>`, 1);
+  var root$1 = /* @__PURE__ */ template(`<dialog class="clue_modal svelte-r4f1vo" aria-modal="true" tabindex="-1"><div class="modal_content svelte-r4f1vo"><div class="ico-close svelte-r4f1vo" aria-label="Close">&#x2716;</div> <div class="ico-extra svelte-r4f1vo">*</div> <!> <div class="modal_main svelte-r4f1vo"><div class="daily_double svelte-r4f1vo">Daily Double</div> <div class="clue svelte-r4f1vo"><!></div> <div class="correct_response svelte-r4f1vo"> <div class="response_comments svelte-r4f1vo"><hr> <!></div></div> <div class="final_responses"></div></div></div></dialog>`);
   function ClueModal($$anchor, $$props) {
     push($$props, true);
     let dialog = state(void 0);
     let showExtra = state(false);
     user_effect(() => {
-      if (selectedClueState.show) {
+      if (clueDisplay.show) {
         showDialog();
       }
     });
     function showDialog() {
-      var _a2;
-      (_a2 = get(dialog)) == null ? void 0 : _a2.showModal();
+      var _a;
+      (_a = get(dialog)) == null ? void 0 : _a.showModal();
       $$props.scrollToElm.scrollIntoView({
         behavior: "smooth",
         block: "start",
@@ -2495,28 +2871,26 @@
         block: "start",
         inline: "start"
       });
-      selectedClueState.show = false;
-      selectedClueState.displayState = ClueDisplayStates.Clue;
+      clueDisplay.show = false;
+      clueDisplay.state = ClueDisplayStates.Clue;
     }
     function nextDisplayState() {
-      switch (selectedClueState.displayState) {
+      switch (clueDisplay.state) {
         case ClueDisplayStates.DailyDouble:
-          selectedClueState.displayState = ClueDisplayStates.Clue;
+          clueDisplay.state = ClueDisplayStates.Clue;
           break;
         case ClueDisplayStates.Clue:
-          selectedClueState.displayState = ClueDisplayStates.CorrectResponse;
-          console.log(selectedClueState.correctResponseExtraHTML);
-          console.log(selectedClueState.correctResponseExtraHTML == "");
+          clueDisplay.state = ClueDisplayStates.CorrectResponse;
           break;
         case ClueDisplayStates.CorrectResponse:
-          if (selectedClueState.finalJeopardy) {
-            selectedClueState.displayState = ClueDisplayStates.FinalResponses;
+          if (clueDisplay.clue.finalJeopardy) {
+            clueDisplay.state = ClueDisplayStates.FinalResponses;
           } else {
-            selectedClueState.displayState = ClueDisplayStates.Clue;
+            clueDisplay.state = ClueDisplayStates.Clue;
           }
           break;
         default:
-          selectedClueState.displayState = ClueDisplayStates.Clue;
+          clueDisplay.state = ClueDisplayStates.Clue;
           break;
       }
     }
@@ -2532,18 +2906,20 @@
       var consequent_1 = ($$anchor2) => {
         var div_3 = root_1$1();
         var node_1 = child(div_3);
-        each(node_1, 17, () => selectedClueState.incorrectResponders, index, ($$anchor3, incorrectResponder) => {
+        each(node_1, 17, () => clueDisplay.clue.response.incorrectResponders, index, ($$anchor3, incorrectResponder) => {
           var div_4 = root_2$1();
-          var text = child(div_4);
+          var text = child(div_4, true);
+          reset(div_4);
           template_effect(() => set_text(text, get(incorrectResponder)));
           append($$anchor3, div_4);
         });
         var node_2 = sibling(node_1, 2);
         {
           var consequent = ($$anchor3) => {
-            var div_5 = root_3();
-            var text_1 = child(div_5);
-            template_effect(() => set_text(text_1, selectedClueState.correctResponder));
+            var div_5 = root_3$1();
+            var text_1 = child(div_5, true);
+            reset(div_5);
+            template_effect(() => set_text(text_1, clueDisplay.clue.response.correctResponder));
             append($$anchor3, div_5);
           };
           var alternate = ($$anchor3) => {
@@ -2551,37 +2927,51 @@
             append($$anchor3, div_6);
           };
           if_block(node_2, ($$render) => {
-            if (selectedClueState.correctResponder) $$render(consequent);
+            if (clueDisplay.clue.response.correctResponder) $$render(consequent);
             else $$render(alternate, false);
           });
         }
+        reset(div_3);
         append($$anchor2, div_3);
       };
       if_block(node, ($$render) => {
-        if (!selectedClueState.finalJeopardy && selectedClueState.displayState == ClueDisplayStates.CorrectResponse) $$render(consequent_1);
+        if (!clueDisplay.clue.finalJeopardy && clueDisplay.state == ClueDisplayStates.CorrectResponse) $$render(consequent_1);
       });
     }
     var div_7 = sibling(node, 2);
     var div_8 = child(div_7);
     var div_9 = sibling(div_8, 2);
     var node_3 = child(div_9);
-    html(node_3, () => selectedClueState.clueHTML);
+    html(node_3, () => clueDisplay.clue.clueHTML);
+    reset(div_9);
     var div_10 = sibling(div_9, 2);
-    var node_4 = child(div_10);
-    html(node_4, () => selectedClueState.correctResponseHTML);
-    var div_11 = sibling(node_4, 2);
-    var node_5 = sibling(child(div_11), 2);
-    html(node_5, () => selectedClueState.correctResponseExtraHTML);
+    var text_2 = child(div_10);
+    var div_11 = sibling(text_2);
+    var node_4 = sibling(child(div_11), 2);
+    each(node_4, 17, () => clueDisplay.clue.response.comments, index, ($$anchor2, comment2) => {
+      next();
+      var fragment = root_5();
+      var text_3 = first_child(fragment);
+      next();
+      template_effect(() => set_text(text_3, `${get(comment2) ?? ""} `));
+      append($$anchor2, fragment);
+    });
+    reset(div_11);
+    reset(div_10);
     var div_12 = sibling(div_10, 2);
+    reset(div_7);
+    reset(div);
+    reset(dialog_1);
     bind_this(dialog_1, ($$value) => set(dialog, $$value), () => get(dialog));
     template_effect(() => {
-      set_attribute(dialog_1, "aria-hidden", !selectedClueState.show);
-      div_2.hidden = selectedClueState.correctResponseExtraHTML == "" || selectedClueState.displayState != ClueDisplayStates.CorrectResponse;
-      div_8.hidden = selectedClueState.displayState != ClueDisplayStates.DailyDouble;
-      div_9.hidden = selectedClueState.displayState != ClueDisplayStates.Clue;
-      div_10.hidden = selectedClueState.displayState != ClueDisplayStates.CorrectResponse;
-      div_11.hidden = selectedClueState.correctResponseExtraHTML == "" || !get(showExtra);
-      div_12.hidden = selectedClueState.displayState != ClueDisplayStates.FinalResponses;
+      set_attribute(dialog_1, "aria-hidden", !clueDisplay.show);
+      div_2.hidden = clueDisplay.clue.response.comments.length == 0 || clueDisplay.state != ClueDisplayStates.CorrectResponse;
+      div_8.hidden = clueDisplay.state != ClueDisplayStates.DailyDouble;
+      div_9.hidden = clueDisplay.state != ClueDisplayStates.Clue;
+      div_10.hidden = clueDisplay.state != ClueDisplayStates.CorrectResponse;
+      set_text(text_2, `${clueDisplay.clue.response.correctResponse ?? ""} `);
+      div_11.hidden = clueDisplay.clue.response.comments.length == 0 || !get(showExtra);
+      div_12.hidden = clueDisplay.state != ClueDisplayStates.FinalResponses;
     });
     event("close", dialog_1, onCloseDialog);
     event("mouseenter", div_7, () => set(showExtra, true));
@@ -2590,100 +2980,87 @@
     pop();
   }
   delegate(["click"]);
-  var root_1 = /* @__PURE__ */ template(`<button class="round-tab svelte-2d0ooi" role="tab"> </button>`);
-  var root_2 = /* @__PURE__ */ template(`<div class="round-tabs-content svelte-2d0ooi" role="tabpanel" tabindex="0"><!></div>`);
-  var root = /* @__PURE__ */ template(`<!> <!> <!> <div class="tabs svelte-2d0ooi"><div role="tablist" aria-label="Round Tabs" class="round-tabs-list svelte-2d0ooi"></div> <div></div> <!></div>`, 1);
+  var root_1 = /* @__PURE__ */ template(`<p class="contestants"><a target="_blank"> </a> </p>`);
+  var root_2 = /* @__PURE__ */ template(`<button class="round-tab svelte-2d0ooi" role="tab"> </button>`);
+  var root_3 = /* @__PURE__ */ template(`<div class="round-tabs-content svelte-2d0ooi" role="tabpanel" tabindex="0"><!></div>`);
+  var root = /* @__PURE__ */ template(`<div id="game_title"><h1> </h1></div> <div id="game_comments"> </div> <div id="contestants"><h2>Contestants</h2> <!></div> <div class="tabs svelte-2d0ooi"><div role="tablist" aria-label="Round Tabs" class="round-tabs-list svelte-2d0ooi"></div> <div></div> <!></div>`, 1);
   function Game($$anchor, $$props) {
     push($$props, true);
     let activeTab = state(0);
     let scrollToElm = state(void 0);
-    function roundIDToName(roundID) {
-      switch (roundID) {
-        case "jeopardy_round":
-          return "Jeopardy!";
-        case "double_jeopardy_round":
-          return "Double Jeopardy!";
-        case "triple_jeopardy_round":
-          return "Triple Jeopardy!";
-        case "final_jeopardy_round":
-          return "Final Jeopardy!";
-        default:
-          return "Unknown";
-      }
-    }
-    const roundElms = Array.from($$props.contentElm.querySelectorAll('[id$="_round"]')).flatMap((roundElm) => {
-      const cloneElm = roundElm.cloneNode(true);
-      $$props.contentElm.removeChild(roundElm);
-      return cloneElm;
-    });
-    const gameTitleElm = $$props.contentElm.querySelector("#game_title") || document.createElement("div");
-    const gameCommentsElm = $$props.contentElm.querySelector("#game_comments") || document.createElement("div");
-    const contestantsElm = $$props.contentElm.querySelector("#contestants") || document.createElement("div");
     var fragment = root();
-    var node = first_child(fragment);
-    html(node, () => gameTitleElm.outerHTML);
-    var node_1 = sibling(node, 2);
-    html(node_1, () => gameCommentsElm.outerHTML);
-    var node_2 = sibling(node_1, 2);
-    html(node_2, () => contestantsElm.outerHTML);
-    var div = sibling(node_2, 2);
-    var div_1 = child(div);
-    each(div_1, 23, () => roundElms, (roundElm) => roundElm.id, ($$anchor2, roundElm, i) => {
-      var button = root_1();
+    var div = first_child(fragment);
+    var h1 = child(div);
+    var text = child(h1, true);
+    reset(h1);
+    reset(div);
+    var div_1 = sibling(div, 2);
+    var text_1 = child(div_1, true);
+    reset(div_1);
+    var div_2 = sibling(div_1, 2);
+    var node = sibling(child(div_2), 2);
+    each(node, 17, () => $$props.gameData.contestants, (contestant) => contestant.id, ($$anchor2, contestant) => {
+      var p = root_1();
+      var a = child(p);
+      var text_2 = child(a, true);
+      reset(a);
+      var text_3 = sibling(a);
+      reset(p);
+      template_effect(() => {
+        set_attribute(a, "href", `showplayer.php?player_id=${get(contestant).id ?? ""}`);
+        set_text(text_2, get(contestant).name);
+        set_text(text_3, `, ${get(contestant).comments ?? ""}`);
+      });
+      append($$anchor2, p);
+    });
+    reset(div_2);
+    var div_3 = sibling(div_2, 2);
+    var div_4 = child(div_3);
+    each(div_4, 23, () => $$props.gameData.rounds, (round) => round.roundNum, ($$anchor2, round, i) => {
+      var button = root_2();
       button.__click = () => set(activeTab, proxy(get(i)));
-      var text = child(button);
-      template_effect(
-        ($0) => {
-          set_attribute(button, "aria-selected", get(activeTab) == get(i) ? true : false);
-          set_attribute(button, "aria-controls", `panel-${get(i) ?? ""}`);
-          set_attribute(button, "id", `tab-${get(i) ?? ""}`);
-          set_attribute(button, "tabindex", get(activeTab) == get(i) ? 0 : -1);
-          set_attribute(button, "data-state", get(activeTab) == get(i) ? "active" : "inactive");
-          set_text(text, $0);
-        },
-        [
-          () => roundIDToName(get(roundElm).id)
-        ]
-      );
+      var text_4 = child(button, true);
+      reset(button);
+      template_effect(() => {
+        set_attribute(button, "aria-selected", get(activeTab) == get(i) ? true : false);
+        set_attribute(button, "aria-controls", `panel-${get(i) ?? ""}`);
+        set_attribute(button, "id", `tab-${get(i) ?? ""}`);
+        set_attribute(button, "tabindex", get(activeTab) == get(i) ? 0 : -1);
+        set_attribute(button, "data-state", get(activeTab) == get(i) ? "active" : "inactive");
+        set_text(text_4, get(round).name);
+      });
       append($$anchor2, button);
     });
-    var div_2 = sibling(div_1, 2);
-    each(div_2, 23, () => roundElms, (roundElm) => roundElm.id, ($$anchor2, roundElm, i) => {
-      var div_3 = root_2();
-      var node_3 = child(div_3);
-      {
-        var consequent = ($$anchor3) => {
-          FinalRound($$anchor3, {
-            get roundElm() {
-              return get(roundElm);
-            }
-          });
-        };
-        var alternate = ($$anchor3) => {
-          Round($$anchor3, {
-            get roundElm() {
-              return get(roundElm);
-            }
-          });
-        };
-        if_block(node_3, ($$render) => {
-          if (get(roundElm).id == "final_jeopardy_round") $$render(consequent);
-          else $$render(alternate, false);
-        });
-      }
-      template_effect(() => {
-        set_attribute(div_3, "id", `panel-${get(i) ?? ""}`);
-        set_attribute(div_3, "aria-labelledby", `tab-${get(i) ?? ""}`);
-        div_3.hidden = get(activeTab) != get(i);
+    reset(div_4);
+    var div_5 = sibling(div_4, 2);
+    each(div_5, 23, () => $$props.gameData.rounds, (round) => round.roundNum, ($$anchor2, round, i) => {
+      var div_6 = root_3();
+      var node_1 = child(div_6);
+      Round(node_1, {
+        get round() {
+          return get(round);
+        }
       });
-      append($$anchor2, div_3);
+      reset(div_6);
+      template_effect(() => {
+        set_attribute(div_6, "id", `panel-${get(i) ?? ""}`);
+        set_attribute(div_6, "aria-labelledby", `tab-${get(i) ?? ""}`);
+        div_6.hidden = get(activeTab) != get(i);
+      });
+      append($$anchor2, div_6);
     });
-    bind_this(div_2, ($$value) => set(scrollToElm, $$value), () => get(scrollToElm));
-    var node_4 = sibling(div_2, 2);
-    ClueModal(node_4, {
+    reset(div_5);
+    bind_this(div_5, ($$value) => set(scrollToElm, $$value), () => get(scrollToElm));
+    var node_2 = sibling(div_5, 2);
+    ClueModal(node_2, {
       get scrollToElm() {
         return get(scrollToElm);
       }
+    });
+    reset(div_3);
+    template_effect(() => {
+      set_text(text, $$props.gameData.title);
+      set_text(text_1, $$props.gameData.comments);
     });
     append($$anchor, fragment);
     pop();
@@ -2691,8 +3068,8 @@
   delegate(["click"]);
   function App($$anchor, $$props) {
     Game($$anchor, {
-      get contentElm() {
-        return $$props.contentElm;
+      get gameData() {
+        return $$props.gameData;
       }
     });
   }
@@ -2704,13 +3081,12 @@
   if (contentElm === null) {
     throw new Error("No content element found");
   }
-  mount(App, {
-    target: document.body,
+  const gameData = parseGame(contentElm);
+  hydrate(App, {
+    target: contentElm,
     props: {
-      contentElm: contentElm.cloneNode(true)
+      gameData
     }
   });
-  contentElm.remove();
-  (_a = document.querySelector("div#disclaimer")) == null ? void 0 : _a.remove();
 
 })();
