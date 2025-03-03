@@ -17,7 +17,7 @@ The goal is to provide a "playable" interface while retaining all of the functio
 - Replaces the exposed clues with the clue values.
 - When a tile is clicked, the clue is displayed in a large modal.
   - Which, when clicked again, displays the correct response.
-- Comments made during the game are indicated by a `*` and are revealed on mouse-over.
+- Comments made during the game are indicated by a `✱` and are revealed on mouse-over.
 
 ### TODO
 

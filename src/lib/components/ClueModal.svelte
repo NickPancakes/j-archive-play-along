@@ -66,7 +66,7 @@
       class="ico-extra"
       hidden={clueDisplay.clue.response.comments.length == 0 || clueDisplay.state != ClueDisplayStates.CorrectResponse}
     >
-      *
+      ✱
     </div>
 
     {#if !clueDisplay.clue.finalJeopardy && clueDisplay.state == ClueDisplayStates.CorrectResponse}

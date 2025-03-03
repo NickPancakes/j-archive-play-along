@@ -27,7 +27,7 @@
   onmouseleave={() => (showComment = false)}
 >
   {#if category.comments && !showComment}
-    <div class="ico-extra">*</div>
+    <div class="ico-extra">✱</div>
   {/if}
   <button class="category" {onclick}>
     <div class={categoryNameClasses}>
