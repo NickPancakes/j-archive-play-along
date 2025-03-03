@@ -21,8 +21,6 @@ The goal is to provide a "playable" interface while retaining all of the functio
 
 ### TODO
 
-- Prev/Next game buttons.
-- Contestant list.
 - Before-break and End-of-Round contestant scores.
 - Constestants' Final Jeopardy wagers and answers.
 

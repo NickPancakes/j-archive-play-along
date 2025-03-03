@@ -78,6 +78,7 @@ export type ContestantData = {
 }
 
 export type GameData = {
+    id: number;
     title: string;
     comments: string;
     contestants: ContestantData[];

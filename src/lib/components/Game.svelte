@@ -10,14 +10,16 @@
 </script>
 
 <div id="game_title">
+  <a href="showgame.php?game_id={gameData.id - 1}" target="_blank" role="button">⇐ Previous Game</a>
   <h1>{gameData.title}</h1>
+  <a href="showgame.php?game_id={gameData.id + 1}" target="_blank" role="button">Next Game ⇒</a>
 </div>
 
 <div id="game_comments">{gameData.comments}</div>
 <div id="contestants">
   <h2>Contestants</h2>
   {#each gameData.contestants as contestant (contestant.id)}
-    <p class="contestants">
+    <p class="contestant">
       <a href="showplayer.php?player_id={contestant.id}" target="_blank">{contestant.name}</a>, {contestant.comments}
     </p>
   {/each}
@@ -59,6 +61,17 @@
 </div>
 
 <style lang="postcss">
+  #game_title {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  #game_title > a {
+    font-size: clamp(0.5rem, 2vmin, 6rem);
+  }
+
   div.tabs {
     height: 100%;
     width: 100%;

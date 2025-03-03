@@ -1,4 +1,4 @@
-import type { CategoryData, ClueResponse, GameData, OptionalClueData, RoundData, ScoreBlockData, } from "$lib/types.ts";
+import type { CategoryData, ClueResponse, ContestantData, GameData, OptionalClueData, RoundData, ScoreBlockData, } from "$lib/types.ts";
 import { RoundName } from "$lib/types.ts";
 
 function roundIDToName(roundID: string): string {
@@ -221,17 +221,53 @@ function parseRound(roundNum: number, roundElm: Element): RoundData {
 
 }
 
+function parseContestant(contestantsPElm: Element): ContestantData {
+    let id = 0;
+    let name = "";
+    let comments = "";
+    for (let childNode of contestantsPElm.childNodes) {
+        if (childNode.nodeType === Node.TEXT_NODE) {
+            if (childNode.textContent) {
+                comments = childNode.textContent;
+            }
+        } else {
+            const childElm = childNode as Element;
+            if (childElm.tagName == "A") {
+                id = parseInt((childElm as HTMLAnchorElement).href.split("player_id=").pop() || "0");
+                name = childElm.textContent || "";
+            }
+        }
+    }
+
+    if (comments.startsWith(", ")) {
+        comments = comments.substring(2);
+    }
+
+    return {
+        id: id,
+        name: name,
+        comments: comments,
+    };
+}
+
+function parseContestants(contestantsTableElm: Element): ContestantData[] {
+    const contestantsElms = Array.from(contestantsTableElm.querySelectorAll("p.contestants"));
+    return contestantsElms.map((contestantPElm) => parseContestant(contestantPElm))
+}
+
 
 export function parseGame(contentElm: Element): GameData {
+    const gameID = parseInt(window.location.href.split('game_id=').pop() || "0");
     const gameTitleElm = contentElm.querySelector("#game_title");
     const gameCommentsElm = contentElm.querySelector("#game_comments");
-    const contestantsElm = contentElm.querySelector("#contestants");
+    const contestantsTableElm = contentElm.querySelector("#contestants");
     const roundElms = Array.from(contentElm.querySelectorAll('[id$="_round"]'));
 
     return {
+        id: gameID,
         title: gameTitleElm?.textContent || "",
         comments: gameCommentsElm?.textContent || "",
-        contestants: [],
+        contestants: contestantsTableElm ? parseContestants(contestantsTableElm) : [],
         rounds: roundElms.map((roundElm, roundNum) => parseRound(roundNum, roundElm)),
     };
 } 
