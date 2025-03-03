@@ -1,4 +1,4 @@
-import type { Category, Game, OptionalClue, Round, ScoreBlock } from "$lib/types.ts";
+import type { CategoryData, ClueResponse, GameData, OptionalClueData, RoundData, ScoreBlockData, } from "$lib/types.ts";
 import { RoundName } from "$lib/types.ts";
 
 function roundIDToName(roundID: string): string {
@@ -12,7 +12,7 @@ function roundIDToName(roundID: string): string {
         case "final_jeopardy_round":
             return RoundName.FinalJeopardy;
         default:
-            return "Unknown";
+            throw new Error("Unrecognized round ID: " + roundID);
     }
 }
 
@@ -33,73 +33,86 @@ function clueIDToGridPosition(clueID: string): [number, number, number] {
     return [1, row, col];
 }
 
-function parseClue(roundNum: number, categoryNum: number, clueNum: number, clueElm: Element): OptionalClue {
-    const headerElm = clueElm.querySelector("table.clue_header");
-    if (!headerElm) {
-        return null;
-    }
+function parseClueResponse(responseElm: Element): ClueResponse {
+    let correctResponse: string = "";
+    let correctResponder: string | null = null;
+    let incorrectResponders: string[] = [];
+    let comments: string[] = [];
 
-    const valueElm = headerElm.querySelector('[class^="clue_value"]');
-    const dailyDouble = valueElm?.textContent?.startsWith("DD:") ?? false;
-    const value = 100 * roundNum * (clueNum - 1);
-
-
-    const playOrder = headerElm?.querySelector("td.clue_order_number")?.textContent ?? "0";
-    const clueTextElms = clueElm.querySelectorAll("td.clue_text");
-    if (clueTextElms.length < 2) {
-        return null;
-    }
-
-    const clueText = clueTextElms[0].innerHTML ?? "";
-    const responseElm = clueTextElms[1];
-
-
-    let extra: string[] = [];
     let sameLine = false;
-    for (let childNode of clueTextElms[1].childNodes) {
+    for (let childNode of responseElm.childNodes) {
         if (childNode.nodeType === Node.TEXT_NODE) {
             if (childNode.textContent) {
                 if (sameLine) {
-                    extra[extra.length - 1] += childNode.textContent;
+                    comments[comments.length - 1] += childNode.textContent;
                     sameLine = false;
                 } else {
-                    extra.push(childNode.textContent);
+                    comments.push(childNode.textContent);
                 }
             }
         } else {
             const childElm = childNode as Element;
             if (childElm.tagName == "SPAN") {
-                extra[extra.length - 1] += childElm.textContent || "";
+                comments[comments.length - 1] += childElm.textContent || "";
                 sameLine = true;
-            }
-        }
-    }
-
-    const correctResponse = responseElm.querySelector("em.correct_response")?.textContent ?? "";
-
-    const responderTableElms = responseElm.querySelectorAll("table");
-    let correctResponder: string | null = null;
-    let incorrectResponders: string[] = [];
-    for (var responderTableElm of responderTableElms) {
-        correctResponder = responderTableElm.querySelector("td.right")?.textContent ?? "";
-        for (var incorrectResponderElm of responderTableElm.querySelectorAll("td.wrong")) {
-            if (incorrectResponderElm.textContent && incorrectResponderElm.textContent != "Triple Stumper") {
-                incorrectResponders.push(incorrectResponderElm.textContent);
+            } else if (childElm.tagName == "EM") {
+                correctResponse = childElm.textContent || "";
+            } else if (childElm.tagName == "TABLE") {
+                const rightElm = childElm.querySelector("td.right");
+                if (rightElm && rightElm.textContent) {
+                    correctResponder = rightElm.textContent;
+                }
+                for (var incorrectResponderElm of childElm.querySelectorAll("td.wrong")) {
+                    if (incorrectResponderElm.textContent && incorrectResponderElm.textContent != "Triple Stumper") {
+                        incorrectResponders.push(incorrectResponderElm.textContent);
+                    }
+                }
             }
         }
     }
 
     return {
+        correctResponse: correctResponse,
+        comments: comments,
+        incorrectResponders: incorrectResponders,
+        correctResponder: correctResponder,
+    };
+}
+
+function parseClue(roundNum: number, categoryNum: number, clueNum: number, clueElm: Element): OptionalClueData {
+
+    let playOrder = "0";
+    let dailyDouble = false;
+
+    const headerElm = clueElm.querySelector("table.clue_header");
+    if (headerElm) {
+        playOrder = headerElm?.querySelector("td.clue_order_number")?.textContent ?? "0";
+
+        const valueElm = headerElm.querySelector('[class^="clue_value"]');
+        dailyDouble = valueElm?.textContent?.startsWith("DD:") ?? false;
+    }
+
+    const clueTextElms = clueElm.querySelectorAll("td.clue_text");
+    if (clueTextElms.length == 0) {
+        return {
+            roundNum: roundNum,
+            categoryNum: categoryNum,
+            clueNum: clueNum,
+        };
+    }
+
+    const clueHTML = clueTextElms[0].innerHTML ?? "";
+    const responseElm = clueTextElms[1];
+    const clueResponse = parseClueResponse(responseElm);
+
+    return {
         roundNum: roundNum,
         categoryNum: categoryNum,
         clueNum: clueNum,
-        value: value,
+        value: 100 * (roundNum + 1) * (clueNum + 1),
         playOrder: parseInt(playOrder),
-        clueText: clueText,
-        correctResponse: correctResponse,
-        comments: extra,
-        incorrectResponders: incorrectResponders,
-        correctResponder: correctResponder,
+        clueHTML: clueHTML,
+        response: clueResponse,
         dailyDouble: dailyDouble,
         dailyDoubleWager: null,
         finalJeopardy: false,
@@ -107,9 +120,10 @@ function parseClue(roundNum: number, categoryNum: number, clueNum: number, clueE
     };
 }
 
-function parseCategory(roundNum: number, categoryNum: number, clues: OptionalClue[], categoryElm: Element): Category {
-    const titleElm = categoryElm.querySelector("h2.category_name");
-    const commentsElm = categoryElm.querySelector("p.category_comments");
+function parseCategory(roundNum: number, categoryNum: number, clues: OptionalClueData[], categoryElm: Element): CategoryData {
+    const titleElm = categoryElm.querySelector(".category_name");
+    const commentsElm = categoryElm.querySelector(".category_comments");
+
     return {
         roundNum: roundNum,
         categoryNum: categoryNum,
@@ -119,45 +133,47 @@ function parseCategory(roundNum: number, categoryNum: number, clues: OptionalClu
     };
 }
 
-function parseScoreBlock(scoreBlockElm: Element): ScoreBlock {
+function parseScoreBlock(scoreBlockElm: Element): ScoreBlockData {
     return {
         title: "",
         players: [],
     }
 }
 
-function parseRound(roundNum: number, roundElm: Element): Round {
-    if (roundElm.id == "final_jeopardy_round") {
-        return {
-            roundNum: roundNum,
-            name: roundIDToName(roundElm.id),
-            categories: [],
-            scoreBlocks: [],
-        };
+function parseFinalRound(roundNum: number, roundName: string, categoryRowElm: Element, clueRowElm: Element): RoundData {
+    const clueElm = clueRowElm.querySelector("td.clue");
+    if (!clueElm) {
+        throw new Error("Could not find td.clue in final round clue row");
     }
 
-    const tbodyElm = roundElm.querySelector("table.round > tbody");
-    if (!tbodyElm) {
-        throw new Error("Could not find table.round > tbody in round element");
+    const categoryElm = categoryRowElm.querySelector("td.category");
+    if (!categoryElm) {
+        throw new Error("Could not find td.category in final round category row");
     }
 
-    const rowElms = Array.from(tbodyElm.children);
-    if (rowElms.length < 2) {
-        throw new Error("Not enough rows in table.round");
-    }
+    const clue = parseClue(roundNum, 1, 0, clueElm);
+    const category = parseCategory(roundNum, 1, [clue], categoryElm);
 
-    let cluesPerCategory: OptionalClue[][] = [
-        [null, null, null, null, null],
-        [null, null, null, null, null],
-        [null, null, null, null, null],
-        [null, null, null, null, null],
-        [null, null, null, null, null],
-        [null, null, null, null, null],
+    return {
+        roundNum: roundNum,
+        name: roundName,
+        categories: [category],
+        scoreBlocks: [],
+    };
+}
+
+function parseNormalRound(roundNum: number, roundName: string, categoryRowElm: Element, clueRowElms: Element[]): RoundData {
+    let cluesPerCategory: OptionalClueData[][] = [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
     ];
 
-    const clueRows = rowElms.slice(1);
-    for (let clueNum = 0; clueNum < clueRows.length; clueNum++) {
-        const clueElms = Array.from(clueRows[clueNum].querySelectorAll("td.clue"));
+    for (let clueNum = 0; clueNum < clueRowElms.length; clueNum++) {
+        const clueElms = Array.from(clueRowElms[clueNum].querySelectorAll("td.clue"));
         for (let categoryNum = 0; categoryNum < clueElms.length; categoryNum++) {
             const clueElm = clueElms[categoryNum];
             const clue = parseClue(roundNum, categoryNum, clueNum, clueElm);
@@ -165,8 +181,8 @@ function parseRound(roundNum: number, roundElm: Element): Round {
         }
     }
 
-    let categories: Category[] = [];
-    const categoryElms = Array.from(rowElms[0].querySelectorAll("td.category"));
+    let categories: CategoryData[] = [];
+    const categoryElms = Array.from(categoryRowElm.querySelectorAll("td.category"));
     for (let categoryNum = 0; categoryNum < categoryElms.length; categoryNum++) {
         const categoryElm = categoryElms[categoryNum];
         const category = parseCategory(roundNum, categoryNum, cluesPerCategory[categoryNum], categoryElm);
@@ -175,14 +191,38 @@ function parseRound(roundNum: number, roundElm: Element): Round {
 
     return {
         roundNum: roundNum,
-        name: roundIDToName(roundElm.id),
+        name: roundName,
         categories: categories,
         scoreBlocks: [],
     };
 }
 
+function parseRound(roundNum: number, roundElm: Element): RoundData {
+    const roundName = roundIDToName(roundElm.id);
 
-export function parseGame(contentElm: Element): Game {
+    const tbodyElm = roundElm.querySelector("table > tbody");
+    if (!tbodyElm) {
+        throw new Error("Could not find table > tbody in round element");
+    }
+
+    const rowElms = Array.from(tbodyElm.children);
+    if (rowElms.length < 2) {
+        throw new Error("Not enough rows in table.round");
+    }
+
+    const categoryRowElm = rowElms[0];
+    const clueRowElms = rowElms.slice(1);
+
+    if (roundName == RoundName.FinalJeopardy) {
+        return parseFinalRound(roundNum, roundName, categoryRowElm, clueRowElms[0]);
+    }
+
+    return parseNormalRound(roundNum, roundName, categoryRowElm, clueRowElms);
+
+}
+
+
+export function parseGame(contentElm: Element): GameData {
     const gameTitleElm = contentElm.querySelector("#game_title");
     const gameCommentsElm = contentElm.querySelector("#game_comments");
     const contestantsElm = contentElm.querySelector("#contestants");

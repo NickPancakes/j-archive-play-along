@@ -5,3 +5,7 @@
   --clue-depth-top: #0000ff;
 }
 
+#content {
+  max-width: unset;
+  min-width: unset;
+}

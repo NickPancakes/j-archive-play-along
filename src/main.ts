@@ -1,4 +1,5 @@
-import { mount } from 'svelte';
+import { parseGame } from "$lib/parser.ts";
+import { hydrate } from 'svelte';
 import './app.css';
 import App from './App.svelte';
 
@@ -11,23 +12,24 @@ const contentElm = document.querySelector("div#content");
 if (contentElm === null) {
   throw new Error("No content element found");
 }
-// document.styleSheets[0].disabled = true;
+const gameData = parseGame(contentElm);
 
-const app = mount(App, {
-  target: document.body,
+const app = hydrate(App, {
+  target: contentElm,
   props: {
-    contentElm: contentElm.cloneNode(true) as Element,
+    gameData: gameData,
   }
 });
 
-contentElm.remove();
-document.querySelector("div#disclaimer")?.remove();
+//contentElm.remove();
+//(contentElm as HTMLElement).style.display = 'none';
 
 /*
 document.querySelector("div#navbar")?.remove();
 document.querySelector("div#game_title")?.remove();
 document.querySelector("div#game_comments")?.remove();
 document.querySelector("div#contestants")?.remove();
+document.querySelector("div#disclaimer")?.remove();
 */
 
 export default app;

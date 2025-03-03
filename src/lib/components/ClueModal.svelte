@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { selectedClueState, ClueDisplayStates } from "$lib/state.svelte.ts";
+  import { clueDisplay } from "$lib/state.svelte.ts";
+  import { ClueDisplayStates } from "$lib/types.ts";
 
   let { scrollToElm }: { scrollToElm: Element } = $props();
 
@@ -7,7 +8,7 @@
   let showExtra: boolean = $state(false);
 
   $effect(() => {
-    if (selectedClueState.show) {
+    if (clueDisplay.show) {
       showDialog();
     }
   });
@@ -19,29 +20,27 @@
 
   function onCloseDialog() {
     scrollToElm.scrollIntoView({ behavior: "smooth", block: "start", inline: "start" });
-    selectedClueState.show = false;
-    selectedClueState.displayState = ClueDisplayStates.Clue;
+    clueDisplay.show = false;
+    clueDisplay.state = ClueDisplayStates.Clue;
   }
 
   function nextDisplayState() {
-    switch (selectedClueState.displayState) {
+    switch (clueDisplay.state) {
       case ClueDisplayStates.DailyDouble:
-        selectedClueState.displayState = ClueDisplayStates.Clue;
+        clueDisplay.state = ClueDisplayStates.Clue;
         break;
       case ClueDisplayStates.Clue:
-        selectedClueState.displayState = ClueDisplayStates.CorrectResponse;
-        console.log(selectedClueState.correctResponseExtraHTML);
-        console.log(selectedClueState.correctResponseExtraHTML == "");
+        clueDisplay.state = ClueDisplayStates.CorrectResponse;
         break;
       case ClueDisplayStates.CorrectResponse:
-        if (selectedClueState.finalJeopardy) {
-          selectedClueState.displayState = ClueDisplayStates.FinalResponses;
+        if (clueDisplay.clue.finalJeopardy) {
+          clueDisplay.state = ClueDisplayStates.FinalResponses;
         } else {
-          selectedClueState.displayState = ClueDisplayStates.Clue;
+          clueDisplay.state = ClueDisplayStates.Clue;
         }
         break;
       default:
-        selectedClueState.displayState = ClueDisplayStates.Clue;
+        clueDisplay.state = ClueDisplayStates.Clue;
         break;
     }
   }
@@ -51,7 +50,7 @@
 <dialog
   class="clue_modal"
   aria-modal="true"
-  aria-hidden={!selectedClueState.show}
+  aria-hidden={!clueDisplay.show}
   tabindex="-1"
   bind:this={dialog}
   onclose={onCloseDialog}
@@ -65,23 +64,22 @@
 
     <div
       class="ico-extra"
-      hidden={selectedClueState.correctResponseExtraHTML == "" ||
-        selectedClueState.displayState != ClueDisplayStates.CorrectResponse}
+      hidden={clueDisplay.clue.response.comments.length == 0 || clueDisplay.state != ClueDisplayStates.CorrectResponse}
     >
       *
     </div>
 
-    {#if !selectedClueState.finalJeopardy && selectedClueState.displayState == ClueDisplayStates.CorrectResponse}
+    {#if !clueDisplay.clue.finalJeopardy && clueDisplay.state == ClueDisplayStates.CorrectResponse}
       <div class="responders">
-        {#each selectedClueState.incorrectResponders as incorrectResponder}
+        {#each clueDisplay.clue.response.incorrectResponders as incorrectResponder}
           <div class="responder" data-state="incorrect">
             {incorrectResponder}
           </div>
         {/each}
 
-        {#if selectedClueState.correctResponder}
+        {#if clueDisplay.clue.response.correctResponder}
           <div class="responder" data-state="correct">
-            {selectedClueState.correctResponder}
+            {clueDisplay.clue.response.correctResponder}
           </div>
         {:else}
           <div class="responder" data-state="incorrect">Triple Stumper</div>
@@ -90,24 +88,25 @@
     {/if}
 
     <div class="modal_main" onmouseenter={() => (showExtra = true)} onmouseleave={() => (showExtra = false)}>
-      <div class="daily_double" hidden={selectedClueState.displayState != ClueDisplayStates.DailyDouble}>
-        Daily Double
+      <div class="daily_double" hidden={clueDisplay.state != ClueDisplayStates.DailyDouble}>Daily Double</div>
+
+      <div class="clue" hidden={clueDisplay.state != ClueDisplayStates.Clue}>
+        {@html clueDisplay.clue.clueHTML}
       </div>
 
-      <div class="clue" hidden={selectedClueState.displayState != ClueDisplayStates.Clue}>
-        {@html selectedClueState.clueHTML}
-      </div>
+      <div class="correct_response" hidden={clueDisplay.state != ClueDisplayStates.CorrectResponse}>
+        {clueDisplay.clue.response.correctResponse}
 
-      <div class="correct_response" hidden={selectedClueState.displayState != ClueDisplayStates.CorrectResponse}>
-        {@html selectedClueState.correctResponseHTML}
-
-        <div class="extra" hidden={selectedClueState.correctResponseExtraHTML == "" || !showExtra}>
+        <div class="response_comments" hidden={clueDisplay.clue.response.comments.length == 0 || !showExtra}>
           <hr />
-          {@html selectedClueState.correctResponseExtraHTML}
+          {#each clueDisplay.clue.response.comments as comment}
+            {comment}
+            <br />
+          {/each}
         </div>
       </div>
 
-      <div class="final_responses" hidden={selectedClueState.displayState != ClueDisplayStates.FinalResponses}></div>
+      <div class="final_responses" hidden={clueDisplay.state != ClueDisplayStates.FinalResponses}></div>
     </div>
   </div>
 </dialog>
@@ -178,10 +177,14 @@
     font-size: clamp(1rem, 7vmin, 9rem);
     text-shadow: 0.3rem 0.3rem 0px #000000;
   }
-  .extra {
+
+  .response_comments {
     text-transform: none;
     text-shadow: none;
     font-size: clamp(1rem, 4vmin, 9rem);
+    color: var(--white);
+    text-align: center;
+    vertical-align: middle;
   }
 
   .responders {
@@ -201,13 +204,6 @@
     color: var(--error-red);
   }
 
-  .extra {
-    font-size: clamp(1rem, 3vmin, 9rem);
-    color: var(--white);
-    text-align: center;
-    vertical-align: middle;
-  }
-
   .ico-close {
     width: 100%;
     height: 100%;
@@ -215,7 +211,7 @@
     grid-area: tr;
     font-size: clamp(1rem, 3vmin, 9rem);
     font-family: arial, sans-serif;
-    text-align: center;
+    text-align: right;
     vertical-align: center;
     text-shadow: 0.3rem 0.3rem 0px #000000;
   }
@@ -227,7 +223,7 @@
     grid-area: tl;
     font-size: clamp(1rem, 5vmin, 9rem);
     font-family: arial, sans-serif;
-    text-align: center;
+    text-align: left;
     vertical-align: center;
     text-shadow: 0.3rem 0.3rem 0px #000000;
   }

@@ -1,7 +1,8 @@
 <script lang="ts">
-  import Game from "$lib/Game.svelte";
+  import Game from "$lib/components/Game.svelte";
+  import { type GameData } from "$lib/types.ts";
 
-  let { contentElm }: { contentElm: Element } = $props();
+  let { gameData }: { gameData: GameData } = $props();
 </script>
 
-<Game {contentElm} />
+<Game {gameData} />

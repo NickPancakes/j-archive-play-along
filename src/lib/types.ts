@@ -1,4 +1,10 @@
 
+export const RoundName = {
+    Jeopardy: "Jeopardy!",
+    DoubleJeopardy: "Double Jeopardy!",
+    TripleJeopardy: "Triple Jeopardy!",
+    FinalJeopardy: "Final Jeopardy!"
+} as const;
 
 
 export type FinalJeopardyResponse = {
@@ -8,70 +14,74 @@ export type FinalJeopardyResponse = {
     correct: boolean;
 }
 
-export type Clue = {
-    roundNum: number;
-    categoryNum: number;
-    clueNum: number;
-    playOrder: number;
-    value: number;
-    clueText: string;
+export type ClueResponse = {
     correctResponse: string;
     comments: string[];
     incorrectResponders: string[];
     correctResponder: string | null;
+}
+
+export type UnselectedClueData = {
+    roundNum: number;
+    categoryNum: number;
+    clueNum: number;
+}
+
+export type ClueData = {
+    roundNum: number;
+    categoryNum: number;
+    clueNum: number;
+    value: number;
+    playOrder: number;
     dailyDouble: boolean;
-    dailyDoubleWager: number | null;
     finalJeopardy: boolean;
+    clueHTML: string;
+    response: ClueResponse;
+    dailyDoubleWager: number | null;
     finalJeopardyResponses: FinalJeopardyResponse[];
 }
 
 
-export type OptionalClue = Clue | null;
+export type OptionalClueData = ClueData | UnselectedClueData;
 
-export type Category = {
+export type CategoryData = {
     roundNum: number;
     categoryNum: number;
     title: string;
     comments: string;
-    clues: OptionalClue[];
+    clues: OptionalClueData[];
 }
 
-export const RoundName = {
-    Jeopardy: "Jeopardy!",
-    DoubleJeopardy: "Double Jeopardy!",
-    TripleJeopardy: "Triple Jeopardy!",
-    FinalJeopardy: "Final Jeopardy!"
-};
 
 export type ScoreBlockPlayer = {
     name: string;
     score: number;
 }
 
-export type ScoreBlock = {
+export type ScoreBlockData = {
     title: string;
     players: ScoreBlockPlayer[];
 }
 
 
-export type Round = {
+export type RoundData = {
     roundNum: number;
     name: string;
-    categories: Category[];
-    scoreBlocks: ScoreBlock[];
+    categories: CategoryData[];
+    scoreBlocks: ScoreBlockData[];
 }
 
-export type Contestant = {
+export type ContestantData = {
+    id: number;
     name: string;
-    link: string;
     comments: string;
 }
 
-export type Game = {
+export type GameData = {
     title: string;
     comments: string;
-    contestants: Contestant[];
-    rounds: Round[];
+    contestants: ContestantData[];
+    rounds: RoundData[];
 }
 
 export const ClueDisplayStates = {
@@ -79,10 +89,10 @@ export const ClueDisplayStates = {
     CorrectResponse: 1,
     FinalResponses: 2,
     DailyDouble: 3
-};
+} as const;
 
 export type ClueDisplay = {
     show: boolean;
     state: number;
-    clue: Clue;
+    clue: ClueData;
 }

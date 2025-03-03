@@ -1,46 +1,31 @@
 <script lang="ts">
-  import Round from "$lib/Round.svelte";
-  import FinalRound from "$lib/FinalRound.svelte";
-  import ClueModal from "$lib/ClueModal.svelte";
+  import Round from "$lib/components/Round.svelte";
+  import ClueModal from "$lib/components/ClueModal.svelte";
+  import { type GameData } from "$lib/types.ts";
 
-  let { contentElm }: { contentElm: Element } = $props();
+  let { gameData }: { gameData: GameData } = $props();
 
   let activeTab = $state(0);
   let scrollToElm: Element | undefined = $state();
-
-  function roundIDToName(roundID: string): string {
-    switch (roundID) {
-      case "jeopardy_round":
-        return "Jeopardy!";
-      case "double_jeopardy_round":
-        return "Double Jeopardy!";
-      case "triple_jeopardy_round":
-        return "Triple Jeopardy!";
-      case "final_jeopardy_round":
-        return "Final Jeopardy!";
-      default:
-        return "Unknown";
-    }
-  }
-
-  const roundElms = Array.from(contentElm.querySelectorAll('[id$="_round"]')).flatMap((roundElm) => {
-    const cloneElm = roundElm.cloneNode(true) as Element;
-    contentElm.removeChild(roundElm);
-    return cloneElm;
-  });
-
-  const gameTitleElm = contentElm.querySelector("#game_title") || document.createElement("div");
-  const gameCommentsElm = contentElm.querySelector("#game_comments") || document.createElement("div");
-  const contestantsElm = contentElm.querySelector("#contestants") || document.createElement("div");
 </script>
 
-{@html gameTitleElm.outerHTML}
-{@html gameCommentsElm.outerHTML}
-{@html contestantsElm.outerHTML}
+<div id="game_title">
+  <h1>{gameData.title}</h1>
+</div>
+
+<div id="game_comments">{gameData.comments}</div>
+<div id="contestants">
+  <h2>Contestants</h2>
+  {#each gameData.contestants as contestant (contestant.id)}
+    <p class="contestants">
+      <a href="showplayer.php?player_id={contestant.id}" target="_blank">{contestant.name}</a>, {contestant.comments}
+    </p>
+  {/each}
+</div>
 
 <div class="tabs">
   <div role="tablist" aria-label="Round Tabs" class="round-tabs-list">
-    {#each roundElms as roundElm, i (roundElm.id)}
+    {#each gameData.rounds as round, i (round.roundNum)}
       <button
         class="round-tab"
         role="tab"
@@ -51,12 +36,12 @@
         onclick={() => (activeTab = i)}
         data-state={activeTab == i ? "active" : "inactive"}
       >
-        {roundIDToName(roundElm.id)}
+        {round.name}
       </button>
     {/each}
   </div>
   <div bind:this={scrollToElm}>
-    {#each roundElms as roundElm, i (roundElm.id)}
+    {#each gameData.rounds as round, i (round.roundNum)}
       <div
         id="panel-{i}"
         class="round-tabs-content"
@@ -65,11 +50,7 @@
         aria-labelledby="tab-{i}"
         hidden={activeTab != i}
       >
-        {#if roundElm.id == "final_jeopardy_round"}
-          <FinalRound {roundElm} />
-        {:else}
-          <Round {roundElm} />
-        {/if}
+        <Round {round} />
       </div>
     {/each}
   </div>

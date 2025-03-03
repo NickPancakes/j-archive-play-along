@@ -1,47 +1,41 @@
 <script lang="ts">
+  import { type CategoryData } from "$lib/types.ts";
+  import { noop } from "$lib/utils.ts";
+
   interface Props {
-    categoryCellElm: Element;
-    idx: number;
+    category: CategoryData;
     onclick?: () => void;
-    final?: boolean;
   }
 
-  function defaultOnClickFn() {
-    return;
-  }
-
-  let { categoryCellElm, idx, onclick = defaultOnClickFn, final = false }: Props = $props();
+  let { category, onclick = noop }: Props = $props();
 
   let showComment = $state(false);
-  let name = $state(categoryCellElm.querySelector("td.category_name")?.textContent);
-
-  const comments = categoryCellElm.querySelector("td.category_comments")?.textContent ?? "";
-  const categoryNameClasses = final ? "category_name final" : "category_name";
+  const categoryNameClasses = category.clues.length == 1 ? "category_name final" : "category_name";
 </script>
 
 <div
   class="category_cell"
   role="columnheader"
-  tabindex={idx}
-  style:grid-column={idx + 1}
+  tabindex={category.categoryNum}
+  style:grid-column={category.categoryNum + 1}
+  style:grid-row={1}
   onmouseenter={() => {
-    if (comments != "") {
+    if (category.comments) {
       showComment = true;
     }
   }}
   onmouseleave={() => (showComment = false)}
 >
-  {#if comments && !showComment}
+  {#if category.comments && !showComment}
     <div class="ico-extra">*</div>
   {/if}
   <button class="category" {onclick}>
     <div class={categoryNameClasses}>
-      {name}
+      {category.title}
     </div>
-    {#if comments && showComment}
-      <hr />
+    {#if category.comments && showComment}
       <div class="category_comments">
-        {comments}
+        {category.comments}
       </div>
     {/if}
   </button>
@@ -68,12 +62,12 @@
     border-top-color: var(--clue-depth-top);
     grid-row: 1;
 
-    grid-template-columns: 3% 94% 3%;
-    grid-template-rows: 3% 94% 3%;
+    grid-template-rows: 15% 70% 15%;
+    grid-template-columns: 100%;
     grid-template-areas:
-      "tl tc tr"
-      "ml main mr"
-      "bl bc br";
+      "top"
+      "main"
+      "bottom";
   }
 
   button.category {
@@ -87,7 +81,7 @@
   }
   div.category_name {
     font-family: "Swiss911 Cm BT", "Open Sans", helvetica, arial, verdana, sans-serif;
-    font-size: clamp(0.25rem, 2cqmin, 9rem);
+    font-size: clamp(0.25rem, 2.5cqmin, 9rem);
     text-shadow: 0.1em 0.1em 0px #000000;
     text-align: center;
     text-wrap: balance;
@@ -102,8 +96,7 @@
   div.category_comments {
     text-align: center;
     vertical-align: middle;
-    font-weight: bold;
-    font-size: clamp(1rem, 1.5cqmin, 9rem);
+    font-size: clamp(0.2rem, 2cqmin, 8rem);
     text-wrap: balance;
     grid-area: main;
   }
@@ -111,11 +104,13 @@
   .ico-extra {
     width: 100%;
     height: 100%;
+    padding-top: 0.2rem;
+    padding-left: 0.2rem;
     color: var(--white);
-    grid-area: tl;
+    grid-area: top;
     font-size: clamp(1rem, 1cqmin, 9rem);
     font-family: arial, sans-serif;
-    text-align: center;
+    text-align: left;
     vertical-align: center;
     text-shadow:
       -1px 0 black,

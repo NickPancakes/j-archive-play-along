@@ -1,10 +1,7 @@
 
-export const ClueDisplayStates = {
-  Clue: 0,
-  CorrectResponse: 1,
-  FinalResponses: 2,
-  DailyDouble: 3
-};
+
+import { ClueDisplayStates, type ClueData, type ClueDisplay } from "$lib/types.ts";
+
 
 export type SelectedClueState = {
   show: boolean;
@@ -46,4 +43,34 @@ export const updateSelectedClueState = (newState: Partial<SelectedClueState>) =>
   selectedClueState.incorrectResponders = newState.incorrectResponders ?? [];
   selectedClueState.correctResponder = newState.correctResponder ?? "";
   selectedClueState.finalResponsesHTML = newState.finalResponsesHTML ?? "";
+}
+
+export const clueDisplay: ClueDisplay = $state({
+  show: false,
+  state: ClueDisplayStates.Clue,
+  clue: {
+    roundNum: 0,
+    categoryNum: 0,
+    clueNum: 0,
+    value: 0,
+    playOrder: 0,
+    dailyDouble: false,
+    finalJeopardy: false,
+    clueHTML: "",
+    response: {
+      correctResponse: "",
+      comments: [],
+      incorrectResponders: [],
+      correctResponder: null,
+
+    },
+    dailyDoubleWager: null,
+    finalJeopardyResponses: [],
+  }
+});
+
+export function showModal(clue: ClueData) {
+  clueDisplay.show = true;
+  clueDisplay.state = ClueDisplayStates.Clue;
+  clueDisplay.clue = clue;
 }
