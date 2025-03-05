@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         j-archive-play-along
 // @namespace    https://github.com/NickPancakes/j-archive-play-along
-// @version      0.0.3
+// @version      0.0.4
 // @author       NickPancakes
 // @description  Transforms J! Archive games UI to play along.
 // @iconURL      https://www.google.com/s2/favicons?sz=16&domain=j-archive.com
@@ -13,7 +13,7 @@
 // @grant        GM_addStyle
 // ==/UserScript==
 
-(e=>{if(typeof GM_addStyle=="function"){GM_addStyle(e);return}const t=document.createElement("style");t.textContent=e,document.head.append(t)})(' @import"https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap";@import"https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght,YOPQ@100..900,40..300&display=swap";@import"https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap";:root{--clue-depth-bottom: #000088;--clue-depth-left: #0000ee;--clue-depth-right: #000099;--clue-depth-top: #0000ff}#content{max-width:unset;min-width:unset}.clue_cell.svelte-whch0{border-width:.2rem;border-style:outset;display:grid;place-content:center;place-items:center;text-align:center;background-color:var(--clue-screen-blue);border-bottom-color:var(--clue-depth-bottom);border-left-color:var(--clue-depth-left);border-right-color:var(--clue-depth-right);border-top-color:var(--clue-depth-top);grid-template-rows:15% 70% 15%;grid-template-columns:100%;grid-template-areas:"top" "main" "bottom"}.order_text.svelte-whch0{padding-top:.2rem;padding-right:.2rem;font-size:clamp(.1rem,1.5cqmin,9rem);color:var(--white);text-align:right;vertical-align:middle;grid-area:top}.value_text.svelte-whch0{font-family:Swiss911 Cm BT,Open Sans,helvetica,arial,verdana,sans-serif;font-size:clamp(1rem,7cqmin,12rem);background-color:var(--clue-screen-blue);color:var(--font-yellow);text-shadow:.1em .1em 0px #000000;text-align:center;vertical-align:middle;font-weight:800;grid-area:main;border-style:none;padding:0}div.category_cell.svelte-jiifq5{border-width:.2rem;border-style:outset;display:grid;place-content:center;place-items:center;color:var(--white);text-align:center;vertical-align:middle;font-weight:700;background-color:var(--clue-screen-blue);border-bottom-color:var(--clue-depth-bottom);border-left-color:var(--clue-depth-left);border-right-color:var(--clue-depth-right);border-top-color:var(--clue-depth-top);grid-row:1;grid-template-rows:15% 70% 15%;grid-template-columns:100%;grid-template-areas:"top" "main" "bottom"}button.category.svelte-jiifq5{width:100%;height:100%;background-color:var(--clue-screen-blue);border-style:none;grid-area:main;padding:0;color:var(--white)}div.category_name.svelte-jiifq5{font-family:Swiss911 Cm BT,Open Sans,helvetica,arial,verdana,sans-serif;font-size:clamp(.25rem,2.5cqmin,9rem);text-shadow:.1em .1em 0px #000000;text-align:center;text-wrap:balance;vertical-align:middle;font-weight:700}div.final.svelte-jiifq5{font-size:clamp(1rem,4vmin,9rem)}div.category_comments.svelte-jiifq5{text-align:center;vertical-align:middle;font-size:clamp(.2rem,2cqmin,8rem);text-wrap:balance;grid-area:main}.ico-extra.svelte-jiifq5{width:100%;height:100%;padding-top:.2rem;padding-left:.2rem;color:var(--white);grid-area:top;font-size:clamp(1rem,1cqmin,9rem);font-family:arial,sans-serif;text-align:left;vertical-align:center;text-shadow:-1px 0 black,0 1px black,1px 0 black,0 -1px black}div.board.svelte-17irm38{height:100%;width:100%;display:grid;gap:.1rem;place-content:center;grid-auto-flow:row dense;grid-template-columns:repeat(6,minmax(0,1fr));grid-template-rows:repeat(1,minmax(0,.9fr)) repeat(5,minmax(0,1fr))}div.final_board.svelte-17irm38{height:50%;width:100%;display:grid;gap:.1rem;place-content:center;grid-auto-flow:row dense;grid-template-columns:minmax(0,.5fr) minmax(0,1fr) minmax(0,.5fr);grid-template-rows:minmax(0,1fr)}dialog.clue_modal.svelte-r4f1vo{width:90%;height:90%;position:fixed;border-width:1em;border-style:outset;background-color:var(--clue-screen-blue);border-bottom-color:var(--clue-depth-bottom);border-left-color:var(--clue-depth-left);border-right-color:var(--clue-depth-right);border-top-color:var(--clue-depth-top)}.modal_content.svelte-r4f1vo{width:100%;height:100%;display:grid;grid-template-columns:5% 90% 5%;grid-template-rows:5% 85% 10%;grid-template-areas:"tl tc tr" "ml main mr" "bl bc br";place-content:center;place-items:center}.modal_main.svelte-r4f1vo{grid-area:main;color:var(--white);text-align:center;font-weight:700;vertical-align:middle;text-wrap:pretty;line-height:1.25}.daily_double.svelte-r4f1vo{text-transform:uppercase;font-family:Futura,Kumbh Sans,Century Gothic,sans-serif;font-weight:800;font-size:clamp(1rem,24vmin,30rem);text-shadow:.3rem .3rem 0px #000000}.clue.svelte-r4f1vo{text-transform:uppercase;font-family:ITC Korinna Std,Libre Baskerville,Times New Roman,serif;font-size:clamp(1rem,7vmin,9rem);text-shadow:.3rem .3rem 0px #000000}.correct_response.svelte-r4f1vo{text-transform:uppercase;color:var(--aqua-blue);font-family:ITC Korinna Std,Libre Baskerville,Times New Roman,serif;font-size:clamp(1rem,7vmin,9rem);text-shadow:.3rem .3rem 0px #000000}.response_comments.svelte-r4f1vo{text-transform:none;text-shadow:none;font-size:clamp(1rem,4vmin,9rem);color:var(--white);text-align:center;vertical-align:middle}.responders.svelte-r4f1vo{grid-area:bc;display:flex;font-size:clamp(1rem,3vmin,9rem);text-align:center;vertical-align:middle;flex-direction:row}.responder[data-state=correct].svelte-r4f1vo{color:var(--lime-green)}.responder[data-state=incorrect].svelte-r4f1vo{color:var(--error-red)}.ico-close.svelte-r4f1vo{width:100%;height:100%;color:var(--white);grid-area:tr;font-size:clamp(1rem,3vmin,9rem);font-family:arial,sans-serif;text-align:right;vertical-align:center;text-shadow:.3rem .3rem 0px #000000}.ico-extra.svelte-r4f1vo{width:100%;height:100%;color:var(--white);grid-area:tl;font-size:clamp(1rem,5vmin,9rem);font-family:arial,sans-serif;text-align:left;vertical-align:center;text-shadow:.3rem .3rem 0px #000000}dialog.svelte-r4f1vo::backdrop{background:#0000004d}dialog[open].svelte-r4f1vo{animation:svelte-r4f1vo-zoom .3s cubic-bezier(.34,1.56,.64,1)}@keyframes svelte-r4f1vo-zoom{0%{transform:scale(.95)}to{transform:scale(1)}}dialog[open].svelte-r4f1vo::backdrop{animation:svelte-r4f1vo-fade .2s ease-out}@keyframes svelte-r4f1vo-fade{0%{opacity:0}to{opacity:1}}#game_title.svelte-1ybnarh{display:flex;flex-wrap:nowrap;justify-content:space-around;align-items:center}#game_title.svelte-1ybnarh>a:where(.svelte-1ybnarh){font-size:clamp(.5rem,2vmin,6rem)}div.tabs.svelte-1ybnarh{height:100%;width:100%}div.round-tabs-list.svelte-1ybnarh{flex:auto;width:100%;display:flex;flex-direction:row;justify-content:center;border-bottom-width:.25em;border-bottom-style:outset;border-bottom-color:var(--background-dark-blue)}div.round-tabs-content.svelte-1ybnarh{height:100vh;width:100%}button.round-tab.svelte-1ybnarh{flex:1;display:flex;flex-direction:row;place-content:center;border-width:.1em;border-style:outset;background-color:var(--clue-depth-bottom);border-bottom-color:var(--clue-depth-bottom);border-left-color:var(--clue-depth-left);border-right-color:var(--clue-depth-right);border-top-color:var(--clue-depth-top);color:var(--disclaimer-gray);text-shadow:2px 2px 0px #000000;font-size:clamp(1rem,3vmin,9rem);text-align:center;vertical-align:middle;font-weight:700}button.round-tab[data-state=active].svelte-1ybnarh{flex:1.5;background-color:var(--clue-screen-blue);color:var(--white)} ');
+(e=>{if(typeof GM_addStyle=="function"){GM_addStyle(e);return}const t=document.createElement("style");t.textContent=e,document.head.append(t)})(' @import"https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap";@import"https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght,YOPQ@100..900,40..300&display=swap";@import"https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap";:root{--clue-depth-bottom: #000088;--clue-depth-left: #0000ee;--clue-depth-right: #000099;--clue-depth-top: #0000ff}#content{max-width:unset;min-width:unset}.clue_cell.svelte-whch0{border-width:.2rem;border-style:outset;display:grid;place-content:center;place-items:center;text-align:center;background-color:var(--clue-screen-blue);border-bottom-color:var(--clue-depth-bottom);border-left-color:var(--clue-depth-left);border-right-color:var(--clue-depth-right);border-top-color:var(--clue-depth-top);grid-template-rows:15% 70% 15%;grid-template-columns:100%;grid-template-areas:"top" "main" "bottom"}.order_text.svelte-whch0{padding-top:.2rem;padding-right:.2rem;font-size:clamp(.1rem,1.5cqmin,9rem);color:var(--white);text-align:right;vertical-align:middle;grid-area:top}.value_text.svelte-whch0{font-family:Swiss911 Cm BT,Open Sans,helvetica,arial,verdana,sans-serif;font-size:clamp(1rem,7cqmin,12rem);background-color:var(--clue-screen-blue);color:var(--font-yellow);text-shadow:.1em .1em 0px #000000;text-align:center;vertical-align:middle;font-weight:800;grid-area:main;border-style:none;padding:0}div.category_cell.svelte-63tsd7{border-width:.2rem;border-style:outset;display:grid;place-content:center;place-items:center;color:var(--white);text-align:center;vertical-align:middle;font-weight:700;background-color:var(--clue-screen-blue);border-bottom-color:var(--clue-depth-bottom);border-left-color:var(--clue-depth-left);border-right-color:var(--clue-depth-right);border-top-color:var(--clue-depth-top);grid-row:1;grid-template-rows:15% 70% 15%;grid-template-columns:100%;grid-template-areas:"top" "main" "bottom"}button.category.svelte-63tsd7{width:100%;height:100%;background-color:var(--clue-screen-blue);border-style:none;grid-area:main;padding:0;color:var(--white)}div.category_name.svelte-63tsd7{font-family:Swiss911 Cm BT,Open Sans,helvetica,arial,verdana,sans-serif;font-size:clamp(.25rem,2.5cqmin,9rem);text-shadow:.1em .1em 0px #000000;text-align:center;text-wrap:balance;vertical-align:middle;font-weight:700}div.final.svelte-63tsd7{font-size:clamp(1rem,6vmin,6rem)}div.category_comments.svelte-63tsd7{text-align:center;vertical-align:middle;font-size:clamp(.2rem,2cqmin,8rem);text-wrap:balance;grid-area:main}.ico-extra.svelte-63tsd7{width:100%;height:100%;padding-top:.2rem;padding-left:.2rem;color:var(--white);grid-area:top;font-size:clamp(.25rem,1.5cqmin,9rem);font-family:arial,sans-serif;text-align:left;vertical-align:center;text-shadow:-1px 0 black,0 1px black,1px 0 black,0 -1px black}div.board.svelte-17irm38{height:100%;width:100%;display:grid;gap:.1rem;place-content:center;grid-auto-flow:row dense;grid-template-columns:repeat(6,minmax(0,1fr));grid-template-rows:repeat(1,minmax(0,.9fr)) repeat(5,minmax(0,1fr))}div.final_board.svelte-17irm38{height:50%;width:100%;display:grid;gap:.1rem;place-content:center;grid-auto-flow:row dense;grid-template-columns:minmax(0,.5fr) minmax(0,1fr) minmax(0,.5fr);grid-template-rows:minmax(0,1fr)}dialog.clue_modal.svelte-r4f1vo{width:90%;height:90%;position:fixed;border-width:1em;border-style:outset;background-color:var(--clue-screen-blue);border-bottom-color:var(--clue-depth-bottom);border-left-color:var(--clue-depth-left);border-right-color:var(--clue-depth-right);border-top-color:var(--clue-depth-top)}.modal_content.svelte-r4f1vo{width:100%;height:100%;display:grid;grid-template-columns:5% 90% 5%;grid-template-rows:5% 85% 10%;grid-template-areas:"tl tc tr" "ml main mr" "bl bc br";place-content:center;place-items:center}.modal_main.svelte-r4f1vo{grid-area:main;color:var(--white);text-align:center;font-weight:700;vertical-align:middle;text-wrap:pretty;line-height:1.25}.daily_double.svelte-r4f1vo{text-transform:uppercase;font-family:Futura,Kumbh Sans,Century Gothic,sans-serif;font-weight:800;font-size:clamp(1rem,24vmin,30rem);text-shadow:.3rem .3rem 0px #000000}.clue.svelte-r4f1vo{text-transform:uppercase;font-family:ITC Korinna Std,Libre Baskerville,Times New Roman,serif;font-size:clamp(1rem,7vmin,9rem);text-shadow:.3rem .3rem 0px #000000}.correct_response.svelte-r4f1vo{text-transform:uppercase;color:var(--aqua-blue);font-family:ITC Korinna Std,Libre Baskerville,Times New Roman,serif;font-size:clamp(1rem,7vmin,9rem);text-shadow:.3rem .3rem 0px #000000}.response_comments.svelte-r4f1vo{text-transform:none;text-shadow:none;font-size:clamp(1rem,4vmin,9rem);color:var(--white);text-align:center;vertical-align:middle}.responders.svelte-r4f1vo{grid-area:bc;display:flex;font-size:clamp(1rem,3vmin,9rem);text-align:center;vertical-align:middle;flex-direction:row}.responder[data-state=correct].svelte-r4f1vo{color:var(--lime-green)}.responder[data-state=incorrect].svelte-r4f1vo{color:var(--error-red)}.ico-close.svelte-r4f1vo{width:100%;height:100%;color:var(--white);grid-area:tr;font-size:clamp(1rem,3vmin,9rem);font-family:arial,sans-serif;text-align:right;vertical-align:center;text-shadow:.3rem .3rem 0px #000000}.ico-extra.svelte-r4f1vo{width:100%;height:100%;color:var(--white);grid-area:tl;font-size:clamp(1rem,5vmin,9rem);font-family:arial,sans-serif;text-align:left;vertical-align:center;text-shadow:.3rem .3rem 0px #000000}dialog.svelte-r4f1vo::backdrop{background:#0000004d}dialog[open].svelte-r4f1vo{animation:svelte-r4f1vo-zoom .3s cubic-bezier(.34,1.56,.64,1)}@keyframes svelte-r4f1vo-zoom{0%{transform:scale(.95)}to{transform:scale(1)}}dialog[open].svelte-r4f1vo::backdrop{animation:svelte-r4f1vo-fade .2s ease-out}@keyframes svelte-r4f1vo-fade{0%{opacity:0}to{opacity:1}}#game_title.svelte-1ybnarh{display:flex;flex-wrap:nowrap;justify-content:space-around;align-items:center}#game_title.svelte-1ybnarh>a:where(.svelte-1ybnarh){font-size:clamp(.5rem,2vmin,6rem)}div.tabs.svelte-1ybnarh{height:100%;width:100%}div.round-tabs-list.svelte-1ybnarh{flex:auto;width:100%;display:flex;flex-direction:row;justify-content:center;border-bottom-width:.25em;border-bottom-style:outset;border-bottom-color:var(--background-dark-blue)}div.round-tabs-content.svelte-1ybnarh{height:100vh;width:100%}button.round-tab.svelte-1ybnarh{flex:1;display:flex;flex-direction:row;place-content:center;border-width:.1em;border-style:outset;background-color:var(--clue-depth-bottom);border-bottom-color:var(--clue-depth-bottom);border-left-color:var(--clue-depth-left);border-right-color:var(--clue-depth-right);border-top-color:var(--clue-depth-top);color:var(--disclaimer-gray);text-shadow:2px 2px 0px #000000;font-size:clamp(1rem,3vmin,9rem);text-align:center;vertical-align:middle;font-weight:700}button.round-tab[data-state=active].svelte-1ybnarh{flex:1.5;background-color:var(--clue-screen-blue);color:var(--white)} ');
 
 (function () {
   'use strict';
@@ -44,10 +44,32 @@
         throw new Error("Unrecognized round ID: " + roundID);
     }
   }
+  function parseResponsesTable(childElm) {
+    let responders = [];
+    const rightElm = childElm.querySelector("td.right");
+    if (rightElm && rightElm.textContent) {
+      responders.push({
+        player: rightElm.textContent,
+        wager: 0,
+        response: "",
+        correct: true
+      });
+    }
+    for (var wrongElm of childElm.querySelectorAll("td.wrong")) {
+      if (wrongElm.textContent && wrongElm.textContent != "Triple Stumper") {
+        responders.push({
+          player: wrongElm.textContent,
+          wager: 0,
+          response: "",
+          correct: false
+        });
+      }
+    }
+    return responders.length > 0 ? responders : null;
+  }
   function parseClueResponse(responseElm) {
     let correctResponse = "";
-    let correctResponder = null;
-    let incorrectResponders = [];
+    let responders = [];
     let comments = [];
     let sameLine = false;
     for (let childNode of responseElm.childNodes) {
@@ -62,32 +84,49 @@
         }
       } else {
         const childElm = childNode;
-        if (childElm.tagName == "SPAN") {
-          comments[comments.length - 1] += childElm.textContent || "";
-          sameLine = true;
-        } else if (childElm.tagName == "EM") {
-          correctResponse = childElm.textContent || "";
-        } else if (childElm.tagName == "TABLE") {
-          const rightElm = childElm.querySelector("td.right");
-          if (rightElm && rightElm.textContent) {
-            correctResponder = rightElm.textContent;
-          }
-          for (var incorrectResponderElm of childElm.querySelectorAll("td.wrong")) {
-            if (incorrectResponderElm.textContent && incorrectResponderElm.textContent != "Triple Stumper") {
-              incorrectResponders.push(incorrectResponderElm.textContent);
+        switch (childElm.tagName) {
+          case "EM":
+            correctResponse = childElm.textContent || "";
+            break;
+          case "TABLE":
+            const parsedResponses = parseResponsesTable(childElm);
+            if (parsedResponses) {
+              responders = parsedResponses;
             }
-          }
+            break;
+          default:
+            comments[comments.length - 1] += childElm.textContent || "";
+            sameLine = true;
+            break;
         }
       }
     }
+    console.log(responders);
     return {
       correctResponse,
       comments,
-      incorrectResponders,
-      correctResponder
+      responders
     };
   }
-  function parseClue(roundNum, categoryNum, clueNum, clueElm) {
+  function parseFinalClue(roundNum, categoryNum, clueNum, clueElm) {
+    const clueTextElms = clueElm.querySelectorAll("td.clue_text");
+    const clueHTML = clueTextElms[0].innerHTML ?? "";
+    const responseElm = clueTextElms[1];
+    const clueResponse = parseClueResponse(responseElm);
+    return {
+      roundNum,
+      categoryNum,
+      clueNum,
+      value: 0,
+      playOrder: 0,
+      clueHTML,
+      response: clueResponse,
+      dailyDouble: false,
+      dailyDoubleWager: null,
+      finalJeopardy: true
+    };
+  }
+  function parseClue(roundNum, totalRounds, categoryNum, clueNum, clueElm) {
     var _a, _b;
     let playOrder = "0";
     let dailyDouble = false;
@@ -108,18 +147,19 @@
     const clueHTML = clueTextElms[0].innerHTML ?? "";
     const responseElm = clueTextElms[1];
     const clueResponse = parseClueResponse(responseElm);
+    const baseValue = totalRounds > 3 ? 100 : 200;
+    const value = baseValue * (roundNum + 1) * (clueNum + 1);
     return {
       roundNum,
       categoryNum,
       clueNum,
-      value: 100 * (roundNum + 1) * (clueNum + 1),
+      value,
       playOrder: parseInt(playOrder),
       clueHTML,
       response: clueResponse,
       dailyDouble,
       dailyDoubleWager: null,
-      finalJeopardy: false,
-      finalJeopardyResponses: []
+      finalJeopardy: false
     };
   }
   function parseCategory(roundNum, categoryNum, clues, categoryElm) {
@@ -133,7 +173,17 @@
       comments: (commentsElm == null ? void 0 : commentsElm.textContent) || ""
     };
   }
-  function parseFinalRound(roundNum, roundName, categoryRowElm, clueRowElm) {
+  function parseFinalRoundTable(roundNum, tableElm) {
+    const tbodyElm = tableElm.querySelector("tbody");
+    if (!tbodyElm) {
+      throw new Error("Could not find  in round element");
+    }
+    const rowElms = Array.from(tbodyElm.children);
+    if (rowElms.length < 2) {
+      throw new Error("Not enough rows in table.round");
+    }
+    const categoryRowElm = rowElms[0];
+    const clueRowElm = rowElms[1];
     const clueElm = clueRowElm.querySelector("td.clue");
     if (!clueElm) {
       throw new Error("Could not find td.clue in final round clue row");
@@ -142,16 +192,21 @@
     if (!categoryElm) {
       throw new Error("Could not find td.category in final round category row");
     }
-    const clue = parseClue(roundNum, 1, 0, clueElm);
+    const clue = parseFinalClue(roundNum, 1, 0, clueElm);
     const category = parseCategory(roundNum, 1, [clue], categoryElm);
-    return {
-      roundNum,
-      name: roundName,
-      categories: [category],
-      scoreBlocks: []
-    };
+    return [category];
   }
-  function parseNormalRound(roundNum, roundName, categoryRowElm, clueRowElms) {
+  function parseNormalRoundTable(roundNum, totalRounds, tableElm) {
+    const tbodyElm = tableElm.querySelector("tbody");
+    if (!tbodyElm) {
+      throw new Error("Could not find tbody in round element");
+    }
+    const rowElms = Array.from(tbodyElm.children);
+    if (rowElms.length < 2) {
+      throw new Error("Not enough rows in table.round");
+    }
+    const categoryRowElm = rowElms[0];
+    const clueRowElms = rowElms.slice(1);
     let cluesPerCategory = [
       [],
       [],
@@ -164,7 +219,7 @@
       const clueElms = Array.from(clueRowElms[clueNum].querySelectorAll("td.clue"));
       for (let categoryNum = 0; categoryNum < clueElms.length; categoryNum++) {
         const clueElm = clueElms[categoryNum];
-        const clue = parseClue(roundNum, categoryNum, clueNum, clueElm);
+        const clue = parseClue(roundNum, totalRounds, categoryNum, clueNum, clueElm);
         cluesPerCategory[categoryNum][clueNum] = clue;
       }
     }
@@ -175,29 +230,64 @@
       const category = parseCategory(roundNum, categoryNum, cluesPerCategory[categoryNum], categoryElm);
       categories.push(category);
     }
+    return categories;
+  }
+  function parseScoreBlock(title, scoreTableElm) {
+    let players = [
+      { name: "", score: 0, remarks: "" },
+      { name: "", score: 0, remarks: "" },
+      { name: "", score: 0, remarks: "" }
+    ];
+    const rowElms = Array.from(scoreTableElm.querySelectorAll("tr"));
+    if (rowElms.length < 2) {
+      throw new Error("Not enough rows in table.score_block");
+    }
+    const namesRowElm = rowElms[0];
+    const scoresRowElm = rowElms[1];
+    const remarksRowElm = rowElms[2];
+    for (let playerNum = 0; playerNum < 3; playerNum++) {
+      const nameElm = namesRowElm.children[playerNum];
+      const scoreElm = scoresRowElm.children[playerNum];
+      const remarksElm = remarksRowElm == null ? void 0 : remarksRowElm.children[playerNum];
+      const scoreText = ((scoreElm == null ? void 0 : scoreElm.textContent) || "$0").replaceAll("$", "").replaceAll(",", "");
+      players[playerNum] = {
+        name: nameElm.textContent || "",
+        score: parseInt(scoreText),
+        remarks: (remarksElm == null ? void 0 : remarksElm.textContent) || ""
+      };
+    }
+    return {
+      title,
+      players
+    };
+  }
+  function parseRound(roundNum, totalRounds, roundElm) {
+    const roundName = roundIDToName(roundElm.id);
+    let categories = [];
+    let scoreBlocks = [];
+    let currentScoreBlockTitle = "";
+    for (let childElm of roundElm.children) {
+      switch (childElm.tagName) {
+        case "H3":
+          currentScoreBlockTitle = childElm.textContent || "";
+          break;
+        case "TABLE":
+          if (childElm.className == "round") {
+            categories = parseNormalRoundTable(roundNum, totalRounds, childElm);
+          } else if (childElm.className == "final_round") {
+            categories = parseFinalRoundTable(roundNum, childElm);
+          } else {
+            scoreBlocks.push(parseScoreBlock(currentScoreBlockTitle, childElm));
+          }
+          break;
+      }
+    }
     return {
       roundNum,
       name: roundName,
       categories,
-      scoreBlocks: []
+      scoreBlocks
     };
-  }
-  function parseRound(roundNum, roundElm) {
-    const roundName = roundIDToName(roundElm.id);
-    const tbodyElm = roundElm.querySelector("table > tbody");
-    if (!tbodyElm) {
-      throw new Error("Could not find table > tbody in round element");
-    }
-    const rowElms = Array.from(tbodyElm.children);
-    if (rowElms.length < 2) {
-      throw new Error("Not enough rows in table.round");
-    }
-    const categoryRowElm = rowElms[0];
-    const clueRowElms = rowElms.slice(1);
-    if (roundName == RoundName.FinalJeopardy) {
-      return parseFinalRound(roundNum, roundName, categoryRowElm, clueRowElms[0]);
-    }
-    return parseNormalRound(roundNum, roundName, categoryRowElm, clueRowElms);
   }
   function parseContestant(contestantsPElm) {
     let id = 0;
@@ -240,7 +330,7 @@
       title: (gameTitleElm == null ? void 0 : gameTitleElm.textContent) || "",
       comments: (gameCommentsElm == null ? void 0 : gameCommentsElm.textContent) || "",
       contestants: contestantsTableElm ? parseContestants(contestantsTableElm) : [],
-      rounds: roundElms.map((roundElm, roundNum) => parseRound(roundNum, roundElm))
+      rounds: roundElms.map((roundElm, roundNum) => parseRound(roundNum, roundElms.length, roundElm))
     };
   }
   const DEV = false;
@@ -2692,8 +2782,7 @@
       response: {
         correctResponse: "",
         comments: [],
-        incorrectResponders: [],
-        correctResponder: null
+        responders: []
       },
       dailyDoubleWager: null,
       finalJeopardyResponses: []
@@ -2748,9 +2837,9 @@
   function noop() {
     return;
   }
-  var root_1$3 = /* @__PURE__ */ template(`<div class="ico-extra svelte-jiifq5">*</div>`);
-  var root_2$2 = /* @__PURE__ */ template(`<div class="category_comments svelte-jiifq5"> </div>`);
-  var root$3 = /* @__PURE__ */ template(`<div class="category_cell svelte-jiifq5" role="columnheader"><!> <button class="category svelte-jiifq5"><div> </div> <!></button></div>`);
+  var root_1$3 = /* @__PURE__ */ template(`<div class="ico-extra svelte-63tsd7">✱</div>`);
+  var root_2$2 = /* @__PURE__ */ template(`<div class="category_comments svelte-63tsd7"> </div>`);
+  var root$3 = /* @__PURE__ */ template(`<div class="category_cell svelte-63tsd7" role="columnheader"><!> <button class="category svelte-63tsd7"><div> </div> <!></button></div>`);
   function CategoryCell($$anchor, $$props) {
     push($$props, true);
     let onclick = prop($$props, "onclick", 3, noop);
@@ -2773,7 +2862,7 @@
       (_a = onclick()) == null ? void 0 : _a.apply(this, $$args);
     };
     var div_2 = child(button);
-    set_class(div_2, clsx(categoryNameClasses), "svelte-jiifq5");
+    set_class(div_2, clsx(categoryNameClasses), "svelte-63tsd7");
     var text = child(div_2, true);
     reset(div_2);
     var node_1 = sibling(div_2, 2);
@@ -2860,18 +2949,24 @@
     var _a;
     return (_a = get(dialog)) == null ? void 0 : _a.close();
   };
-  var root_2$1 = /* @__PURE__ */ template(`<div class="responder svelte-r4f1vo" data-state="incorrect"> </div>`);
-  var root_3$1 = /* @__PURE__ */ template(`<div class="responder svelte-r4f1vo" data-state="correct"> </div>`);
-  var root_4 = /* @__PURE__ */ template(`<div class="responder svelte-r4f1vo" data-state="incorrect">Triple Stumper</div>`);
+  var root_2$1 = /* @__PURE__ */ template(`<div class="responder svelte-r4f1vo"> </div>`);
+  var root_3$1 = /* @__PURE__ */ template(`<div class="responder svelte-r4f1vo" data-state="incorrect">Triple Stumper</div>`);
   var root_1$1 = /* @__PURE__ */ template(`<div class="responders svelte-r4f1vo"><!> <!></div>`);
-  var root_5 = /* @__PURE__ */ template(` <br>`, 1);
-  var root$1 = /* @__PURE__ */ template(`<dialog class="clue_modal svelte-r4f1vo" aria-modal="true" tabindex="-1"><div class="modal_content svelte-r4f1vo"><div class="ico-close svelte-r4f1vo" aria-label="Close">&#x2716;</div> <div class="ico-extra svelte-r4f1vo">*</div> <!> <div class="modal_main svelte-r4f1vo"><div class="daily_double svelte-r4f1vo">Daily Double</div> <div class="clue svelte-r4f1vo"><!></div> <div class="correct_response svelte-r4f1vo"> <div class="response_comments svelte-r4f1vo"><hr> <!></div></div> <div class="final_responses"></div></div></div></dialog>`);
+  var root_4 = /* @__PURE__ */ template(` <br>`, 1);
+  var root$1 = /* @__PURE__ */ template(`<dialog class="clue_modal svelte-r4f1vo" aria-modal="true" tabindex="-1"><div class="modal_content svelte-r4f1vo"><div class="ico-close svelte-r4f1vo" aria-label="Close">&#x2716;</div> <div class="ico-extra svelte-r4f1vo">✱</div> <!> <div class="modal_main svelte-r4f1vo"><div class="daily_double svelte-r4f1vo">Daily Double</div> <div class="clue svelte-r4f1vo"><!></div> <div class="correct_response svelte-r4f1vo"> <div class="response_comments svelte-r4f1vo"><hr> <!></div></div> <div class="final_responses"></div></div></div></dialog>`);
   function ClueModal($$anchor, $$props) {
     push($$props, true);
     let dialog = state(void 0);
     let showExtra = state(false);
+    let tripleStumper = state(false);
     user_effect(() => {
       if (clueDisplay.show) {
+        set(tripleStumper, true);
+        clueDisplay.clue.response.responders.forEach((responder) => {
+          if (responder.correct) {
+            set(tripleStumper, false);
+          }
+        });
         showDialog();
       }
     });
@@ -2925,29 +3020,24 @@
       var consequent_1 = ($$anchor2) => {
         var div_3 = root_1$1();
         var node_1 = child(div_3);
-        each(node_1, 17, () => clueDisplay.clue.response.incorrectResponders, index, ($$anchor3, incorrectResponder) => {
+        each(node_1, 17, () => clueDisplay.clue.response.responders, (responder) => responder.player, ($$anchor3, responder) => {
           var div_4 = root_2$1();
           var text = child(div_4, true);
           reset(div_4);
-          template_effect(() => set_text(text, get(incorrectResponder)));
+          template_effect(() => {
+            set_attribute(div_4, "data-state", get(responder).correct ? "correct" : "incorrect");
+            set_text(text, get(responder).player);
+          });
           append($$anchor3, div_4);
         });
         var node_2 = sibling(node_1, 2);
         {
           var consequent = ($$anchor3) => {
             var div_5 = root_3$1();
-            var text_1 = child(div_5, true);
-            reset(div_5);
-            template_effect(() => set_text(text_1, clueDisplay.clue.response.correctResponder));
             append($$anchor3, div_5);
           };
-          var alternate = ($$anchor3) => {
-            var div_6 = root_4();
-            append($$anchor3, div_6);
-          };
           if_block(node_2, ($$render) => {
-            if (clueDisplay.clue.response.correctResponder) $$render(consequent);
-            else $$render(alternate, false);
+            if (get(tripleStumper)) $$render(consequent);
           });
         }
         reset(div_3);
@@ -2957,44 +3047,44 @@
         if (!clueDisplay.clue.finalJeopardy && clueDisplay.state == ClueDisplayStates.CorrectResponse) $$render(consequent_1);
       });
     }
-    var div_7 = sibling(node, 2);
-    var div_8 = child(div_7);
-    var div_9 = sibling(div_8, 2);
-    var node_3 = child(div_9);
+    var div_6 = sibling(node, 2);
+    var div_7 = child(div_6);
+    var div_8 = sibling(div_7, 2);
+    var node_3 = child(div_8);
     html(node_3, () => clueDisplay.clue.clueHTML);
-    reset(div_9);
-    var div_10 = sibling(div_9, 2);
-    var text_2 = child(div_10);
-    var div_11 = sibling(text_2);
-    var node_4 = sibling(child(div_11), 2);
+    reset(div_8);
+    var div_9 = sibling(div_8, 2);
+    var text_1 = child(div_9);
+    var div_10 = sibling(text_1);
+    var node_4 = sibling(child(div_10), 2);
     each(node_4, 17, () => clueDisplay.clue.response.comments, index, ($$anchor2, comment2) => {
       next();
-      var fragment = root_5();
-      var text_3 = first_child(fragment);
+      var fragment = root_4();
+      var text_2 = first_child(fragment);
       next();
-      template_effect(() => set_text(text_3, `${get(comment2) ?? ""} `));
+      template_effect(() => set_text(text_2, `${get(comment2) ?? ""} `));
       append($$anchor2, fragment);
     });
-    reset(div_11);
     reset(div_10);
-    var div_12 = sibling(div_10, 2);
-    reset(div_7);
+    reset(div_9);
+    var div_11 = sibling(div_9, 2);
+    reset(div_6);
     reset(div);
     reset(dialog_1);
     bind_this(dialog_1, ($$value) => set(dialog, $$value), () => get(dialog));
     template_effect(() => {
       set_attribute(dialog_1, "aria-hidden", !clueDisplay.show);
       div_2.hidden = clueDisplay.clue.response.comments.length == 0 || clueDisplay.state != ClueDisplayStates.CorrectResponse;
-      div_8.hidden = clueDisplay.state != ClueDisplayStates.DailyDouble;
-      div_9.hidden = clueDisplay.state != ClueDisplayStates.Clue;
-      div_10.hidden = clueDisplay.state != ClueDisplayStates.CorrectResponse;
-      set_text(text_2, `${clueDisplay.clue.response.correctResponse ?? ""} `);
-      div_11.hidden = clueDisplay.clue.response.comments.length == 0 || !get(showExtra);
-      div_12.hidden = clueDisplay.state != ClueDisplayStates.FinalResponses;
+      div_7.hidden = clueDisplay.state != ClueDisplayStates.DailyDouble;
+      div_8.hidden = clueDisplay.state != ClueDisplayStates.Clue;
+      div_9.hidden = clueDisplay.state != ClueDisplayStates.CorrectResponse;
+      set_text(text_1, `${clueDisplay.clue.response.correctResponse ?? ""} `);
+      div_10.hidden = clueDisplay.clue.response.comments.length == 0 || !get(showExtra);
+      div_11.hidden = clueDisplay.state != ClueDisplayStates.FinalResponses;
     });
     event("close", dialog_1, onCloseDialog);
-    event("mouseenter", div_7, () => set(showExtra, true));
-    event("mouseleave", div_7, () => set(showExtra, false));
+    event("mouseenter", div_6, () => set(showExtra, true));
+    event("mouseleave", div_6, () => set(showExtra, false));
     append($$anchor, dialog_1);
     pop();
   }
