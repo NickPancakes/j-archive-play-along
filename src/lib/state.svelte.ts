@@ -17,8 +17,7 @@ export const clueDisplay: ClueDisplay = $state({
     response: {
       correctResponse: "",
       comments: [],
-      incorrectResponders: [],
-      correctResponder: null,
+      responders: [],
     },
     dailyDoubleWager: null,
     finalJeopardyResponses: [],

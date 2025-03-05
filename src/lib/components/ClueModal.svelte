@@ -6,9 +6,16 @@
 
   let dialog: HTMLDialogElement | undefined = $state();
   let showExtra: boolean = $state(false);
+  let tripleStumper: boolean = $state(false);
 
   $effect(() => {
     if (clueDisplay.show) {
+      tripleStumper = true;
+      clueDisplay.clue.response.responders.forEach((responder) => {
+        if (responder.correct) {
+          tripleStumper = false;
+        }
+      });
       showDialog();
     }
   });
@@ -71,17 +78,13 @@
 
     {#if !clueDisplay.clue.finalJeopardy && clueDisplay.state == ClueDisplayStates.CorrectResponse}
       <div class="responders">
-        {#each clueDisplay.clue.response.incorrectResponders as incorrectResponder}
-          <div class="responder" data-state="incorrect">
-            {incorrectResponder}
+        {#each clueDisplay.clue.response.responders as responder (responder.player)}
+          <div class="responder" data-state={responder.correct ? "correct" : "incorrect"}>
+            {responder.player}
           </div>
         {/each}
 
-        {#if clueDisplay.clue.response.correctResponder}
-          <div class="responder" data-state="correct">
-            {clueDisplay.clue.response.correctResponder}
-          </div>
-        {:else}
+        {#if tripleStumper}
           <div class="responder" data-state="incorrect">Triple Stumper</div>
         {/if}
       </div>

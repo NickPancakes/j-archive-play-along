@@ -7,7 +7,7 @@ export const RoundName = {
 } as const;
 
 
-export type FinalJeopardyResponse = {
+export type Responder = {
     player: string;
     wager: number;
     response: string;
@@ -17,8 +17,7 @@ export type FinalJeopardyResponse = {
 export type ClueResponse = {
     correctResponse: string;
     comments: string[];
-    incorrectResponders: string[];
-    correctResponder: string | null;
+    responders: Responder[];
 }
 
 export type UnselectedClueData = {
@@ -38,7 +37,6 @@ export type ClueData = {
     clueHTML: string;
     response: ClueResponse;
     dailyDoubleWager: number | null;
-    finalJeopardyResponses: FinalJeopardyResponse[];
 }
 
 
@@ -56,6 +54,7 @@ export type CategoryData = {
 export type ScoreBlockPlayer = {
     name: string;
     score: number;
+    remarks: string;
 }
 
 export type ScoreBlockData = {

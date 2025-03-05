@@ -1,5 +1,15 @@
-import type { CategoryData, ClueResponse, ContestantData, GameData, OptionalClueData, RoundData, ScoreBlockData, } from "$lib/types.ts";
-import { RoundName } from "$lib/types.ts";
+import {
+    type CategoryData,
+    type ClueResponse,
+    type ContestantData,
+    type GameData,
+    type OptionalClueData,
+    type Responder,
+    type RoundData,
+    type ScoreBlockData,
+    type ScoreBlockPlayer,
+    RoundName,
+} from "$lib/types.ts";
 
 function roundIDToName(roundID: string): string {
     switch (roundID) {
@@ -33,10 +43,38 @@ function clueIDToGridPosition(clueID: string): [number, number, number] {
     return [1, row, col];
 }
 
+function parseResponsesTable(childElm: Element): Responder[] | null {
+    // const rowElms = childElm.querySelectorAll("tr");
+
+    let responders: Responder[] = [];
+
+    const rightElm = childElm.querySelector("td.right");
+    if (rightElm && rightElm.textContent) {
+        responders.push({
+            player: rightElm.textContent,
+            wager: 0,
+            response: "",
+            correct: true,
+        })
+    }
+
+    for (var wrongElm of childElm.querySelectorAll("td.wrong")) {
+        if (wrongElm.textContent && wrongElm.textContent != "Triple Stumper") {
+            responders.push({
+                player: wrongElm.textContent,
+                wager: 0,
+                response: "",
+                correct: false,
+            })
+        }
+    }
+
+    return responders.length > 0 ? responders : null;
+}
+
 function parseClueResponse(responseElm: Element): ClueResponse {
     let correctResponse: string = "";
-    let correctResponder: string | null = null;
-    let incorrectResponders: string[] = [];
+    let responders: Responder[] = [];
     let comments: string[] = [];
 
     let sameLine = false;
@@ -52,34 +90,53 @@ function parseClueResponse(responseElm: Element): ClueResponse {
             }
         } else {
             const childElm = childNode as Element;
-            if (childElm.tagName == "SPAN") {
-                comments[comments.length - 1] += childElm.textContent || "";
-                sameLine = true;
-            } else if (childElm.tagName == "EM") {
-                correctResponse = childElm.textContent || "";
-            } else if (childElm.tagName == "TABLE") {
-                const rightElm = childElm.querySelector("td.right");
-                if (rightElm && rightElm.textContent) {
-                    correctResponder = rightElm.textContent;
-                }
-                for (var incorrectResponderElm of childElm.querySelectorAll("td.wrong")) {
-                    if (incorrectResponderElm.textContent && incorrectResponderElm.textContent != "Triple Stumper") {
-                        incorrectResponders.push(incorrectResponderElm.textContent);
+            switch (childElm.tagName) {
+                case "EM":
+                    correctResponse = childElm.textContent || "";
+                    break;
+                case "TABLE":
+                    const parsedResponses = parseResponsesTable(childElm);
+                    if (parsedResponses) {
+                        responders = parsedResponses;
                     }
-                }
+                    break;
+                default:
+                    comments[comments.length - 1] += childElm.textContent || "";
+                    sameLine = true;
+                    break;
             }
         }
     }
 
+    console.log(responders);
     return {
         correctResponse: correctResponse,
         comments: comments,
-        incorrectResponders: incorrectResponders,
-        correctResponder: correctResponder,
+        responders: responders,
     };
 }
 
-function parseClue(roundNum: number, categoryNum: number, clueNum: number, clueElm: Element): OptionalClueData {
+
+function parseFinalClue(roundNum: number, categoryNum: number, clueNum: number, clueElm: Element): OptionalClueData {
+    const clueTextElms = clueElm.querySelectorAll("td.clue_text");
+    const clueHTML = clueTextElms[0].innerHTML ?? "";
+    const responseElm = clueTextElms[1];
+    const clueResponse = parseClueResponse(responseElm);
+
+    return {
+        roundNum: roundNum,
+        categoryNum: categoryNum,
+        clueNum: clueNum,
+        value: 0,
+        playOrder: 0,
+        clueHTML: clueHTML,
+        response: clueResponse,
+        dailyDouble: false,
+        dailyDoubleWager: null,
+        finalJeopardy: true,
+    };
+}
+function parseClue(roundNum: number, totalRounds: number, categoryNum: number, clueNum: number, clueElm: Element): OptionalClueData {
 
     let playOrder = "0";
     let dailyDouble = false;
@@ -105,20 +162,23 @@ function parseClue(roundNum: number, categoryNum: number, clueNum: number, clueE
     const responseElm = clueTextElms[1];
     const clueResponse = parseClueResponse(responseElm);
 
+    const baseValue = totalRounds > 3 ? 100 : 200;
+    const value = baseValue * (roundNum + 1) * (clueNum + 1)
+
     return {
         roundNum: roundNum,
         categoryNum: categoryNum,
         clueNum: clueNum,
-        value: 100 * (roundNum + 1) * (clueNum + 1),
+        value: value,
         playOrder: parseInt(playOrder),
         clueHTML: clueHTML,
         response: clueResponse,
         dailyDouble: dailyDouble,
         dailyDoubleWager: null,
         finalJeopardy: false,
-        finalJeopardyResponses: []
     };
 }
+
 
 function parseCategory(roundNum: number, categoryNum: number, clues: OptionalClueData[], categoryElm: Element): CategoryData {
     const titleElm = categoryElm.querySelector(".category_name");
@@ -133,14 +193,21 @@ function parseCategory(roundNum: number, categoryNum: number, clues: OptionalClu
     };
 }
 
-function parseScoreBlock(scoreBlockElm: Element): ScoreBlockData {
-    return {
-        title: "",
-        players: [],
-    }
-}
 
-function parseFinalRound(roundNum: number, roundName: string, categoryRowElm: Element, clueRowElm: Element): RoundData {
+function parseFinalRoundTable(roundNum: number, tableElm: Element): CategoryData[] {
+    const tbodyElm = tableElm.querySelector("tbody");
+    if (!tbodyElm) {
+        throw new Error("Could not find  in round element");
+    }
+
+    const rowElms = Array.from(tbodyElm.children);
+    if (rowElms.length < 2) {
+        throw new Error("Not enough rows in table.round");
+    }
+
+    const categoryRowElm = rowElms[0];
+    const clueRowElm = rowElms[1];
+
     const clueElm = clueRowElm.querySelector("td.clue");
     if (!clueElm) {
         throw new Error("Could not find td.clue in final round clue row");
@@ -151,18 +218,26 @@ function parseFinalRound(roundNum: number, roundName: string, categoryRowElm: El
         throw new Error("Could not find td.category in final round category row");
     }
 
-    const clue = parseClue(roundNum, 1, 0, clueElm);
+    const clue = parseFinalClue(roundNum, 1, 0, clueElm);
     const category = parseCategory(roundNum, 1, [clue], categoryElm);
 
-    return {
-        roundNum: roundNum,
-        name: roundName,
-        categories: [category],
-        scoreBlocks: [],
-    };
+    return [category];
 }
 
-function parseNormalRound(roundNum: number, roundName: string, categoryRowElm: Element, clueRowElms: Element[]): RoundData {
+function parseNormalRoundTable(roundNum: number, totalRounds: number, tableElm: Element): CategoryData[] {
+    const tbodyElm = tableElm.querySelector("tbody");
+    if (!tbodyElm) {
+        throw new Error("Could not find tbody in round element");
+    }
+
+    const rowElms = Array.from(tbodyElm.children);
+    if (rowElms.length < 2) {
+        throw new Error("Not enough rows in table.round");
+    }
+
+    const categoryRowElm = rowElms[0];
+    const clueRowElms = rowElms.slice(1);
+
     let cluesPerCategory: OptionalClueData[][] = [
         [],
         [],
@@ -176,7 +251,7 @@ function parseNormalRound(roundNum: number, roundName: string, categoryRowElm: E
         const clueElms = Array.from(clueRowElms[clueNum].querySelectorAll("td.clue"));
         for (let categoryNum = 0; categoryNum < clueElms.length; categoryNum++) {
             const clueElm = clueElms[categoryNum];
-            const clue = parseClue(roundNum, categoryNum, clueNum, clueElm);
+            const clue = parseClue(roundNum, totalRounds, categoryNum, clueNum, clueElm);
             cluesPerCategory[categoryNum][clueNum] = clue;
         }
     }
@@ -189,36 +264,77 @@ function parseNormalRound(roundNum: number, roundName: string, categoryRowElm: E
         categories.push(category);
     }
 
+    return categories;
+}
+
+function parseScoreBlock(title: string, scoreTableElm: Element): ScoreBlockData {
+    let players: ScoreBlockPlayer[] = [
+        { name: "", score: 0, remarks: "" },
+        { name: "", score: 0, remarks: "" },
+        { name: "", score: 0, remarks: "" },
+    ];
+
+    const rowElms = Array.from(scoreTableElm.querySelectorAll("tr"));
+    if (rowElms.length < 2) {
+        throw new Error("Not enough rows in table.score_block");
+    }
+
+    const namesRowElm = rowElms[0];
+    const scoresRowElm = rowElms[1];
+    const remarksRowElm = rowElms[2];
+
+    for (let playerNum = 0; playerNum < 3; playerNum++) {
+        const nameElm = namesRowElm.children[playerNum];
+        const scoreElm = scoresRowElm.children[playerNum];
+        const remarksElm = remarksRowElm?.children[playerNum];
+
+        const scoreText = (scoreElm?.textContent || "$0").replaceAll("$", "").replaceAll(",", "");
+
+        players[playerNum] = {
+            name: nameElm.textContent || "",
+            score: parseInt(scoreText),
+            remarks: remarksElm?.textContent || "",
+        };
+    }
+
+    return {
+        title: title,
+        players: players,
+    }
+}
+
+function parseRound(roundNum: number, totalRounds: number, roundElm: Element): RoundData {
+    const roundName = roundIDToName(roundElm.id);
+
+    let categories: CategoryData[] = [];
+    let scoreBlocks: ScoreBlockData[] = [];
+
+    let currentScoreBlockTitle: string = "";
+
+    for (let childElm of roundElm.children) {
+        switch (childElm.tagName) {
+            case "H3":
+                currentScoreBlockTitle = childElm.textContent || "";
+                break;
+            case "TABLE":
+                if (childElm.className == "round") {
+                    categories = parseNormalRoundTable(roundNum, totalRounds, childElm);
+                } else if (childElm.className == "final_round") {
+                    categories = parseFinalRoundTable(roundNum, childElm);
+                } else {
+                    scoreBlocks.push(parseScoreBlock(currentScoreBlockTitle, childElm));
+                }
+                break;
+        }
+    }
+
+
     return {
         roundNum: roundNum,
         name: roundName,
         categories: categories,
-        scoreBlocks: [],
-    };
-}
-
-function parseRound(roundNum: number, roundElm: Element): RoundData {
-    const roundName = roundIDToName(roundElm.id);
-
-    const tbodyElm = roundElm.querySelector("table > tbody");
-    if (!tbodyElm) {
-        throw new Error("Could not find table > tbody in round element");
+        scoreBlocks: scoreBlocks,
     }
-
-    const rowElms = Array.from(tbodyElm.children);
-    if (rowElms.length < 2) {
-        throw new Error("Not enough rows in table.round");
-    }
-
-    const categoryRowElm = rowElms[0];
-    const clueRowElms = rowElms.slice(1);
-
-    if (roundName == RoundName.FinalJeopardy) {
-        return parseFinalRound(roundNum, roundName, categoryRowElm, clueRowElms[0]);
-    }
-
-    return parseNormalRound(roundNum, roundName, categoryRowElm, clueRowElms);
-
 }
 
 function parseContestant(contestantsPElm: Element): ContestantData {
@@ -268,6 +384,6 @@ export function parseGame(contentElm: Element): GameData {
         title: gameTitleElm?.textContent || "",
         comments: gameCommentsElm?.textContent || "",
         contestants: contestantsTableElm ? parseContestants(contestantsTableElm) : [],
-        rounds: roundElms.map((roundElm, roundNum) => parseRound(roundNum, roundElm)),
+        rounds: roundElms.map((roundElm, roundNum) => parseRound(roundNum, roundElms.length, roundElm)),
     };
 } 

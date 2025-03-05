@@ -90,7 +90,7 @@
   }
 
   div.final {
-    font-size: clamp(1rem, 4vmin, 9rem);
+    font-size: clamp(1rem, 6vmin, 6rem);
   }
 
   div.category_comments {
@@ -108,7 +108,7 @@
     padding-left: 0.2rem;
     color: var(--white);
     grid-area: top;
-    font-size: clamp(1rem, 1cqmin, 9rem);
+    font-size: clamp(0.25rem, 1.5cqmin, 9rem);
     font-family: arial, sans-serif;
     text-align: left;
     vertical-align: center;
