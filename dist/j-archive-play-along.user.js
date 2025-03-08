@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         j-archive-play-along
 // @namespace    https://github.com/NickPancakes/j-archive-play-along
-// @version      0.0.4
+// @version      0.0.5
 // @author       NickPancakes
 // @description  Transforms J! Archive games UI to play along.
 // @iconURL      https://www.google.com/s2/favicons?sz=16&domain=j-archive.com
@@ -13,7 +13,7 @@
 // @grant        GM_addStyle
 // ==/UserScript==
 
-(e=>{if(typeof GM_addStyle=="function"){GM_addStyle(e);return}const t=document.createElement("style");t.textContent=e,document.head.append(t)})(' @import"https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap";@import"https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght,YOPQ@100..900,40..300&display=swap";@import"https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap";:root{--clue-depth-bottom: #000088;--clue-depth-left: #0000ee;--clue-depth-right: #000099;--clue-depth-top: #0000ff}#content{max-width:unset;min-width:unset}.clue_cell.svelte-whch0{border-width:.2rem;border-style:outset;display:grid;place-content:center;place-items:center;text-align:center;background-color:var(--clue-screen-blue);border-bottom-color:var(--clue-depth-bottom);border-left-color:var(--clue-depth-left);border-right-color:var(--clue-depth-right);border-top-color:var(--clue-depth-top);grid-template-rows:15% 70% 15%;grid-template-columns:100%;grid-template-areas:"top" "main" "bottom"}.order_text.svelte-whch0{padding-top:.2rem;padding-right:.2rem;font-size:clamp(.1rem,1.5cqmin,9rem);color:var(--white);text-align:right;vertical-align:middle;grid-area:top}.value_text.svelte-whch0{font-family:Swiss911 Cm BT,Open Sans,helvetica,arial,verdana,sans-serif;font-size:clamp(1rem,7cqmin,12rem);background-color:var(--clue-screen-blue);color:var(--font-yellow);text-shadow:.1em .1em 0px #000000;text-align:center;vertical-align:middle;font-weight:800;grid-area:main;border-style:none;padding:0}div.category_cell.svelte-63tsd7{border-width:.2rem;border-style:outset;display:grid;place-content:center;place-items:center;color:var(--white);text-align:center;vertical-align:middle;font-weight:700;background-color:var(--clue-screen-blue);border-bottom-color:var(--clue-depth-bottom);border-left-color:var(--clue-depth-left);border-right-color:var(--clue-depth-right);border-top-color:var(--clue-depth-top);grid-row:1;grid-template-rows:15% 70% 15%;grid-template-columns:100%;grid-template-areas:"top" "main" "bottom"}button.category.svelte-63tsd7{width:100%;height:100%;background-color:var(--clue-screen-blue);border-style:none;grid-area:main;padding:0;color:var(--white)}div.category_name.svelte-63tsd7{font-family:Swiss911 Cm BT,Open Sans,helvetica,arial,verdana,sans-serif;font-size:clamp(.25rem,2.5cqmin,9rem);text-shadow:.1em .1em 0px #000000;text-align:center;text-wrap:balance;vertical-align:middle;font-weight:700}div.final.svelte-63tsd7{font-size:clamp(1rem,6vmin,6rem)}div.category_comments.svelte-63tsd7{text-align:center;vertical-align:middle;font-size:clamp(.2rem,2cqmin,8rem);text-wrap:balance;grid-area:main}.ico-extra.svelte-63tsd7{width:100%;height:100%;padding-top:.2rem;padding-left:.2rem;color:var(--white);grid-area:top;font-size:clamp(.25rem,1.5cqmin,9rem);font-family:arial,sans-serif;text-align:left;vertical-align:center;text-shadow:-1px 0 black,0 1px black,1px 0 black,0 -1px black}div.board.svelte-17irm38{height:100%;width:100%;display:grid;gap:.1rem;place-content:center;grid-auto-flow:row dense;grid-template-columns:repeat(6,minmax(0,1fr));grid-template-rows:repeat(1,minmax(0,.9fr)) repeat(5,minmax(0,1fr))}div.final_board.svelte-17irm38{height:50%;width:100%;display:grid;gap:.1rem;place-content:center;grid-auto-flow:row dense;grid-template-columns:minmax(0,.5fr) minmax(0,1fr) minmax(0,.5fr);grid-template-rows:minmax(0,1fr)}dialog.clue_modal.svelte-r4f1vo{width:90%;height:90%;position:fixed;border-width:1em;border-style:outset;background-color:var(--clue-screen-blue);border-bottom-color:var(--clue-depth-bottom);border-left-color:var(--clue-depth-left);border-right-color:var(--clue-depth-right);border-top-color:var(--clue-depth-top)}.modal_content.svelte-r4f1vo{width:100%;height:100%;display:grid;grid-template-columns:5% 90% 5%;grid-template-rows:5% 85% 10%;grid-template-areas:"tl tc tr" "ml main mr" "bl bc br";place-content:center;place-items:center}.modal_main.svelte-r4f1vo{grid-area:main;color:var(--white);text-align:center;font-weight:700;vertical-align:middle;text-wrap:pretty;line-height:1.25}.daily_double.svelte-r4f1vo{text-transform:uppercase;font-family:Futura,Kumbh Sans,Century Gothic,sans-serif;font-weight:800;font-size:clamp(1rem,24vmin,30rem);text-shadow:.3rem .3rem 0px #000000}.clue.svelte-r4f1vo{text-transform:uppercase;font-family:ITC Korinna Std,Libre Baskerville,Times New Roman,serif;font-size:clamp(1rem,7vmin,9rem);text-shadow:.3rem .3rem 0px #000000}.correct_response.svelte-r4f1vo{text-transform:uppercase;color:var(--aqua-blue);font-family:ITC Korinna Std,Libre Baskerville,Times New Roman,serif;font-size:clamp(1rem,7vmin,9rem);text-shadow:.3rem .3rem 0px #000000}.response_comments.svelte-r4f1vo{text-transform:none;text-shadow:none;font-size:clamp(1rem,4vmin,9rem);color:var(--white);text-align:center;vertical-align:middle}.responders.svelte-r4f1vo{grid-area:bc;display:flex;font-size:clamp(1rem,3vmin,9rem);text-align:center;vertical-align:middle;flex-direction:row}.responder[data-state=correct].svelte-r4f1vo{color:var(--lime-green)}.responder[data-state=incorrect].svelte-r4f1vo{color:var(--error-red)}.ico-close.svelte-r4f1vo{width:100%;height:100%;color:var(--white);grid-area:tr;font-size:clamp(1rem,3vmin,9rem);font-family:arial,sans-serif;text-align:right;vertical-align:center;text-shadow:.3rem .3rem 0px #000000}.ico-extra.svelte-r4f1vo{width:100%;height:100%;color:var(--white);grid-area:tl;font-size:clamp(1rem,5vmin,9rem);font-family:arial,sans-serif;text-align:left;vertical-align:center;text-shadow:.3rem .3rem 0px #000000}dialog.svelte-r4f1vo::backdrop{background:#0000004d}dialog[open].svelte-r4f1vo{animation:svelte-r4f1vo-zoom .3s cubic-bezier(.34,1.56,.64,1)}@keyframes svelte-r4f1vo-zoom{0%{transform:scale(.95)}to{transform:scale(1)}}dialog[open].svelte-r4f1vo::backdrop{animation:svelte-r4f1vo-fade .2s ease-out}@keyframes svelte-r4f1vo-fade{0%{opacity:0}to{opacity:1}}#game_title.svelte-1ybnarh{display:flex;flex-wrap:nowrap;justify-content:space-around;align-items:center}#game_title.svelte-1ybnarh>a:where(.svelte-1ybnarh){font-size:clamp(.5rem,2vmin,6rem)}div.tabs.svelte-1ybnarh{height:100%;width:100%}div.round-tabs-list.svelte-1ybnarh{flex:auto;width:100%;display:flex;flex-direction:row;justify-content:center;border-bottom-width:.25em;border-bottom-style:outset;border-bottom-color:var(--background-dark-blue)}div.round-tabs-content.svelte-1ybnarh{height:100vh;width:100%}button.round-tab.svelte-1ybnarh{flex:1;display:flex;flex-direction:row;place-content:center;border-width:.1em;border-style:outset;background-color:var(--clue-depth-bottom);border-bottom-color:var(--clue-depth-bottom);border-left-color:var(--clue-depth-left);border-right-color:var(--clue-depth-right);border-top-color:var(--clue-depth-top);color:var(--disclaimer-gray);text-shadow:2px 2px 0px #000000;font-size:clamp(1rem,3vmin,9rem);text-align:center;vertical-align:middle;font-weight:700}button.round-tab[data-state=active].svelte-1ybnarh{flex:1.5;background-color:var(--clue-screen-blue);color:var(--white)} ');
+(e=>{if(typeof GM_addStyle=="function"){GM_addStyle(e);return}const t=document.createElement("style");t.textContent=e,document.head.append(t)})(' @import"https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap";@import"https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght,YOPQ@100..900,40..300&display=swap";@import"https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap";:root{--clue-depth-bottom: #000088;--clue-depth-left: #0000ee;--clue-depth-right: #000099;--clue-depth-top: #0000ff}#content{max-width:unset;min-width:unset}.clue_cell.svelte-whch0{border-width:.2rem;border-style:outset;display:grid;place-content:center;place-items:center;text-align:center;background-color:var(--clue-screen-blue);border-bottom-color:var(--clue-depth-bottom);border-left-color:var(--clue-depth-left);border-right-color:var(--clue-depth-right);border-top-color:var(--clue-depth-top);grid-template-rows:15% 70% 15%;grid-template-columns:100%;grid-template-areas:"top" "main" "bottom"}.order_text.svelte-whch0{padding-top:.2rem;padding-right:.2rem;font-size:clamp(.1rem,1.5cqmin,9rem);color:var(--white);text-align:right;vertical-align:middle;grid-area:top}.value_text.svelte-whch0{font-family:Swiss911 Cm BT,Open Sans,helvetica,arial,verdana,sans-serif;font-size:clamp(1rem,7cqmin,12rem);background-color:var(--clue-screen-blue);color:var(--font-yellow);text-shadow:.1em .1em 0px #000000;text-align:center;vertical-align:middle;font-weight:800;grid-area:main;border-style:none;padding:0}div.category_cell.svelte-63tsd7{border-width:.2rem;border-style:outset;display:grid;place-content:center;place-items:center;color:var(--white);text-align:center;vertical-align:middle;font-weight:700;background-color:var(--clue-screen-blue);border-bottom-color:var(--clue-depth-bottom);border-left-color:var(--clue-depth-left);border-right-color:var(--clue-depth-right);border-top-color:var(--clue-depth-top);grid-row:1;grid-template-rows:15% 70% 15%;grid-template-columns:100%;grid-template-areas:"top" "main" "bottom"}button.category.svelte-63tsd7{width:100%;height:100%;background-color:var(--clue-screen-blue);border-style:none;grid-area:main;padding:0;color:var(--white)}div.category_name.svelte-63tsd7{font-family:Swiss911 Cm BT,Open Sans,helvetica,arial,verdana,sans-serif;font-size:clamp(.25rem,2.5cqmin,9rem);text-shadow:.1em .1em 0px #000000;text-align:center;text-wrap:balance;vertical-align:middle;font-weight:700}div.final.svelte-63tsd7{font-size:clamp(1rem,6vmin,6rem)}div.category_comments.svelte-63tsd7{text-align:center;vertical-align:middle;font-size:clamp(.2rem,2cqmin,8rem);text-wrap:balance;grid-area:main}.ico-extra.svelte-63tsd7{width:100%;height:100%;padding-top:.2rem;padding-left:.2rem;color:var(--white);grid-area:top;font-size:clamp(.25rem,1.5cqmin,9rem);font-family:arial,sans-serif;text-align:left;vertical-align:center;text-shadow:-1px 0 black,0 1px black,1px 0 black,0 -1px black}div.board.svelte-qvpibm{height:100vh;width:100%;display:grid;gap:.1rem;place-content:center;grid-auto-flow:column dense;grid-template-columns:repeat(6,minmax(0,1fr));grid-template-rows:repeat(1,minmax(0,.9fr)) repeat(5,minmax(0,1fr))}div.final_board.svelte-qvpibm{height:50vh;width:100%;display:grid;gap:.1rem;place-content:center;grid-auto-flow:row dense;grid-template-columns:minmax(0,.5fr) minmax(0,1fr) minmax(0,.5fr);grid-template-rows:minmax(0,1fr)}div.score_blocks.svelte-qvpibm{height:75vh;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem}div.score_gap.svelte-qvpibm{height:25vh}div.score_block.svelte-qvpibm{height:100%;width:50%;border-width:.2rem;border-style:outset;background-color:var(--clue-screen-blue);border-bottom-color:var(--clue-depth-bottom);border-left-color:var(--clue-depth-left);border-right-color:var(--clue-depth-right);border-top-color:var(--clue-depth-top);place-content:center;place-items:center;text-align:center;font-family:Swiss911 Cm BT,Open Sans,helvetica,arial,verdana,sans-serif;font-size:clamp(.5rem,3.5cqmin,10rem);display:grid;gap:.1rem;grid-auto-flow:row dense;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(4,minmax(0,1fr))}div.score_block_title.svelte-qvpibm{grid-row:1;grid-column:1 / -1;font-size:clamp(1rem,4cqmin,12rem);font-weight:700}div.score_name.svelte-qvpibm{grid-row:2;font-weight:700}div.score_score.svelte-qvpibm{grid-row:3}div.score_remarks.svelte-qvpibm{grid-row:4;font-size:clamp(.5rem,2.5cqmin,8rem)}dialog.clue_modal.svelte-r4f1vo{width:90%;height:90%;position:fixed;border-width:1em;border-style:outset;background-color:var(--clue-screen-blue);border-bottom-color:var(--clue-depth-bottom);border-left-color:var(--clue-depth-left);border-right-color:var(--clue-depth-right);border-top-color:var(--clue-depth-top)}.modal_content.svelte-r4f1vo{width:100%;height:100%;display:grid;grid-template-columns:5% 90% 5%;grid-template-rows:5% 85% 10%;grid-template-areas:"tl tc tr" "ml main mr" "bl bc br";place-content:center;place-items:center}.modal_main.svelte-r4f1vo{grid-area:main;color:var(--white);text-align:center;font-weight:700;vertical-align:middle;text-wrap:pretty;line-height:1.25}.daily_double.svelte-r4f1vo{text-transform:uppercase;font-family:Futura,Kumbh Sans,Century Gothic,sans-serif;font-weight:800;font-size:clamp(1rem,24vmin,30rem);text-shadow:.3rem .3rem 0px #000000}.clue.svelte-r4f1vo{text-transform:uppercase;font-family:ITC Korinna Std,Libre Baskerville,Times New Roman,serif;font-size:clamp(1rem,7vmin,9rem);text-shadow:.3rem .3rem 0px #000000}.correct_response.svelte-r4f1vo{text-transform:uppercase;color:var(--aqua-blue);font-family:ITC Korinna Std,Libre Baskerville,Times New Roman,serif;font-size:clamp(1rem,7vmin,9rem);text-shadow:.3rem .3rem 0px #000000}.response_comments.svelte-r4f1vo{text-transform:none;text-shadow:none;font-size:clamp(1rem,4vmin,9rem);color:var(--white);text-align:center;vertical-align:middle}.responders.svelte-r4f1vo{grid-area:bc;display:flex;font-size:clamp(1rem,3vmin,9rem);text-align:center;vertical-align:middle;flex-direction:row}.responder[data-state=correct].svelte-r4f1vo{color:var(--lime-green)}.responder[data-state=incorrect].svelte-r4f1vo{color:var(--error-red)}.ico-close.svelte-r4f1vo{width:100%;height:100%;color:var(--white);grid-area:tr;font-size:clamp(1rem,3vmin,9rem);font-family:arial,sans-serif;text-align:right;vertical-align:center;text-shadow:.3rem .3rem 0px #000000}.ico-extra.svelte-r4f1vo{width:100%;height:100%;color:var(--white);grid-area:tl;font-size:clamp(1rem,5vmin,9rem);font-family:arial,sans-serif;text-align:left;vertical-align:center;text-shadow:.3rem .3rem 0px #000000}dialog.svelte-r4f1vo::backdrop{background:#0000004d}dialog[open].svelte-r4f1vo{animation:svelte-r4f1vo-zoom .3s cubic-bezier(.34,1.56,.64,1)}@keyframes svelte-r4f1vo-zoom{0%{transform:scale(.95)}to{transform:scale(1)}}dialog[open].svelte-r4f1vo::backdrop{animation:svelte-r4f1vo-fade .2s ease-out}@keyframes svelte-r4f1vo-fade{0%{opacity:0}to{opacity:1}}#game_title.svelte-1c03mbw{display:flex;flex-wrap:nowrap;justify-content:space-around;align-items:center}#game_title.svelte-1c03mbw>a:where(.svelte-1c03mbw){font-size:clamp(.5rem,2vmin,6rem)}div.tabs.svelte-1c03mbw{height:100%;width:100%}div.round-tabs-list.svelte-1c03mbw{flex:auto;width:100%;display:flex;flex-direction:row;justify-content:center;border-bottom-width:.25em;border-bottom-style:outset;border-bottom-color:var(--background-dark-blue)}div.round-tabs-content.svelte-1c03mbw{height:100%;width:100%}button.round-tab.svelte-1c03mbw{flex:1;display:flex;flex-direction:row;place-content:center;border-width:.1em;border-style:outset;background-color:var(--clue-depth-bottom);border-bottom-color:var(--clue-depth-bottom);border-left-color:var(--clue-depth-left);border-right-color:var(--clue-depth-right);border-top-color:var(--clue-depth-top);color:var(--disclaimer-gray);text-shadow:2px 2px 0px #000000;font-size:clamp(1rem,3vmin,9rem);text-align:center;vertical-align:middle;font-weight:700}button.round-tab[data-state=active].svelte-1c03mbw{flex:1.5;background-color:var(--clue-screen-blue);color:var(--white)} ');
 
 (function () {
   'use strict';
@@ -44,9 +44,9 @@
         throw new Error("Unrecognized round ID: " + roundID);
     }
   }
-  function parseResponsesTable(childElm) {
+  function parseNormalResponsesTable(rowElm) {
     let responders = [];
-    const rightElm = childElm.querySelector("td.right");
+    const rightElm = rowElm.querySelector("td.right");
     if (rightElm && rightElm.textContent) {
       responders.push({
         player: rightElm.textContent,
@@ -55,7 +55,7 @@
         correct: true
       });
     }
-    for (var wrongElm of childElm.querySelectorAll("td.wrong")) {
+    for (var wrongElm of rowElm.querySelectorAll("td.wrong")) {
       if (wrongElm.textContent && wrongElm.textContent != "Triple Stumper") {
         responders.push({
           player: wrongElm.textContent,
@@ -66,6 +66,39 @@
       }
     }
     return responders.length > 0 ? responders : null;
+  }
+  function parseFinalResponsesRows(rowElms) {
+    let responders = [
+      { player: "", wager: 0, response: "", correct: false },
+      { player: "", wager: 0, response: "", correct: false },
+      { player: "", wager: 0, response: "", correct: false }
+    ];
+    for (let rowIdx = 0; rowIdx < rowElms.length; rowIdx++) {
+      const rowElm = rowElms[rowIdx];
+      const playerNum = rowIdx / 2 | 0;
+      const tdElms = rowElm.querySelectorAll("td");
+      if (!tdElms) {
+        continue;
+      }
+      if (rowIdx % 2 == 0 && tdElms.length >= 2) {
+        responders[playerNum].correct = tdElms[0].className == "right";
+        responders[playerNum].player = tdElms[0].textContent || "";
+        responders[playerNum].response = tdElms[1].textContent || "";
+      } else {
+        const wager = (tdElms[0].textContent || "$0").replaceAll("$", "").replaceAll(",", "");
+        responders[playerNum].wager = parseInt(wager);
+      }
+    }
+    return responders;
+  }
+  function parseResponsesTable(childElm) {
+    const rowElms = childElm.querySelectorAll("tr");
+    if (rowElms == null) {
+      return null;
+    } else if (rowElms.length == 6) {
+      return parseFinalResponsesRows(Array.from(rowElms));
+    }
+    return parseNormalResponsesTable(childElm);
   }
   function parseClueResponse(responseElm) {
     let correctResponse = "";
@@ -101,7 +134,6 @@
         }
       }
     }
-    console.log(responders);
     return {
       correctResponse,
       comments,
@@ -2897,7 +2929,9 @@
   }
   delegate(["click"]);
   var root_1$2 = /* @__PURE__ */ template(`<!> <!>`, 1);
-  var root$2 = /* @__PURE__ */ template(`<div role="grid"></div>`);
+  var root_5 = /* @__PURE__ */ template(`<div class="score_name svelte-qvpibm"> </div> <div class="score_score svelte-qvpibm"> </div> <div class="score_remarks svelte-qvpibm"> </div>`, 1);
+  var root_4$1 = /* @__PURE__ */ template(`<div class="score_block svelte-qvpibm" role="grid"><div class="score_block_title svelte-qvpibm"> </div> <!></div>`);
+  var root$2 = /* @__PURE__ */ template(`<div role="grid"></div> <div class="score_blocks svelte-qvpibm"><div class="score_gap svelte-qvpibm"></div> <!></div>`, 1);
   function Round($$anchor, $$props) {
     push($$props, true);
     const finalRound = $$props.round.categories[0].clues.length == 1;
@@ -2906,11 +2940,12 @@
       console.log($$props.round.categories[0].clues[0]);
       showModal($$props.round.categories[0].clues[0]);
     } : noop;
-    var div = root$2();
-    set_class(div, clsx(boardClasses), "svelte-17irm38");
+    var fragment = root$2();
+    var div = first_child(fragment);
+    set_class(div, clsx(boardClasses), "svelte-qvpibm");
     each(div, 21, () => $$props.round.categories, (category) => category.categoryNum, ($$anchor2, category) => {
-      var fragment = root_1$2();
-      var node = first_child(fragment);
+      var fragment_1 = root_1$2();
+      var node = first_child(fragment_1);
       CategoryCell(node, {
         get category() {
           return get(category);
@@ -2920,8 +2955,8 @@
       var node_1 = sibling(node, 2);
       {
         var consequent = ($$anchor3) => {
-          var fragment_1 = comment();
-          var node_2 = first_child(fragment_1);
+          var fragment_2 = comment();
+          var node_2 = first_child(fragment_2);
           each(node_2, 17, () => get(category).clues, index, ($$anchor4, clue) => {
             ClueCell($$anchor4, {
               get clue() {
@@ -2929,16 +2964,52 @@
               }
             });
           });
-          append($$anchor3, fragment_1);
+          append($$anchor3, fragment_2);
         };
         if_block(node_1, ($$render) => {
           if (!finalRound) $$render(consequent);
         });
       }
-      append($$anchor2, fragment);
+      append($$anchor2, fragment_1);
     });
     reset(div);
-    append($$anchor, div);
+    var div_1 = sibling(div, 2);
+    var node_3 = sibling(child(div_1), 2);
+    each(node_3, 17, () => $$props.round.scoreBlocks, (scoreBlock) => scoreBlock.title, ($$anchor2, scoreBlock) => {
+      var div_2 = root_4$1();
+      var div_3 = child(div_2);
+      var text = child(div_3, true);
+      reset(div_3);
+      var node_4 = sibling(div_3, 2);
+      each(node_4, 17, () => get(scoreBlock).players, (playerScore) => playerScore.name, ($$anchor3, playerScore) => {
+        var fragment_4 = root_5();
+        var div_4 = first_child(fragment_4);
+        var text_1 = child(div_4, true);
+        reset(div_4);
+        var div_5 = sibling(div_4, 2);
+        var text_2 = child(div_5);
+        reset(div_5);
+        var div_6 = sibling(div_5, 2);
+        var text_3 = child(div_6, true);
+        reset(div_6);
+        template_effect(
+          ($0) => {
+            set_text(text_1, get(playerScore).name);
+            set_text(text_2, `$${$0 ?? ""}`);
+            set_text(text_3, get(playerScore).remarks);
+          },
+          [
+            () => get(playerScore).score.toLocaleString()
+          ]
+        );
+        append($$anchor3, fragment_4);
+      });
+      reset(div_2);
+      template_effect(() => set_text(text, get(scoreBlock).title));
+      append($$anchor2, div_2);
+    });
+    reset(div_1);
+    append($$anchor, fragment);
     pop();
   }
   var on_click = (e, dialog) => {
@@ -3090,9 +3161,9 @@
   }
   delegate(["click"]);
   var root_1 = /* @__PURE__ */ template(`<p class="contestant"><a target="_blank"> </a> </p>`);
-  var root_2 = /* @__PURE__ */ template(`<button class="round-tab svelte-1ybnarh" role="tab"> </button>`);
-  var root_3 = /* @__PURE__ */ template(`<div class="round-tabs-content svelte-1ybnarh" role="tabpanel" tabindex="0"><!></div>`);
-  var root = /* @__PURE__ */ template(`<div id="game_title" class="svelte-1ybnarh"><a target="_blank" role="button" class="svelte-1ybnarh">⇐ Previous Game</a> <h1> </h1> <a target="_blank" role="button" class="svelte-1ybnarh">Next Game ⇒</a></div> <div id="game_comments"> </div> <div id="contestants"><h2>Contestants</h2> <!></div> <div class="tabs svelte-1ybnarh"><div role="tablist" aria-label="Round Tabs" class="round-tabs-list svelte-1ybnarh"></div> <div></div> <!></div>`, 1);
+  var root_2 = /* @__PURE__ */ template(`<button class="round-tab svelte-1c03mbw" role="tab"> </button>`);
+  var root_3 = /* @__PURE__ */ template(`<div class="round-tabs-content svelte-1c03mbw" role="tabpanel" tabindex="0"><!></div>`);
+  var root = /* @__PURE__ */ template(`<div id="game_title" class="svelte-1c03mbw"><a target="_blank" role="button" class="svelte-1c03mbw">⇐ Previous Game</a> <h1> </h1> <a target="_blank" role="button" class="svelte-1c03mbw">Next Game ⇒</a></div> <div id="game_comments"> </div> <div id="contestants"><h2>Contestants</h2> <!></div> <div class="tabs svelte-1c03mbw"><div role="tablist" aria-label="Round Tabs" class="round-tabs-list svelte-1c03mbw"></div> <div></div> <!></div>`, 1);
   function Game($$anchor, $$props) {
     push($$props, true);
     let activeTab = state(0);
