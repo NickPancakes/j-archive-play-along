@@ -42,6 +42,7 @@
       </button>
     {/each}
   </div>
+
   <div bind:this={scrollToElm}>
     {#each gameData.rounds as round, i (round.roundNum)}
       <div
@@ -89,7 +90,7 @@
   }
 
   div.round-tabs-content {
-    height: 100vh;
+    height: 100%;
     width: 100%;
   }
 

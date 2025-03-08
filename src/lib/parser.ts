@@ -43,12 +43,11 @@ function clueIDToGridPosition(clueID: string): [number, number, number] {
     return [1, row, col];
 }
 
-function parseResponsesTable(childElm: Element): Responder[] | null {
-    // const rowElms = childElm.querySelectorAll("tr");
 
+function parseNormalResponsesTable(rowElm: Element): Responder[] | null {
     let responders: Responder[] = [];
 
-    const rightElm = childElm.querySelector("td.right");
+    const rightElm = rowElm.querySelector("td.right");
     if (rightElm && rightElm.textContent) {
         responders.push({
             player: rightElm.textContent,
@@ -58,7 +57,7 @@ function parseResponsesTable(childElm: Element): Responder[] | null {
         })
     }
 
-    for (var wrongElm of childElm.querySelectorAll("td.wrong")) {
+    for (var wrongElm of rowElm.querySelectorAll("td.wrong")) {
         if (wrongElm.textContent && wrongElm.textContent != "Triple Stumper") {
             responders.push({
                 player: wrongElm.textContent,
@@ -70,6 +69,46 @@ function parseResponsesTable(childElm: Element): Responder[] | null {
     }
 
     return responders.length > 0 ? responders : null;
+}
+
+function parseFinalResponsesRows(rowElms: Element[]): Responder[] | null {
+    let responders: Responder[] = [
+        { player: "", wager: 0, response: "", correct: false },
+        { player: "", wager: 0, response: "", correct: false },
+        { player: "", wager: 0, response: "", correct: false },
+    ];
+
+    for (let rowIdx = 0; rowIdx < rowElms.length; rowIdx++) {
+        const rowElm = rowElms[rowIdx];
+        const playerNum = (rowIdx / 2) | 0;
+
+        const tdElms = rowElm.querySelectorAll("td");
+        if (!tdElms) {
+            continue;
+        }
+
+        if (rowIdx % 2 == 0 && tdElms.length >= 2) {
+            responders[playerNum].correct = tdElms[0].className == "right";
+            responders[playerNum].player = tdElms[0].textContent || "";
+            responders[playerNum].response = tdElms[1].textContent || "";
+        } else {
+            const wager = (tdElms[0].textContent || "$0").replaceAll("$", "").replaceAll(",", "");
+            responders[playerNum].wager = parseInt(wager);
+        }
+    }
+
+    return responders;
+}
+
+
+function parseResponsesTable(childElm: Element): Responder[] | null {
+    const rowElms = childElm.querySelectorAll("tr");
+    if (rowElms == null) {
+        return null;
+    } else if (rowElms.length == 6) {
+        return parseFinalResponsesRows(Array.from(rowElms));
+    }
+    return parseNormalResponsesTable(childElm);
 }
 
 function parseClueResponse(responseElm: Element): ClueResponse {
@@ -108,7 +147,6 @@ function parseClueResponse(responseElm: Element): ClueResponse {
         }
     }
 
-    console.log(responders);
     return {
         correctResponse: correctResponse,
         comments: comments,
@@ -162,7 +200,9 @@ function parseClue(roundNum: number, totalRounds: number, categoryNum: number, c
     const responseElm = clueTextElms[1];
     const clueResponse = parseClueResponse(responseElm);
 
+    // Primetime Celebrity Jeopardy's first round starts at $100 rather than $200.
     const baseValue = totalRounds > 3 ? 100 : 200;
+
     const value = baseValue * (roundNum + 1) * (clueNum + 1)
 
     return {
