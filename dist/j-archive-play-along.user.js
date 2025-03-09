@@ -67,40 +67,33 @@
     }
     return responders.length > 0 ? responders : null;
   }
-  function parseFinalResponsesRows(rowElms) {
-    let responders = [
-      { player: "", wager: 0, response: "", correct: false },
-      { player: "", wager: 0, response: "", correct: false },
-      { player: "", wager: 0, response: "", correct: false }
-    ];
+  function parseFinalResponsesTable(tableElm) {
+    const rowElms = tableElm.querySelectorAll("tr");
+    if (rowElms == null) {
+      return null;
+    }
+    let responders = [];
+    let responder = { player: "", wager: 0, response: "", correct: false };
     for (let rowIdx = 0; rowIdx < rowElms.length; rowIdx++) {
       const rowElm = rowElms[rowIdx];
-      const playerNum = rowIdx / 2 | 0;
       const tdElms = rowElm.querySelectorAll("td");
       if (!tdElms) {
         continue;
       }
       if (rowIdx % 2 == 0 && tdElms.length >= 2) {
-        responders[playerNum].correct = tdElms[0].className == "right";
-        responders[playerNum].player = tdElms[0].textContent || "";
-        responders[playerNum].response = tdElms[1].textContent || "";
+        responder.correct = tdElms[0].className == "right";
+        responder.player = tdElms[0].textContent || "";
+        responder.response = tdElms[1].textContent || "";
       } else {
         const wager = (tdElms[0].textContent || "$0").replaceAll("$", "").replaceAll(",", "");
-        responders[playerNum].wager = parseInt(wager);
+        responder.wager = parseInt(wager);
+        responders.push(responder);
+        responder = { player: "", wager: 0, response: "", correct: false };
       }
     }
     return responders;
   }
-  function parseResponsesTable(childElm) {
-    const rowElms = childElm.querySelectorAll("tr");
-    if (rowElms == null) {
-      return null;
-    } else if (rowElms.length == 6) {
-      return parseFinalResponsesRows(Array.from(rowElms));
-    }
-    return parseNormalResponsesTable(childElm);
-  }
-  function parseClueResponse(responseElm) {
+  function parseClueResponse(responseElm, final) {
     let correctResponse = "";
     let responders = [];
     let comments = [];
@@ -116,7 +109,6 @@
           case "BR":
             if (comment2) {
               comments.push(comment2);
-              console.log(comment2);
               comment2 = "";
             }
             break;
@@ -124,7 +116,7 @@
             correctResponse = childElm.textContent || "";
             break;
           case "TABLE":
-            const parsedResponses = parseResponsesTable(childElm);
+            const parsedResponses = final ? parseFinalResponsesTable(childElm) : parseNormalResponsesTable(childElm);
             if (parsedResponses) {
               responders = parsedResponses;
             }
@@ -145,7 +137,7 @@
     const clueTextElms = clueElm.querySelectorAll("td.clue_text");
     const clueHTML = clueTextElms[0].innerHTML ?? "";
     const responseElm = clueTextElms[1];
-    const clueResponse = parseClueResponse(responseElm);
+    const clueResponse = parseClueResponse(responseElm, true);
     return {
       roundNum,
       categoryNum,
@@ -186,7 +178,7 @@
     }
     const clueHTML = clueTextElms[0].innerHTML ?? "";
     const responseElm = clueTextElms[1];
-    const clueResponse = parseClueResponse(responseElm);
+    const clueResponse = parseClueResponse(responseElm, false);
     return {
       roundNum,
       categoryNum,
