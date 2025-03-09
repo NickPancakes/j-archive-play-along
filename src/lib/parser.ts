@@ -116,20 +116,22 @@ function parseClueResponse(responseElm: Element): ClueResponse {
     let responders: Responder[] = [];
     let comments: string[] = [];
 
-    let sameLine = false;
+    let comment = "";
     for (let childNode of responseElm.childNodes) {
         if (childNode.nodeType === Node.TEXT_NODE) {
             if (childNode.textContent) {
-                if (sameLine) {
-                    comments[comments.length - 1] += childNode.textContent;
-                    sameLine = false;
-                } else {
-                    comments.push(childNode.textContent);
-                }
+                comment += childNode.textContent;
             }
         } else {
             const childElm = childNode as Element;
             switch (childElm.tagName) {
+                case "BR":
+                    if (comment) {
+                        comments.push(comment);
+                        console.log(comment);
+                        comment = "";
+                    }
+                    break;
                 case "EM":
                     correctResponse = childElm.textContent || "";
                     break;
@@ -140,8 +142,7 @@ function parseClueResponse(responseElm: Element): ClueResponse {
                     }
                     break;
                 default:
-                    comments[comments.length - 1] += childElm.textContent || "";
-                    sameLine = true;
+                    comment += childNode.textContent;
                     break;
             }
         }

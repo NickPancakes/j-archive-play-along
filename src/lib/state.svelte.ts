@@ -32,5 +32,4 @@ export function showModal(clue: ClueData) {
     clueDisplay.state = ClueDisplayStates.Clue;
   }
   clueDisplay.clue = clue;
-  console.log(clue.dailyDoubleWager);
 }
