@@ -104,20 +104,22 @@
     let correctResponse = "";
     let responders = [];
     let comments = [];
-    let sameLine = false;
+    let comment2 = "";
     for (let childNode of responseElm.childNodes) {
       if (childNode.nodeType === Node.TEXT_NODE) {
         if (childNode.textContent) {
-          if (sameLine) {
-            comments[comments.length - 1] += childNode.textContent;
-            sameLine = false;
-          } else {
-            comments.push(childNode.textContent);
-          }
+          comment2 += childNode.textContent;
         }
       } else {
         const childElm = childNode;
         switch (childElm.tagName) {
+          case "BR":
+            if (comment2) {
+              comments.push(comment2);
+              console.log(comment2);
+              comment2 = "";
+            }
+            break;
           case "EM":
             correctResponse = childElm.textContent || "";
             break;
@@ -128,8 +130,7 @@
             }
             break;
           default:
-            comments[comments.length - 1] += childElm.textContent || "";
-            sameLine = true;
+            comment2 += childNode.textContent;
             break;
         }
       }
@@ -2901,7 +2902,6 @@
       clueDisplay.state = ClueDisplayStates.Clue;
     }
     clueDisplay.clue = clue;
-    console.log(clue.dailyDoubleWager);
   }
   var on_click$1 = (_, $$props) => {
     if ("clueHTML" in $$props.clue) {
