@@ -71,16 +71,17 @@ function parseNormalResponsesTable(rowElm: Element): Responder[] | null {
     return responders.length > 0 ? responders : null;
 }
 
-function parseFinalResponsesRows(rowElms: Element[]): Responder[] | null {
-    let responders: Responder[] = [
-        { player: "", wager: 0, response: "", correct: false },
-        { player: "", wager: 0, response: "", correct: false },
-        { player: "", wager: 0, response: "", correct: false },
-    ];
+function parseFinalResponsesTable(tableElm: Element): Responder[] | null {
+    const rowElms = tableElm.querySelectorAll("tr");
+    if (rowElms == null) {
+        return null;
+    }
 
+    let responders: Responder[] = [];
+
+    let responder = { player: "", wager: 0, response: "", correct: false };
     for (let rowIdx = 0; rowIdx < rowElms.length; rowIdx++) {
         const rowElm = rowElms[rowIdx];
-        const playerNum = (rowIdx / 2) | 0;
 
         const tdElms = rowElm.querySelectorAll("td");
         if (!tdElms) {
@@ -88,30 +89,22 @@ function parseFinalResponsesRows(rowElms: Element[]): Responder[] | null {
         }
 
         if (rowIdx % 2 == 0 && tdElms.length >= 2) {
-            responders[playerNum].correct = tdElms[0].className == "right";
-            responders[playerNum].player = tdElms[0].textContent || "";
-            responders[playerNum].response = tdElms[1].textContent || "";
+            responder.correct = tdElms[0].className == "right";
+            responder.player = tdElms[0].textContent || "";
+            responder.response = tdElms[1].textContent || "";
         } else {
             const wager = (tdElms[0].textContent || "$0").replaceAll("$", "").replaceAll(",", "");
-            responders[playerNum].wager = parseInt(wager);
+            responder.wager = parseInt(wager);
+            responders.push(responder);
+            responder = { player: "", wager: 0, response: "", correct: false };
         }
     }
+
 
     return responders;
 }
 
-
-function parseResponsesTable(childElm: Element): Responder[] | null {
-    const rowElms = childElm.querySelectorAll("tr");
-    if (rowElms == null) {
-        return null;
-    } else if (rowElms.length == 6) {
-        return parseFinalResponsesRows(Array.from(rowElms));
-    }
-    return parseNormalResponsesTable(childElm);
-}
-
-function parseClueResponse(responseElm: Element): ClueResponse {
+function parseClueResponse(responseElm: Element, final: boolean): ClueResponse {
     let correctResponse: string = "";
     let responders: Responder[] = [];
     let comments: string[] = [];
@@ -128,7 +121,6 @@ function parseClueResponse(responseElm: Element): ClueResponse {
                 case "BR":
                     if (comment) {
                         comments.push(comment);
-                        console.log(comment);
                         comment = "";
                     }
                     break;
@@ -136,7 +128,7 @@ function parseClueResponse(responseElm: Element): ClueResponse {
                     correctResponse = childElm.textContent || "";
                     break;
                 case "TABLE":
-                    const parsedResponses = parseResponsesTable(childElm);
+                    const parsedResponses = final ? parseFinalResponsesTable(childElm) : parseNormalResponsesTable(childElm);
                     if (parsedResponses) {
                         responders = parsedResponses;
                     }
@@ -160,7 +152,7 @@ function parseFinalClue(roundNum: number, categoryNum: number, clueNum: number, 
     const clueTextElms = clueElm.querySelectorAll("td.clue_text");
     const clueHTML = clueTextElms[0].innerHTML ?? "";
     const responseElm = clueTextElms[1];
-    const clueResponse = parseClueResponse(responseElm);
+    const clueResponse = parseClueResponse(responseElm, true);
 
     return {
         roundNum: roundNum,
@@ -208,7 +200,8 @@ function parseClue(roundNum: number, totalRounds: number, categoryNum: number, c
 
     const clueHTML = clueTextElms[0].innerHTML ?? "";
     const responseElm = clueTextElms[1];
-    const clueResponse = parseClueResponse(responseElm);
+    const clueResponse = parseClueResponse(responseElm, false);
+
 
 
     return {
