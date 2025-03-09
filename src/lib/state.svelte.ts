@@ -26,6 +26,11 @@ export const clueDisplay: ClueDisplay = $state({
 
 export function showModal(clue: ClueData) {
   clueDisplay.show = true;
-  clueDisplay.state = ClueDisplayStates.Clue;
+  if (clue.dailyDouble) {
+    clueDisplay.state = ClueDisplayStates.DailyDouble;
+  } else {
+    clueDisplay.state = ClueDisplayStates.Clue;
+  }
   clueDisplay.clue = clue;
+  console.log(clue.dailyDoubleWager);
 }

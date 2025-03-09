@@ -87,8 +87,7 @@ export type GameData = {
 export const ClueDisplayStates = {
     Clue: 0,
     CorrectResponse: 1,
-    FinalResponses: 2,
-    DailyDouble: 3
+    DailyDouble: 2
 } as const;
 
 export type ClueDisplay = {

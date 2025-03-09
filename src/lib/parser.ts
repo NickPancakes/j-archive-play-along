@@ -178,13 +178,22 @@ function parseClue(roundNum: number, totalRounds: number, categoryNum: number, c
 
     let playOrder = "0";
     let dailyDouble = false;
+    let dailyDoubleWager: number | null = null;
+
+    // Primetime Celebrity Jeopardy's first round starts at $100 rather than $200.
+    const baseValue = totalRounds > 3 ? 100 : 200;
+    const value = baseValue * (roundNum + 1) * (clueNum + 1)
 
     const headerElm = clueElm.querySelector("table.clue_header");
     if (headerElm) {
         playOrder = headerElm?.querySelector("td.clue_order_number")?.textContent ?? "0";
 
         const valueElm = headerElm.querySelector('[class^="clue_value"]');
-        dailyDouble = valueElm?.textContent?.startsWith("DD:") ?? false;
+        const valueText = valueElm?.textContent || "";
+        dailyDouble = valueText.startsWith("DD:");
+        if (dailyDouble) {
+            dailyDoubleWager = parseInt((valueText.split(":").pop() || "0").replaceAll("$", "").replaceAll(",", ""));
+        }
     }
 
     const clueTextElms = clueElm.querySelectorAll("td.clue_text");
@@ -200,10 +209,6 @@ function parseClue(roundNum: number, totalRounds: number, categoryNum: number, c
     const responseElm = clueTextElms[1];
     const clueResponse = parseClueResponse(responseElm);
 
-    // Primetime Celebrity Jeopardy's first round starts at $100 rather than $200.
-    const baseValue = totalRounds > 3 ? 100 : 200;
-
-    const value = baseValue * (roundNum + 1) * (clueNum + 1)
 
     return {
         roundNum: roundNum,
@@ -214,7 +219,7 @@ function parseClue(roundNum: number, totalRounds: number, categoryNum: number, c
         clueHTML: clueHTML,
         response: clueResponse,
         dailyDouble: dailyDouble,
-        dailyDoubleWager: null,
+        dailyDoubleWager: dailyDoubleWager,
         finalJeopardy: false,
     };
 }

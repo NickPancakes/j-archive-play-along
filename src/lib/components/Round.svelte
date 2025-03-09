@@ -11,7 +11,6 @@
   const boardClasses = finalRound ? "final_board" : "board";
   const categoryOnClick = finalRound
     ? () => {
-        console.log(round.categories[0].clues[0]);
         showModal(round.categories[0].clues[0] as ClueData);
       }
     : noop;

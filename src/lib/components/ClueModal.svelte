@@ -40,11 +40,7 @@
         clueDisplay.state = ClueDisplayStates.CorrectResponse;
         break;
       case ClueDisplayStates.CorrectResponse:
-        if (clueDisplay.clue.finalJeopardy) {
-          clueDisplay.state = ClueDisplayStates.FinalResponses;
-        } else {
-          clueDisplay.state = ClueDisplayStates.Clue;
-        }
+        clueDisplay.state = ClueDisplayStates.Clue;
         break;
       default:
         clueDisplay.state = ClueDisplayStates.Clue;
@@ -81,6 +77,8 @@
         {#each clueDisplay.clue.response.responders as responder (responder.player)}
           <div class="responder" data-state={responder.correct ? "correct" : "incorrect"}>
             {responder.player}
+            {#if clueDisplay.clue.dailyDoubleWager}
+              - ${clueDisplay.clue.dailyDoubleWager.toLocaleString()}{/if}
           </div>
         {/each}
 
@@ -95,6 +93,19 @@
 
       <div class="clue" hidden={clueDisplay.state != ClueDisplayStates.Clue}>
         {@html clueDisplay.clue.clueHTML}
+        <div class="final_responses" hidden={!clueDisplay.clue.finalJeopardy}>
+          <hr />
+          <div class="final_responses_grid">
+            {#each clueDisplay.clue.response.responders as responder (responder.player)}
+              <div class="responder" data-state={responder.correct ? "correct" : "incorrect"}>
+                {responder.player}
+              </div>
+              <div class="responder_wager">
+                ${responder.wager.toLocaleString()}
+              </div>
+            {/each}
+          </div>
+        </div>
       </div>
 
       <div class="correct_response" hidden={clueDisplay.state != ClueDisplayStates.CorrectResponse}>
@@ -107,25 +118,22 @@
             <br />
           {/each}
         </div>
-      </div>
 
-      <div class="final_responses" hidden={clueDisplay.state != ClueDisplayStates.FinalResponses}>
-        <div class="final_responses_grid">
-          {#each clueDisplay.clue.response.responders as responder (responder.player)}
-            <div class="responder" data-state={responder.correct ? "correct" : "incorrect"}>
-              {responder.player}
-            </div>
-            <div class="responder_wager">
-              ${responder.wager.toLocaleString()}
-            </div>
-            <div class="responder_response">
-              {responder.response}
-            </div>
-          {/each}
-
-          {#if tripleStumper}
-            <div class="responder" data-state="incorrect">Triple Stumper</div>
-          {/if}
+        <div class="final_responses" hidden={!clueDisplay.clue.finalJeopardy}>
+          <hr />
+          <div class="final_responses_grid">
+            {#each clueDisplay.clue.response.responders as responder (responder.player)}
+              <div class="responder" data-state={responder.correct ? "correct" : "incorrect"}>
+                {responder.player}
+              </div>
+              <div class="responder_wager">
+                ${responder.wager.toLocaleString()}
+              </div>
+              <div class="responder_response">
+                {responder.response}
+              </div>
+            {/each}
+          </div>
         </div>
       </div>
     </div>
@@ -230,7 +238,9 @@
     place-items: center;
     text-align: center;
     font-family: "Swiss911 Cm BT", "Open Sans", helvetica, arial, verdana, sans-serif;
+    color: var(--white);
     font-size: clamp(0.5rem, 5cqmin, 10rem);
+    text-shadow: none;
 
     display: grid;
     gap: 0.1rem;
