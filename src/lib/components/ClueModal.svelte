@@ -109,7 +109,25 @@
         </div>
       </div>
 
-      <div class="final_responses" hidden={clueDisplay.state != ClueDisplayStates.FinalResponses}></div>
+      <div class="final_responses" hidden={clueDisplay.state != ClueDisplayStates.FinalResponses}>
+        <div class="final_responses_grid">
+          {#each clueDisplay.clue.response.responders as responder (responder.player)}
+            <div class="responder" data-state={responder.correct ? "correct" : "incorrect"}>
+              {responder.player}
+            </div>
+            <div class="responder_wager">
+              ${responder.wager.toLocaleString()}
+            </div>
+            <div class="responder_response">
+              {responder.response}
+            </div>
+          {/each}
+
+          {#if tripleStumper}
+            <div class="responder" data-state="incorrect">Triple Stumper</div>
+          {/if}
+        </div>
+      </div>
     </div>
   </div>
 </dialog>
@@ -205,6 +223,34 @@
 
   .responder[data-state="incorrect"] {
     color: var(--error-red);
+  }
+
+  .final_responses_grid {
+    place-content: center;
+    place-items: center;
+    text-align: center;
+    font-family: "Swiss911 Cm BT", "Open Sans", helvetica, arial, verdana, sans-serif;
+    font-size: clamp(0.5rem, 5cqmin, 10rem);
+
+    display: grid;
+    gap: 0.1rem;
+    grid-auto-flow: row dense;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: repeat(3, minmax(0, 1fr));
+  }
+
+  .final_responses_grid > div.responder {
+    grid-row: 1;
+    font-weight: bold;
+  }
+
+  div.responder_wager {
+    grid-row: 2;
+  }
+
+  div.responder_response {
+    grid-row: 3;
+    font-size: clamp(0.5rem, 4cqmin, 8rem);
   }
 
   .ico-close {

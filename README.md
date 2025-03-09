@@ -20,7 +20,8 @@ The goal is to provide a "playable" interface while retaining all of the functio
 - Comments made during the game are indicated by a `✱` and are revealed on mouse-over.
 
 ### TODO
-- Constestants' Final Jeopardy wagers and answers.
+
+- Double Jeopardy Wager Amounts
 
 ## Screenshots
 
