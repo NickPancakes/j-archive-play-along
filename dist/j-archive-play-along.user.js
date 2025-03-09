@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         j-archive-play-along
 // @namespace    https://github.com/NickPancakes/j-archive-play-along
-// @version      0.0.6
+// @version      0.1.0
 // @author       NickPancakes
 // @description  Transforms J! Archive games UI to play along.
 // @iconURL      https://www.google.com/s2/favicons?sz=16&domain=j-archive.com
@@ -13,11 +13,12 @@
 // @grant        GM_addStyle
 // ==/UserScript==
 
-(e=>{if(typeof GM_addStyle=="function"){GM_addStyle(e);return}const t=document.createElement("style");t.textContent=e,document.head.append(t)})(' @import"https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap";@import"https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght,YOPQ@100..900,40..300&display=swap";@import"https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap";:root{--clue-depth-bottom: #000088;--clue-depth-left: #0000ee;--clue-depth-right: #000099;--clue-depth-top: #0000ff}#content{max-width:unset;min-width:unset}.clue_cell.svelte-whch0{border-width:.2rem;border-style:outset;display:grid;place-content:center;place-items:center;text-align:center;background-color:var(--clue-screen-blue);border-bottom-color:var(--clue-depth-bottom);border-left-color:var(--clue-depth-left);border-right-color:var(--clue-depth-right);border-top-color:var(--clue-depth-top);grid-template-rows:15% 70% 15%;grid-template-columns:100%;grid-template-areas:"top" "main" "bottom"}.order_text.svelte-whch0{padding-top:.2rem;padding-right:.2rem;font-size:clamp(.1rem,1.5cqmin,9rem);color:var(--white);text-align:right;vertical-align:middle;grid-area:top}.value_text.svelte-whch0{font-family:Swiss911 Cm BT,Open Sans,helvetica,arial,verdana,sans-serif;font-size:clamp(1rem,7cqmin,12rem);background-color:var(--clue-screen-blue);color:var(--font-yellow);text-shadow:.1em .1em 0px #000000;text-align:center;vertical-align:middle;font-weight:800;grid-area:main;border-style:none;padding:0}div.category_cell.svelte-63tsd7{border-width:.2rem;border-style:outset;display:grid;place-content:center;place-items:center;color:var(--white);text-align:center;vertical-align:middle;font-weight:700;background-color:var(--clue-screen-blue);border-bottom-color:var(--clue-depth-bottom);border-left-color:var(--clue-depth-left);border-right-color:var(--clue-depth-right);border-top-color:var(--clue-depth-top);grid-row:1;grid-template-rows:15% 70% 15%;grid-template-columns:100%;grid-template-areas:"top" "main" "bottom"}button.category.svelte-63tsd7{width:100%;height:100%;background-color:var(--clue-screen-blue);border-style:none;grid-area:main;padding:0;color:var(--white)}div.category_name.svelte-63tsd7{font-family:Swiss911 Cm BT,Open Sans,helvetica,arial,verdana,sans-serif;font-size:clamp(.25rem,2.5cqmin,9rem);text-shadow:.1em .1em 0px #000000;text-align:center;text-wrap:balance;vertical-align:middle;font-weight:700}div.final.svelte-63tsd7{font-size:clamp(1rem,6vmin,6rem)}div.category_comments.svelte-63tsd7{text-align:center;vertical-align:middle;font-size:clamp(.2rem,2cqmin,8rem);text-wrap:balance;grid-area:main}.ico-extra.svelte-63tsd7{width:100%;height:100%;padding-top:.2rem;padding-left:.2rem;color:var(--white);grid-area:top;font-size:clamp(.25rem,1.5cqmin,9rem);font-family:arial,sans-serif;text-align:left;vertical-align:center;text-shadow:-1px 0 black,0 1px black,1px 0 black,0 -1px black}div.board.svelte-qvpibm{height:100vh;width:100%;display:grid;gap:.1rem;place-content:center;grid-auto-flow:column dense;grid-template-columns:repeat(6,minmax(0,1fr));grid-template-rows:repeat(1,minmax(0,.9fr)) repeat(5,minmax(0,1fr))}div.final_board.svelte-qvpibm{height:50vh;width:100%;display:grid;gap:.1rem;place-content:center;grid-auto-flow:row dense;grid-template-columns:minmax(0,.5fr) minmax(0,1fr) minmax(0,.5fr);grid-template-rows:minmax(0,1fr)}div.score_blocks.svelte-qvpibm{height:75vh;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem}div.score_gap.svelte-qvpibm{height:25vh}div.score_block.svelte-qvpibm{height:100%;width:50%;border-width:.2rem;border-style:outset;background-color:var(--clue-screen-blue);border-bottom-color:var(--clue-depth-bottom);border-left-color:var(--clue-depth-left);border-right-color:var(--clue-depth-right);border-top-color:var(--clue-depth-top);place-content:center;place-items:center;text-align:center;font-family:Swiss911 Cm BT,Open Sans,helvetica,arial,verdana,sans-serif;font-size:clamp(.5rem,3.5cqmin,10rem);display:grid;gap:.1rem;grid-auto-flow:row dense;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(4,minmax(0,1fr))}div.score_block_title.svelte-qvpibm{grid-row:1;grid-column:1 / -1;font-size:clamp(1rem,4cqmin,12rem);font-weight:700}div.score_name.svelte-qvpibm{grid-row:2;font-weight:700}div.score_score.svelte-qvpibm{grid-row:3}div.score_remarks.svelte-qvpibm{grid-row:4;font-size:clamp(.5rem,2.5cqmin,8rem)}dialog.clue_modal.svelte-hojzz8{width:90%;height:90%;position:fixed;border-width:1em;border-style:outset;background-color:var(--clue-screen-blue);border-bottom-color:var(--clue-depth-bottom);border-left-color:var(--clue-depth-left);border-right-color:var(--clue-depth-right);border-top-color:var(--clue-depth-top)}.modal_content.svelte-hojzz8{width:100%;height:100%;display:grid;grid-template-columns:5% 90% 5%;grid-template-rows:5% 85% 10%;grid-template-areas:"tl tc tr" "ml main mr" "bl bc br";place-content:center;place-items:center}.modal_main.svelte-hojzz8{grid-area:main;color:var(--white);text-align:center;font-weight:700;vertical-align:middle;text-wrap:pretty;line-height:1.25}.daily_double.svelte-hojzz8{text-transform:uppercase;font-family:Futura,Kumbh Sans,Century Gothic,sans-serif;font-weight:800;font-size:clamp(1rem,24vmin,30rem);text-shadow:.3rem .3rem 0px #000000}.clue.svelte-hojzz8{text-transform:uppercase;font-family:ITC Korinna Std,Libre Baskerville,Times New Roman,serif;font-size:clamp(1rem,7vmin,9rem);text-shadow:.3rem .3rem 0px #000000}.correct_response.svelte-hojzz8{text-transform:uppercase;color:var(--aqua-blue);font-family:ITC Korinna Std,Libre Baskerville,Times New Roman,serif;font-size:clamp(1rem,7vmin,9rem);text-shadow:.3rem .3rem 0px #000000}.response_comments.svelte-hojzz8{text-transform:none;text-shadow:none;font-size:clamp(1rem,4vmin,9rem);color:var(--white);text-align:center;vertical-align:middle}.responders.svelte-hojzz8{grid-area:bc;display:flex;font-size:clamp(1rem,3vmin,9rem);text-align:center;vertical-align:middle;flex-direction:row}.responder[data-state=correct].svelte-hojzz8{color:var(--lime-green)}.responder[data-state=incorrect].svelte-hojzz8{color:var(--error-red)}.final_responses_grid.svelte-hojzz8{place-content:center;place-items:center;text-align:center;font-family:Swiss911 Cm BT,Open Sans,helvetica,arial,verdana,sans-serif;font-size:clamp(.5rem,5cqmin,10rem);display:grid;gap:.1rem;grid-auto-flow:row dense;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr))}.final_responses_grid.svelte-hojzz8>div.responder:where(.svelte-hojzz8){grid-row:1;font-weight:700}div.responder_wager.svelte-hojzz8{grid-row:2}div.responder_response.svelte-hojzz8{grid-row:3;font-size:clamp(.5rem,4cqmin,8rem)}.ico-close.svelte-hojzz8{width:100%;height:100%;color:var(--white);grid-area:tr;font-size:clamp(1rem,3vmin,9rem);font-family:arial,sans-serif;text-align:right;vertical-align:center;text-shadow:.3rem .3rem 0px #000000}.ico-extra.svelte-hojzz8{width:100%;height:100%;color:var(--white);grid-area:tl;font-size:clamp(1rem,5vmin,9rem);font-family:arial,sans-serif;text-align:left;vertical-align:center;text-shadow:.3rem .3rem 0px #000000}dialog.svelte-hojzz8::backdrop{background:#0000004d}dialog[open].svelte-hojzz8{animation:svelte-hojzz8-zoom .3s cubic-bezier(.34,1.56,.64,1)}@keyframes svelte-hojzz8-zoom{0%{transform:scale(.95)}to{transform:scale(1)}}dialog[open].svelte-hojzz8::backdrop{animation:svelte-hojzz8-fade .2s ease-out}@keyframes svelte-hojzz8-fade{0%{opacity:0}to{opacity:1}}#game_title.svelte-1c03mbw{display:flex;flex-wrap:nowrap;justify-content:space-around;align-items:center}#game_title.svelte-1c03mbw>a:where(.svelte-1c03mbw){font-size:clamp(.5rem,2vmin,6rem)}div.tabs.svelte-1c03mbw{height:100%;width:100%}div.round-tabs-list.svelte-1c03mbw{flex:auto;width:100%;display:flex;flex-direction:row;justify-content:center;border-bottom-width:.25em;border-bottom-style:outset;border-bottom-color:var(--background-dark-blue)}div.round-tabs-content.svelte-1c03mbw{height:100%;width:100%}button.round-tab.svelte-1c03mbw{flex:1;display:flex;flex-direction:row;place-content:center;border-width:.1em;border-style:outset;background-color:var(--clue-depth-bottom);border-bottom-color:var(--clue-depth-bottom);border-left-color:var(--clue-depth-left);border-right-color:var(--clue-depth-right);border-top-color:var(--clue-depth-top);color:var(--disclaimer-gray);text-shadow:2px 2px 0px #000000;font-size:clamp(1rem,3vmin,9rem);text-align:center;vertical-align:middle;font-weight:700}button.round-tab[data-state=active].svelte-1c03mbw{flex:1.5;background-color:var(--clue-screen-blue);color:var(--white)} ');
+(e=>{if(typeof GM_addStyle=="function"){GM_addStyle(e);return}const t=document.createElement("style");t.textContent=e,document.head.append(t)})(' @import"https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap";@import"https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght,YOPQ@100..900,40..300&display=swap";@import"https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap";:root{--clue-depth-bottom: #000088;--clue-depth-left: #0000ee;--clue-depth-right: #000099;--clue-depth-top: #0000ff}#content{max-width:unset;min-width:unset}.clue_cell.svelte-whch0{border-width:.2rem;border-style:outset;display:grid;place-content:center;place-items:center;text-align:center;background-color:var(--clue-screen-blue);border-bottom-color:var(--clue-depth-bottom);border-left-color:var(--clue-depth-left);border-right-color:var(--clue-depth-right);border-top-color:var(--clue-depth-top);grid-template-rows:15% 70% 15%;grid-template-columns:100%;grid-template-areas:"top" "main" "bottom"}.order_text.svelte-whch0{padding-top:.2rem;padding-right:.2rem;font-size:clamp(.1rem,1.5cqmin,9rem);color:var(--white);text-align:right;vertical-align:middle;grid-area:top}.value_text.svelte-whch0{font-family:Swiss911 Cm BT,Open Sans,helvetica,arial,verdana,sans-serif;font-size:clamp(1rem,7cqmin,12rem);background-color:var(--clue-screen-blue);color:var(--font-yellow);text-shadow:.1em .1em 0px #000000;text-align:center;vertical-align:middle;font-weight:800;grid-area:main;border-style:none;padding:0}div.category_cell.svelte-63tsd7{border-width:.2rem;border-style:outset;display:grid;place-content:center;place-items:center;color:var(--white);text-align:center;vertical-align:middle;font-weight:700;background-color:var(--clue-screen-blue);border-bottom-color:var(--clue-depth-bottom);border-left-color:var(--clue-depth-left);border-right-color:var(--clue-depth-right);border-top-color:var(--clue-depth-top);grid-row:1;grid-template-rows:15% 70% 15%;grid-template-columns:100%;grid-template-areas:"top" "main" "bottom"}button.category.svelte-63tsd7{width:100%;height:100%;background-color:var(--clue-screen-blue);border-style:none;grid-area:main;padding:0;color:var(--white)}div.category_name.svelte-63tsd7{font-family:Swiss911 Cm BT,Open Sans,helvetica,arial,verdana,sans-serif;font-size:clamp(.25rem,2.5cqmin,9rem);text-shadow:.1em .1em 0px #000000;text-align:center;text-wrap:balance;vertical-align:middle;font-weight:700}div.final.svelte-63tsd7{font-size:clamp(1rem,6vmin,6rem)}div.category_comments.svelte-63tsd7{text-align:center;vertical-align:middle;font-size:clamp(.2rem,2cqmin,8rem);text-wrap:balance;grid-area:main}.ico-extra.svelte-63tsd7{width:100%;height:100%;padding-top:.2rem;padding-left:.2rem;color:var(--white);grid-area:top;font-size:clamp(.25rem,1.5cqmin,9rem);font-family:arial,sans-serif;text-align:left;vertical-align:center;text-shadow:-1px 0 black,0 1px black,1px 0 black,0 -1px black}div.board.svelte-qvpibm{height:100vh;width:100%;display:grid;gap:.1rem;place-content:center;grid-auto-flow:column dense;grid-template-columns:repeat(6,minmax(0,1fr));grid-template-rows:repeat(1,minmax(0,.9fr)) repeat(5,minmax(0,1fr))}div.final_board.svelte-qvpibm{height:50vh;width:100%;display:grid;gap:.1rem;place-content:center;grid-auto-flow:row dense;grid-template-columns:minmax(0,.5fr) minmax(0,1fr) minmax(0,.5fr);grid-template-rows:minmax(0,1fr)}div.score_blocks.svelte-qvpibm{height:75vh;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem}div.score_gap.svelte-qvpibm{height:25vh}div.score_block.svelte-qvpibm{height:100%;width:50%;border-width:.2rem;border-style:outset;background-color:var(--clue-screen-blue);border-bottom-color:var(--clue-depth-bottom);border-left-color:var(--clue-depth-left);border-right-color:var(--clue-depth-right);border-top-color:var(--clue-depth-top);place-content:center;place-items:center;text-align:center;font-family:Swiss911 Cm BT,Open Sans,helvetica,arial,verdana,sans-serif;font-size:clamp(.5rem,3.5cqmin,10rem);display:grid;gap:.1rem;grid-auto-flow:row dense;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(4,minmax(0,1fr))}div.score_block_title.svelte-qvpibm{grid-row:1;grid-column:1 / -1;font-size:clamp(1rem,4cqmin,12rem);font-weight:700}div.score_name.svelte-qvpibm{grid-row:2;font-weight:700}div.score_score.svelte-qvpibm{grid-row:3}div.score_remarks.svelte-qvpibm{grid-row:4;font-size:clamp(.5rem,2.5cqmin,8rem)}dialog.clue_modal.svelte-bzhb10{width:90%;height:90%;position:fixed;border-width:1em;border-style:outset;background-color:var(--clue-screen-blue);border-bottom-color:var(--clue-depth-bottom);border-left-color:var(--clue-depth-left);border-right-color:var(--clue-depth-right);border-top-color:var(--clue-depth-top)}.modal_content.svelte-bzhb10{width:100%;height:100%;display:grid;grid-template-columns:5% 90% 5%;grid-template-rows:5% 85% 10%;grid-template-areas:"tl tc tr" "ml main mr" "bl bc br";place-content:center;place-items:center}.modal_main.svelte-bzhb10{grid-area:main;color:var(--white);text-align:center;font-weight:700;vertical-align:middle;text-wrap:pretty;line-height:1.25}.daily_double.svelte-bzhb10{text-transform:uppercase;font-family:Futura,Kumbh Sans,Century Gothic,sans-serif;font-weight:800;font-size:clamp(1rem,24vmin,30rem);text-shadow:.3rem .3rem 0px #000000}.clue.svelte-bzhb10{text-transform:uppercase;font-family:ITC Korinna Std,Libre Baskerville,Times New Roman,serif;font-size:clamp(1rem,7vmin,9rem);text-shadow:.3rem .3rem 0px #000000}.correct_response.svelte-bzhb10{text-transform:uppercase;color:var(--aqua-blue);font-family:ITC Korinna Std,Libre Baskerville,Times New Roman,serif;font-size:clamp(1rem,7vmin,9rem);text-shadow:.3rem .3rem 0px #000000}.response_comments.svelte-bzhb10{text-transform:none;text-shadow:none;font-size:clamp(1rem,4vmin,9rem);color:var(--white);text-align:center;vertical-align:middle}.responders.svelte-bzhb10{grid-area:bc;display:flex;font-size:clamp(1rem,3vmin,9rem);text-align:center;vertical-align:middle;flex-direction:row}.responder[data-state=correct].svelte-bzhb10{color:var(--lime-green)}.responder[data-state=incorrect].svelte-bzhb10{color:var(--error-red)}.final_responses_grid.svelte-bzhb10{place-content:center;place-items:center;text-align:center;font-family:Swiss911 Cm BT,Open Sans,helvetica,arial,verdana,sans-serif;color:var(--white);font-size:clamp(.5rem,5cqmin,10rem);text-shadow:none;display:grid;gap:.1rem;grid-auto-flow:row dense;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr))}.final_responses_grid.svelte-bzhb10>div.responder:where(.svelte-bzhb10){grid-row:1;font-weight:700}div.responder_wager.svelte-bzhb10{grid-row:2}div.responder_response.svelte-bzhb10{grid-row:3;font-size:clamp(.5rem,4cqmin,8rem)}.ico-close.svelte-bzhb10{width:100%;height:100%;color:var(--white);grid-area:tr;font-size:clamp(1rem,3vmin,9rem);font-family:arial,sans-serif;text-align:right;vertical-align:center;text-shadow:.3rem .3rem 0px #000000}.ico-extra.svelte-bzhb10{width:100%;height:100%;color:var(--white);grid-area:tl;font-size:clamp(1rem,5vmin,9rem);font-family:arial,sans-serif;text-align:left;vertical-align:center;text-shadow:.3rem .3rem 0px #000000}dialog.svelte-bzhb10::backdrop{background:#0000004d}dialog[open].svelte-bzhb10{animation:svelte-bzhb10-zoom .3s cubic-bezier(.34,1.56,.64,1)}@keyframes svelte-bzhb10-zoom{0%{transform:scale(.95)}to{transform:scale(1)}}dialog[open].svelte-bzhb10::backdrop{animation:svelte-bzhb10-fade .2s ease-out}@keyframes svelte-bzhb10-fade{0%{opacity:0}to{opacity:1}}#game_title.svelte-1c03mbw{display:flex;flex-wrap:nowrap;justify-content:space-around;align-items:center}#game_title.svelte-1c03mbw>a:where(.svelte-1c03mbw){font-size:clamp(.5rem,2vmin,6rem)}div.tabs.svelte-1c03mbw{height:100%;width:100%}div.round-tabs-list.svelte-1c03mbw{flex:auto;width:100%;display:flex;flex-direction:row;justify-content:center;border-bottom-width:.25em;border-bottom-style:outset;border-bottom-color:var(--background-dark-blue)}div.round-tabs-content.svelte-1c03mbw{height:100%;width:100%}button.round-tab.svelte-1c03mbw{flex:1;display:flex;flex-direction:row;place-content:center;border-width:.1em;border-style:outset;background-color:var(--clue-depth-bottom);border-bottom-color:var(--clue-depth-bottom);border-left-color:var(--clue-depth-left);border-right-color:var(--clue-depth-right);border-top-color:var(--clue-depth-top);color:var(--disclaimer-gray);text-shadow:2px 2px 0px #000000;font-size:clamp(1rem,3vmin,9rem);text-align:center;vertical-align:middle;font-weight:700}button.round-tab[data-state=active].svelte-1c03mbw{flex:1.5;background-color:var(--clue-screen-blue);color:var(--white)} ');
 
 (function () {
   'use strict';
 
+  var _a;
   const RoundName = {
     Jeopardy: "Jeopardy!",
     DoubleJeopardy: "Double Jeopardy!",
@@ -27,8 +28,7 @@
   const ClueDisplayStates = {
     Clue: 0,
     CorrectResponse: 1,
-    FinalResponses: 2,
-    DailyDouble: 3
+    DailyDouble: 2
   };
   function roundIDToName(roundID) {
     switch (roundID) {
@@ -159,14 +159,21 @@
     };
   }
   function parseClue(roundNum, totalRounds, categoryNum, clueNum, clueElm) {
-    var _a, _b;
+    var _a2;
     let playOrder = "0";
     let dailyDouble = false;
+    let dailyDoubleWager = null;
+    const baseValue = totalRounds > 3 ? 100 : 200;
+    const value = baseValue * (roundNum + 1) * (clueNum + 1);
     const headerElm = clueElm.querySelector("table.clue_header");
     if (headerElm) {
-      playOrder = ((_a = headerElm == null ? void 0 : headerElm.querySelector("td.clue_order_number")) == null ? void 0 : _a.textContent) ?? "0";
+      playOrder = ((_a2 = headerElm == null ? void 0 : headerElm.querySelector("td.clue_order_number")) == null ? void 0 : _a2.textContent) ?? "0";
       const valueElm = headerElm.querySelector('[class^="clue_value"]');
-      dailyDouble = ((_b = valueElm == null ? void 0 : valueElm.textContent) == null ? void 0 : _b.startsWith("DD:")) ?? false;
+      const valueText = (valueElm == null ? void 0 : valueElm.textContent) || "";
+      dailyDouble = valueText.startsWith("DD:");
+      if (dailyDouble) {
+        dailyDoubleWager = parseInt((valueText.split(":").pop() || "0").replaceAll("$", "").replaceAll(",", ""));
+      }
     }
     const clueTextElms = clueElm.querySelectorAll("td.clue_text");
     if (clueTextElms.length == 0) {
@@ -179,8 +186,6 @@
     const clueHTML = clueTextElms[0].innerHTML ?? "";
     const responseElm = clueTextElms[1];
     const clueResponse = parseClueResponse(responseElm);
-    const baseValue = totalRounds > 3 ? 100 : 200;
-    const value = baseValue * (roundNum + 1) * (clueNum + 1);
     return {
       roundNum,
       categoryNum,
@@ -190,7 +195,7 @@
       clueHTML,
       response: clueResponse,
       dailyDouble,
-      dailyDoubleWager: null,
+      dailyDoubleWager,
       finalJeopardy: false
     };
   }
@@ -467,6 +472,7 @@
   const HYDRATION_END = "]";
   const HYDRATION_ERROR = {};
   const UNINITIALIZED = Symbol();
+  const NAMESPACE_HTML = "http://www.w3.org/1999/xhtml";
   function hydration_mismatch(location) {
     {
       console.warn(`https://svelte.dev/e/hydration_mismatch`);
@@ -720,13 +726,13 @@
           return true;
         },
         get(target, prop2, receiver) {
-          var _a;
+          var _a2;
           if (prop2 === STATE_SYMBOL) {
             return value;
           }
           var s = sources.get(prop2);
           var exists = prop2 in target;
-          if (s === void 0 && (!exists || ((_a = get_descriptor(target, prop2)) == null ? void 0 : _a.writable))) {
+          if (s === void 0 && (!exists || ((_a2 = get_descriptor(target, prop2)) == null ? void 0 : _a2.writable))) {
             s = source(proxy(exists ? target[prop2] : UNINITIALIZED, metadata));
             sources.set(prop2, s);
           }
@@ -756,13 +762,13 @@
           return descriptor;
         },
         has(target, prop2) {
-          var _a;
+          var _a2;
           if (prop2 === STATE_SYMBOL) {
             return true;
           }
           var s = sources.get(prop2);
           var has = s !== void 0 && s.v !== UNINITIALIZED || Reflect.has(target, prop2);
-          if (s !== void 0 || active_effect !== null && (!has || ((_a = get_descriptor(target, prop2)) == null ? void 0 : _a.writable))) {
+          if (s !== void 0 || active_effect !== null && (!has || ((_a2 = get_descriptor(target, prop2)) == null ? void 0 : _a2.writable))) {
             if (s === void 0) {
               s = source(has ? proxy(target[prop2], metadata) : UNINITIALIZED);
               sources.set(prop2, s);
@@ -775,7 +781,7 @@
           return has;
         },
         set(target, prop2, value2, receiver) {
-          var _a;
+          var _a2;
           var s = sources.get(prop2);
           var has = prop2 in target;
           if (is_proxied_array && prop2 === "length") {
@@ -791,7 +797,7 @@
             }
           }
           if (s === void 0) {
-            if (!has || ((_a = get_descriptor(target, prop2)) == null ? void 0 : _a.writable)) {
+            if (!has || ((_a2 = get_descriptor(target, prop2)) == null ? void 0 : _a2.writable)) {
               s = source(void 0);
               set(s, proxy(value2, metadata));
               sources.set(prop2, s);
@@ -856,9 +862,9 @@
     first_child_getter = get_descriptor(node_prototype, "firstChild").get;
     next_sibling_getter = get_descriptor(node_prototype, "nextSibling").get;
     element_prototype.__click = void 0;
-    element_prototype.__className = "";
+    element_prototype.__className = void 0;
     element_prototype.__attributes = null;
-    element_prototype.__styles = null;
+    element_prototype.__style = void 0;
     element_prototype.__e = void 0;
     Text.prototype.__t = void 0;
   }
@@ -884,10 +890,10 @@
     if (child2 === null) {
       child2 = hydrate_node.appendChild(create_text());
     } else if (is_text && child2.nodeType !== 3) {
-      var text = create_text();
-      child2 == null ? void 0 : child2.before(text);
-      set_hydrate_node(text);
-      return text;
+      var text2 = create_text();
+      child2 == null ? void 0 : child2.before(text2);
+      set_hydrate_node(text2);
+      return text2;
     }
     set_hydrate_node(child2);
     return child2;
@@ -919,14 +925,14 @@
     }
     var type = next_sibling == null ? void 0 : next_sibling.nodeType;
     if (is_text && type !== 3) {
-      var text = create_text();
+      var text2 = create_text();
       if (next_sibling === null) {
-        last_sibling == null ? void 0 : last_sibling.after(text);
+        last_sibling == null ? void 0 : last_sibling.after(text2);
       } else {
-        next_sibling.before(text);
+        next_sibling.before(text2);
       }
-      set_hydrate_node(text);
-      return text;
+      set_hydrate_node(text2);
+      return text2;
     }
     set_hydrate_node(next_sibling);
     return (
@@ -1043,8 +1049,7 @@
     }
   }
   function create_effect(type, fn, sync, push2 = true) {
-    var is_root = (type & ROOT_EFFECT) !== 0;
-    var parent_effect = active_effect;
+    var parent = active_effect;
     var effect2 = {
       ctx: component_context,
       deps: null,
@@ -1055,31 +1060,27 @@
       fn,
       last: null,
       next: null,
-      parent: is_root ? null : parent_effect,
+      parent,
       prev: null,
       teardown: null,
       transitions: null,
       wv: 0
     };
     if (sync) {
-      var previously_flushing_effect = is_flushing_effect;
       try {
-        set_is_flushing_effect(true);
         update_effect(effect2);
         effect2.f |= EFFECT_RAN;
       } catch (e) {
         destroy_effect(effect2);
         throw e;
-      } finally {
-        set_is_flushing_effect(previously_flushing_effect);
       }
     } else if (fn !== null) {
       schedule_effect(effect2);
     }
     var inert = sync && effect2.deps === null && effect2.first === null && effect2.nodes_start === null && effect2.teardown === null && (effect2.f & (EFFECT_HAS_DERIVED | BOUNDARY_EFFECT)) === 0;
-    if (!inert && !is_root && push2) {
-      if (parent_effect !== null) {
-        push_effect(effect2, parent_effect);
+    if (!inert && push2) {
+      if (parent !== null) {
+        push_effect(effect2, parent);
       }
       if (active_reaction !== null && (active_reaction.f & DERIVED) !== 0) {
         var derived2 = (
@@ -1168,7 +1169,11 @@
     signal.first = signal.last = null;
     while (effect2 !== null) {
       var next2 = effect2.next;
-      destroy_effect(effect2, remove_dom);
+      if ((effect2.f & ROOT_EFFECT) !== 0) {
+        effect2.parent = null;
+      } else {
+        destroy_effect(effect2, remove_dom);
+      }
       effect2 = next2;
     }
   }
@@ -1289,34 +1294,27 @@
       }
     }
   }
-  let is_micro_task_queued$1 = false;
-  let current_queued_micro_tasks = [];
-  function process_micro_tasks() {
-    is_micro_task_queued$1 = false;
-    const tasks = current_queued_micro_tasks.slice();
-    current_queued_micro_tasks = [];
+  let micro_tasks = [];
+  function run_micro_tasks() {
+    var tasks = micro_tasks;
+    micro_tasks = [];
     run_all(tasks);
   }
   function queue_micro_task(fn) {
-    if (!is_micro_task_queued$1) {
-      is_micro_task_queued$1 = true;
-      queueMicrotask(process_micro_tasks);
+    if (micro_tasks.length === 0) {
+      queueMicrotask(run_micro_tasks);
     }
-    current_queued_micro_tasks.push(fn);
+    micro_tasks.push(fn);
   }
   let is_throwing_error = false;
-  let is_micro_task_queued = false;
+  let is_flushing = false;
   let last_scheduled_effect = null;
-  let is_flushing_effect = false;
+  let is_updating_effect = false;
   let is_destroying_effect = false;
-  function set_is_flushing_effect(value) {
-    is_flushing_effect = value;
-  }
   function set_is_destroying_effect(value) {
     is_destroying_effect = value;
   }
   let queued_root_effects = [];
-  let flush_count = 0;
   let active_reaction = null;
   let untracking = false;
   function set_active_reaction(reaction) {
@@ -1343,7 +1341,7 @@
     return ++write_version;
   }
   function check_dirtiness(reaction) {
-    var _a;
+    var _a2;
     var flags = reaction.f;
     if ((flags & DIRTY) !== 0) {
       return true;
@@ -1365,7 +1363,7 @@
           var parent = derived2.parent;
           for (i = 0; i < length; i++) {
             dependency = dependencies[i];
-            if (is_disconnected || !((_a = dependency == null ? void 0 : dependency.reactions) == null ? void 0 : _a.includes(derived2))) {
+            if (is_disconnected || !((_a2 = dependency == null ? void 0 : dependency.reactions) == null ? void 0 : _a2.includes(derived2))) {
               (dependency.reactions ?? (dependency.reactions = [])).push(derived2);
             }
           }
@@ -1461,7 +1459,7 @@
     }
   }
   function update_reaction(reaction) {
-    var _a;
+    var _a2;
     var previous_deps = new_deps;
     var previous_skipped_deps = skipped_deps;
     var previous_untracked_writes = untracked_writes;
@@ -1475,8 +1473,8 @@
     null;
     skipped_deps = 0;
     untracked_writes = null;
+    skip_reaction = (flags & UNOWNED) !== 0 && (untracking || !is_updating_effect || active_reaction === null);
     active_reaction = (flags & (BRANCH_EFFECT | ROOT_EFFECT)) === 0 ? reaction : null;
-    skip_reaction = (flags & UNOWNED) !== 0 && (!is_flushing_effect || previous_reaction === null || previous_untracking);
     derived_sources = null;
     set_component_context(reaction.ctx);
     untracking = false;
@@ -1500,7 +1498,7 @@
         }
         if (!skip_reaction) {
           for (i = skipped_deps; i < deps.length; i++) {
-            ((_a = deps[i]).reactions ?? (_a.reactions = [])).push(reaction);
+            ((_a2 = deps[i]).reactions ?? (_a2.reactions = [])).push(reaction);
           }
         }
       } else if (deps !== null && skipped_deps < deps.length) {
@@ -1580,7 +1578,9 @@
     set_signal_status(effect2, CLEAN);
     var previous_effect = active_effect;
     var previous_component_context = component_context;
+    var was_updating_effect = is_updating_effect;
     active_effect = effect2;
+    is_updating_effect = true;
     try {
       if ((flags & BLOCK_EFFECT) !== 0) {
         destroy_block_effect_children(effect2);
@@ -1598,45 +1598,44 @@
     } catch (error) {
       handle_error(error, effect2, previous_effect, previous_component_context || effect2.ctx);
     } finally {
+      is_updating_effect = was_updating_effect;
       active_effect = previous_effect;
     }
   }
   function infinite_loop_guard() {
-    if (flush_count > 1e3) {
-      flush_count = 0;
-      try {
-        effect_update_depth_exceeded();
-      } catch (error) {
-        if (last_scheduled_effect !== null) {
-          {
-            handle_error(error, last_scheduled_effect, null);
-          }
-        } else {
-          throw error;
+    try {
+      effect_update_depth_exceeded();
+    } catch (error) {
+      if (last_scheduled_effect !== null) {
+        {
+          handle_error(error, last_scheduled_effect, null);
         }
+      } else {
+        throw error;
       }
     }
-    flush_count++;
   }
-  function flush_queued_root_effects(root_effects) {
-    var length = root_effects.length;
-    if (length === 0) {
-      return;
-    }
-    infinite_loop_guard();
-    var previously_flushing_effect = is_flushing_effect;
-    is_flushing_effect = true;
+  function flush_queued_root_effects() {
+    var was_updating_effect = is_updating_effect;
     try {
-      for (var i = 0; i < length; i++) {
-        var effect2 = root_effects[i];
-        if ((effect2.f & CLEAN) === 0) {
-          effect2.f ^= CLEAN;
+      var flush_count = 0;
+      is_updating_effect = true;
+      while (queued_root_effects.length > 0) {
+        if (flush_count++ > 1e3) {
+          infinite_loop_guard();
         }
-        var collected_effects = process_effects(effect2);
-        flush_queued_effects(collected_effects);
+        var root_effects = queued_root_effects;
+        var length = root_effects.length;
+        queued_root_effects = [];
+        for (var i = 0; i < length; i++) {
+          var collected_effects = process_effects(root_effects[i]);
+          flush_queued_effects(collected_effects);
+        }
       }
     } finally {
-      is_flushing_effect = previously_flushing_effect;
+      is_flushing = false;
+      is_updating_effect = was_updating_effect;
+      last_scheduled_effect = null;
     }
   }
   function flush_queued_effects(effects) {
@@ -1662,28 +1661,12 @@
       }
     }
   }
-  function process_deferred() {
-    is_micro_task_queued = false;
-    if (flush_count > 1001) {
-      return;
-    }
-    const previous_queued_root_effects = queued_root_effects;
-    queued_root_effects = [];
-    flush_queued_root_effects(previous_queued_root_effects);
-    if (!is_micro_task_queued) {
-      flush_count = 0;
-      last_scheduled_effect = null;
-    }
-  }
   function schedule_effect(signal) {
-    {
-      if (!is_micro_task_queued) {
-        is_micro_task_queued = true;
-        queueMicrotask(process_deferred);
-      }
+    if (!is_flushing) {
+      is_flushing = true;
+      queueMicrotask(flush_queued_root_effects);
     }
-    last_scheduled_effect = signal;
-    var effect2 = signal;
+    var effect2 = last_scheduled_effect = signal;
     while (effect2.parent !== null) {
       effect2 = effect2.parent;
       var flags = effect2.f;
@@ -1694,53 +1677,43 @@
     }
     queued_root_effects.push(effect2);
   }
-  function process_effects(effect2) {
+  function process_effects(root2) {
     var effects = [];
-    var current_effect = effect2.first;
-    main_loop: while (current_effect !== null) {
-      var flags = current_effect.f;
-      var is_branch = (flags & BRANCH_EFFECT) !== 0;
+    var effect2 = root2;
+    while (effect2 !== null) {
+      var flags = effect2.f;
+      var is_branch = (flags & (BRANCH_EFFECT | ROOT_EFFECT)) !== 0;
       var is_skippable_branch = is_branch && (flags & CLEAN) !== 0;
-      var sibling2 = current_effect.next;
       if (!is_skippable_branch && (flags & INERT) === 0) {
         if ((flags & EFFECT) !== 0) {
-          effects.push(current_effect);
+          effects.push(effect2);
         } else if (is_branch) {
-          current_effect.f ^= CLEAN;
+          effect2.f ^= CLEAN;
         } else {
           var previous_active_reaction = active_reaction;
           try {
-            active_reaction = current_effect;
-            if (check_dirtiness(current_effect)) {
-              update_effect(current_effect);
+            active_reaction = effect2;
+            if (check_dirtiness(effect2)) {
+              update_effect(effect2);
             }
           } catch (error) {
-            handle_error(error, current_effect, null, current_effect.ctx);
+            handle_error(error, effect2, null, effect2.ctx);
           } finally {
             active_reaction = previous_active_reaction;
           }
         }
-        var child2 = current_effect.first;
+        var child2 = effect2.first;
         if (child2 !== null) {
-          current_effect = child2;
+          effect2 = child2;
           continue;
         }
       }
-      if (sibling2 === null) {
-        let parent = current_effect.parent;
-        while (parent !== null) {
-          if (effect2 === parent) {
-            break main_loop;
-          }
-          var parent_sibling = parent.next;
-          if (parent_sibling !== null) {
-            current_effect = parent_sibling;
-            continue main_loop;
-          }
-          parent = parent.parent;
-        }
+      var parent = effect2.parent;
+      effect2 = effect2.next;
+      while (effect2 === null && parent !== null) {
+        effect2 = parent.next;
+        parent = parent.parent;
       }
-      current_effect = sibling2;
     }
     return effects;
   }
@@ -1852,14 +1825,14 @@
     }
   }
   function handle_event_propagation(event2) {
-    var _a;
+    var _a2;
     var handler_element = this;
     var owner_document = (
       /** @type {Node} */
       handler_element.ownerDocument
     );
     var event_name = event2.type;
-    var path = ((_a = event2.composedPath) == null ? void 0 : _a.call(event2)) || [];
+    var path = ((_a2 = event2.composedPath) == null ? void 0 : _a2.call(event2)) || [];
     var current_target = (
       /** @type {null | Element} */
       path[0] || event2.target
@@ -1902,8 +1875,10 @@
         current_target.host || null;
         try {
           var delegated = current_target["__" + event_name];
-          if (delegated !== void 0 && !/** @type {any} */
-          current_target.disabled) {
+          if (delegated != null && (!/** @type {any} */
+          current_target.disabled || // DOM could've been updated already by the time this is reached, so we check this as well
+          // -> the target could not have been disabled because it emits the event in the first place
+          event2.target === current_target)) {
             if (is_array(delegated)) {
               var [fn, ...data] = delegated;
               fn.apply(current_target, [event2, ...data]);
@@ -1989,6 +1964,20 @@
       return clone;
     };
   }
+  function text(value = "") {
+    if (!hydrating) {
+      var t = create_text(value + "");
+      assign_nodes(t, t);
+      return t;
+    }
+    var node = hydrate_node;
+    if (node.nodeType !== 3) {
+      node.before(node = create_text());
+      set_hydrate_node(node);
+    }
+    assign_nodes(node, node);
+    return node;
+  }
   function comment() {
     if (hydrating) {
       assign_nodes(hydrate_node, null);
@@ -2015,11 +2004,11 @@
       dom
     );
   }
-  function set_text(text, value) {
+  function set_text(text2, value) {
     var str = value == null ? "" : typeof value === "object" ? value + "" : value;
-    if (str !== (text.__t ?? (text.__t = text.nodeValue))) {
-      text.__t = str;
-      text.nodeValue = str + "";
+    if (str !== (text2.__t ?? (text2.__t = text2.nodeValue))) {
+      text2.__t = str;
+      text2.nodeValue = str + "";
     }
   }
   function mount(component, options) {
@@ -2130,7 +2119,7 @@
         }
       });
       return () => {
-        var _a;
+        var _a2;
         for (var event_name of registered_events) {
           target.removeEventListener(event_name, handle_event_propagation);
           var n = (
@@ -2146,7 +2135,7 @@
         }
         root_event_handles.delete(event_handle);
         if (anchor_node !== anchor) {
-          (_a = anchor_node.parentNode) == null ? void 0 : _a.removeChild(anchor_node);
+          (_a2 = anchor_node.parentNode) == null ? void 0 : _a2.removeChild(anchor_node);
         }
       };
     });
@@ -2154,15 +2143,15 @@
     return component;
   }
   let mounted_components = /* @__PURE__ */ new WeakMap();
-  function if_block(node, fn, elseif = false) {
-    if (hydrating) {
+  function if_block(node, fn, [root_index, hydrate_index] = [0, 0]) {
+    if (hydrating && root_index === 0) {
       hydrate_next();
     }
     var anchor = node;
     var consequent_effect = null;
     var alternate_effect = null;
     var condition = UNINITIALIZED;
-    var flags = elseif ? EFFECT_TRANSPARENT : 0;
+    var flags = root_index > 0 ? EFFECT_TRANSPARENT : 0;
     var has_branch = false;
     const set_branch = (fn2, flag = true) => {
       has_branch = true;
@@ -2171,16 +2160,30 @@
     const update_branch = (new_condition, fn2) => {
       if (condition === (condition = new_condition)) return;
       let mismatch = false;
-      if (hydrating) {
-        const is_else = (
-          /** @type {Comment} */
-          anchor.data === HYDRATION_START_ELSE
-        );
+      if (hydrating && hydrate_index !== -1) {
+        if (root_index === 0) {
+          const data = (
+            /** @type {Comment} */
+            anchor.data
+          );
+          if (data === HYDRATION_START) {
+            hydrate_index = 0;
+          } else if (data === HYDRATION_START_ELSE) {
+            hydrate_index = Infinity;
+          } else {
+            hydrate_index = parseInt(data.substring(1));
+            if (hydrate_index !== hydrate_index) {
+              hydrate_index = condition ? Infinity : -1;
+            }
+          }
+        }
+        const is_else = hydrate_index > root_index;
         if (!!condition === is_else) {
           anchor = remove_nodes();
           set_hydrate_node(anchor);
           set_hydrating(false);
           mismatch = true;
+          hydrate_index = -1;
         }
       }
       if (condition) {
@@ -2198,7 +2201,7 @@
         if (alternate_effect) {
           resume_effect(alternate_effect);
         } else if (fn2) {
-          alternate_effect = branch(() => fn2(anchor));
+          alternate_effect = branch(() => fn2(anchor, [root_index + 1, hydrate_index]));
         }
         if (consequent_effect) {
           pause_effect(consequent_effect, () => {
@@ -2358,7 +2361,7 @@
     }
   }
   function reconcile(array, state2, anchor, render_fn, flags, get_key, get_collection) {
-    var _a, _b, _c, _d;
+    var _a2, _b, _c, _d;
     var is_animated = (flags & EACH_IS_ANIMATED) !== 0;
     var should_update = (flags & (EACH_ITEM_REACTIVE | EACH_INDEX_REACTIVE)) !== 0;
     var length = array.length;
@@ -2380,7 +2383,7 @@
         key = get_key(value, i);
         item = items.get(key);
         if (item !== void 0) {
-          (_a = item.a) == null ? void 0 : _a.measure();
+          (_a2 = item.a) == null ? void 0 : _a2.measure();
           (to_animate ?? (to_animate = /* @__PURE__ */ new Set())).add(item);
         }
       }
@@ -2496,10 +2499,10 @@
     }
     if (is_animated) {
       queue_micro_task(() => {
-        var _a2;
+        var _a3;
         if (to_animate === void 0) return;
         for (item of to_animate) {
-          (_a2 = item.a) == null ? void 0 : _a2.apply();
+          (_a3 = item.a) == null ? void 0 : _a3.apply();
         }
       });
     }
@@ -2656,8 +2659,99 @@
       return value ?? "";
     }
   }
+  function to_class(value, hash, directives) {
+    var classname = value == null ? "" : "" + value;
+    if (hash) {
+      classname = classname ? classname + " " + hash : hash;
+    }
+    return classname === "" ? null : classname;
+  }
+  function append_styles(styles, important = false) {
+    var separator = important ? " !important;" : ";";
+    var css = "";
+    for (var key in styles) {
+      var value = styles[key];
+      if (value != null && value !== "") {
+        css += " " + key + ": " + value + separator;
+      }
+    }
+    return css;
+  }
+  function to_style(value, styles) {
+    if (styles) {
+      var new_style = "";
+      var normal_styles;
+      var important_styles;
+      if (Array.isArray(styles)) {
+        normal_styles = styles[0];
+        important_styles = styles[1];
+      } else {
+        normal_styles = styles;
+      }
+      if (normal_styles) {
+        new_style += append_styles(normal_styles);
+      }
+      if (important_styles) {
+        new_style += append_styles(important_styles, true);
+      }
+      new_style = new_style.trim();
+      return new_style === "" ? null : new_style;
+    }
+    return String(value);
+  }
+  function set_class(dom, is_html, value, hash, prev_classes, next_classes) {
+    var prev = dom.__className;
+    if (hydrating || prev !== value) {
+      var next_class_name = to_class(value, hash);
+      if (!hydrating || next_class_name !== dom.getAttribute("class")) {
+        if (next_class_name == null) {
+          dom.removeAttribute("class");
+        } else {
+          dom.className = next_class_name;
+        }
+      }
+      dom.__className = value;
+    }
+    return next_classes;
+  }
+  function update_styles(dom, prev = {}, next2, priority) {
+    for (var key in next2) {
+      var value = next2[key];
+      if (prev[key] !== value) {
+        if (next2[key] == null) {
+          dom.style.removeProperty(key);
+        } else {
+          dom.style.setProperty(key, value, priority);
+        }
+      }
+    }
+  }
+  function set_style(dom, value, prev_styles, next_styles) {
+    var prev = dom.__style;
+    if (hydrating || prev !== value) {
+      var next_style_attr = to_style(value, next_styles);
+      if (!hydrating || next_style_attr !== dom.getAttribute("style")) {
+        if (next_style_attr == null) {
+          dom.removeAttribute("style");
+        } else {
+          dom.style.cssText = next_style_attr;
+        }
+      }
+      dom.__style = value;
+    } else if (next_styles) {
+      if (Array.isArray(next_styles)) {
+        update_styles(dom, prev_styles == null ? void 0 : prev_styles[0], next_styles[0]);
+        update_styles(dom, prev_styles == null ? void 0 : prev_styles[1], next_styles[1], "important");
+      } else {
+        update_styles(dom, prev_styles, next_styles);
+      }
+    }
+    return next_styles;
+  }
+  const IS_CUSTOM_ELEMENT = Symbol("is custom element");
+  const IS_HTML = Symbol("is html");
   function set_attribute(element, attribute, value, skip_warning) {
-    var attributes = element.__attributes ?? (element.__attributes = {});
+    var attributes = get_attributes(element);
     if (hydrating) {
       attributes[attribute] = element.getAttribute(attribute);
       if (attribute === "src" || attribute === "srcset" || attribute === "href" && element.nodeName === "LINK") {
@@ -2665,9 +2759,6 @@
       }
     }
     if (attributes[attribute] === (attributes[attribute] = value)) return;
-    if (attribute === "style" && "__styles" in element) {
-      element.__styles = {};
-    }
     if (attribute === "loading") {
       element[LOADING_ATTR_SYMBOL] = value;
     }
@@ -2678,6 +2769,16 @@
     } else {
       element.setAttribute(attribute, value);
     }
+  }
+  function get_attributes(element) {
+    return (
+      /** @type {Record<string | symbol, unknown>} **/
+      // @ts-expect-error
+      element.__attributes ?? (element.__attributes = {
+        [IS_CUSTOM_ELEMENT]: element.nodeName.includes("-"),
+        [IS_HTML]: element.namespaceURI === NAMESPACE_HTML
+      })
+    );
   }
   var setters_cache = /* @__PURE__ */ new Map();
   function get_setters(element) {
@@ -2697,35 +2798,6 @@
       proto = get_prototype_of(proto);
     }
     return setters;
-  }
-  function set_class(dom, value, hash) {
-    var prev_class_name = dom.__className;
-    var next_class_name = to_class(value, hash);
-    if (hydrating && dom.className === next_class_name) {
-      dom.__className = next_class_name;
-    } else if (prev_class_name !== next_class_name || hydrating && dom.className !== next_class_name) {
-      if (value == null && !hash) {
-        dom.removeAttribute("class");
-      } else {
-        dom.className = next_class_name;
-      }
-      dom.__className = next_class_name;
-    }
-  }
-  function to_class(value, hash) {
-    return (value == null ? "" : value) + (hash ? " " + hash : "");
-  }
-  function set_style(dom, key, value, important) {
-    var styles = dom.__styles ?? (dom.__styles = {});
-    if (styles[key] === value) {
-      return;
-    }
-    styles[key] = value;
-    if (value == null) {
-      dom.style.removeProperty(key);
-    } else {
-      dom.style.setProperty(key, value, "");
-    }
   }
   function is_bound_this(bound_value, element_or_component) {
     return bound_value === element_or_component || (bound_value == null ? void 0 : bound_value[STATE_SYMBOL]) === element_or_component;
@@ -2797,8 +2869,9 @@
     }
   }
   const PUBLIC_VERSION = "5";
-  if (typeof window !== "undefined")
-    (window.__svelte || (window.__svelte = { v: /* @__PURE__ */ new Set() })).v.add(PUBLIC_VERSION);
+  if (typeof window !== "undefined") {
+    ((_a = window.__svelte ?? (window.__svelte = {})).v ?? (_a.v = /* @__PURE__ */ new Set())).add(PUBLIC_VERSION);
+  }
   const clueDisplay = proxy({
     show: false,
     state: ClueDisplayStates.Clue,
@@ -2822,8 +2895,13 @@
   });
   function showModal(clue) {
     clueDisplay.show = true;
-    clueDisplay.state = ClueDisplayStates.Clue;
+    if (clue.dailyDouble) {
+      clueDisplay.state = ClueDisplayStates.DailyDouble;
+    } else {
+      clueDisplay.state = ClueDisplayStates.Clue;
+    }
     clueDisplay.clue = clue;
+    console.log(clue.dailyDoubleWager);
   }
   var on_click$1 = (_, $$props) => {
     if ("clueHTML" in $$props.clue) {
@@ -2836,19 +2914,20 @@
     push($$props, true);
     var button = root$4();
     button.__click = [on_click$1, $$props];
+    let styles;
     var node = child(button);
     {
       var consequent = ($$anchor2) => {
         var fragment = root_1$4();
         const clueData = /* @__PURE__ */ derived(() => $$props.clue);
         var div = first_child(fragment);
-        var text = child(div, true);
+        var text2 = child(div, true);
         reset(div);
         var div_1 = sibling(div, 2);
         var text_1 = child(div_1, true);
         reset(div_1);
         template_effect(() => {
-          set_text(text, get(clueData).playOrder);
+          set_text(text2, get(clueData).playOrder);
           set_text(text_1, get(clueData).value);
         });
         append($$anchor2, fragment);
@@ -2858,10 +2937,10 @@
       });
     }
     reset(button);
-    template_effect(() => {
-      set_style(button, "grid-row", $$props.clue.clueNum + 2);
-      set_style(button, "grid-column", $$props.clue.categoryNum + 1);
-    });
+    template_effect(() => styles = set_style(button, "", styles, {
+      "grid-row": $$props.clue.clueNum + 2,
+      "grid-column": $$props.clue.categoryNum + 1
+    }));
     append($$anchor, button);
     pop();
   }
@@ -2878,6 +2957,7 @@
     let showComment = state(false);
     const categoryNameClasses = $$props.category.clues.length == 1 ? "category_name final" : "category_name";
     var div = root$3();
+    let styles;
     var node = child(div);
     {
       var consequent = ($$anchor2) => {
@@ -2890,12 +2970,12 @@
     }
     var button = sibling(node, 2);
     button.__click = function(...$$args) {
-      var _a;
-      (_a = onclick()) == null ? void 0 : _a.apply(this, $$args);
+      var _a2;
+      (_a2 = onclick()) == null ? void 0 : _a2.apply(this, $$args);
     };
     var div_2 = child(button);
-    set_class(div_2, clsx(categoryNameClasses), "svelte-63tsd7");
-    var text = child(div_2, true);
+    set_class(div_2, 1, clsx(categoryNameClasses), "svelte-63tsd7");
+    var text2 = child(div_2, true);
     reset(div_2);
     var node_1 = sibling(div_2, 2);
     {
@@ -2914,9 +2994,11 @@
     reset(div);
     template_effect(() => {
       set_attribute(div, "tabindex", $$props.category.categoryNum);
-      set_style(div, "grid-column", $$props.category.categoryNum + 1);
-      set_style(div, "grid-row", 1);
-      set_text(text, $$props.category.title);
+      styles = set_style(div, "", styles, {
+        "grid-column": $$props.category.categoryNum + 1,
+        "grid-row": 1
+      });
+      set_text(text2, $$props.category.title);
     });
     event("mouseenter", div, () => {
       if ($$props.category.comments) {
@@ -2937,12 +3019,11 @@
     const finalRound = $$props.round.categories[0].clues.length == 1;
     const boardClasses = finalRound ? "final_board" : "board";
     const categoryOnClick = finalRound ? () => {
-      console.log($$props.round.categories[0].clues[0]);
       showModal($$props.round.categories[0].clues[0]);
     } : noop;
     var fragment = root$2();
     var div = first_child(fragment);
-    set_class(div, clsx(boardClasses), "svelte-qvpibm");
+    set_class(div, 1, clsx(boardClasses), "svelte-qvpibm");
     each(div, 21, () => $$props.round.categories, (category) => category.categoryNum, ($$anchor2, category) => {
       var fragment_1 = root_1$2();
       var node = first_child(fragment_1);
@@ -2978,7 +3059,7 @@
     each(node_3, 17, () => $$props.round.scoreBlocks, (scoreBlock) => scoreBlock.title, ($$anchor2, scoreBlock) => {
       var div_2 = root_4$1();
       var div_3 = child(div_2);
-      var text = child(div_3, true);
+      var text2 = child(div_3, true);
       reset(div_3);
       var node_4 = sibling(div_3, 2);
       each(node_4, 17, () => get(scoreBlock).players, (playerScore) => playerScore.name, ($$anchor3, playerScore) => {
@@ -3005,7 +3086,7 @@
         append($$anchor3, fragment_4);
       });
       reset(div_2);
-      template_effect(() => set_text(text, get(scoreBlock).title));
+      template_effect(() => set_text(text2, get(scoreBlock).title));
       append($$anchor2, div_2);
     });
     reset(div_1);
@@ -3013,20 +3094,20 @@
     pop();
   }
   var on_click = (e, dialog) => {
-    var _a;
-    if (e.target === get(dialog)) (_a = get(dialog)) == null ? void 0 : _a.close();
+    var _a2;
+    if (e.target === get(dialog)) (_a2 = get(dialog)) == null ? void 0 : _a2.close();
   };
   var on_click_1 = (_, dialog) => {
-    var _a;
-    return (_a = get(dialog)) == null ? void 0 : _a.close();
+    var _a2;
+    return (_a2 = get(dialog)) == null ? void 0 : _a2.close();
   };
-  var root_2$1 = /* @__PURE__ */ template(`<div class="responder svelte-hojzz8"> </div>`);
-  var root_3$1 = /* @__PURE__ */ template(`<div class="responder svelte-hojzz8" data-state="incorrect">Triple Stumper</div>`);
-  var root_1$1 = /* @__PURE__ */ template(`<div class="responders svelte-hojzz8"><!> <!></div>`);
-  var root_4 = /* @__PURE__ */ template(` <br>`, 1);
-  var root_5 = /* @__PURE__ */ template(`<div class="responder svelte-hojzz8"> </div> <div class="responder_wager svelte-hojzz8"> </div> <div class="responder_response svelte-hojzz8"> </div>`, 1);
-  var root_6 = /* @__PURE__ */ template(`<div class="responder svelte-hojzz8" data-state="incorrect">Triple Stumper</div>`);
-  var root$1 = /* @__PURE__ */ template(`<dialog class="clue_modal svelte-hojzz8" aria-modal="true" tabindex="-1"><div class="modal_content svelte-hojzz8"><div class="ico-close svelte-hojzz8" aria-label="Close">&#x2716;</div> <div class="ico-extra svelte-hojzz8">✱</div> <!> <div class="modal_main svelte-hojzz8"><div class="daily_double svelte-hojzz8">Daily Double</div> <div class="clue svelte-hojzz8"><!></div> <div class="correct_response svelte-hojzz8"> <div class="response_comments svelte-hojzz8"><hr> <!></div></div> <div class="final_responses"><div class="final_responses_grid svelte-hojzz8"><!> <!></div></div></div></div></dialog>`);
+  var root_2$1 = /* @__PURE__ */ template(`<div class="responder svelte-bzhb10"> <!></div>`);
+  var root_4 = /* @__PURE__ */ template(`<div class="responder svelte-bzhb10" data-state="incorrect">Triple Stumper</div>`);
+  var root_1$1 = /* @__PURE__ */ template(`<div class="responders svelte-bzhb10"><!> <!></div>`);
+  var root_5 = /* @__PURE__ */ template(`<div class="responder svelte-bzhb10"> </div> <div class="responder_wager svelte-bzhb10"> </div>`, 1);
+  var root_6 = /* @__PURE__ */ template(` <br>`, 1);
+  var root_7 = /* @__PURE__ */ template(`<div class="responder svelte-bzhb10"> </div> <div class="responder_wager svelte-bzhb10"> </div> <div class="responder_response svelte-bzhb10"> </div>`, 1);
+  var root$1 = /* @__PURE__ */ template(`<dialog class="clue_modal svelte-bzhb10" aria-modal="true" tabindex="-1"><div class="modal_content svelte-bzhb10"><div class="ico-close svelte-bzhb10" aria-label="Close">&#x2716;</div> <div class="ico-extra svelte-bzhb10">✱</div> <!> <div class="modal_main svelte-bzhb10"><div class="daily_double svelte-bzhb10">Daily Double</div> <div class="clue svelte-bzhb10"><!> <div class="final_responses"><hr> <div class="final_responses_grid svelte-bzhb10"></div></div></div> <div class="correct_response svelte-bzhb10"> <div class="response_comments svelte-bzhb10"><hr> <!></div> <div class="final_responses"><hr> <div class="final_responses_grid svelte-bzhb10"></div></div></div></div></div></dialog>`);
   function ClueModal($$anchor, $$props) {
     push($$props, true);
     let dialog = state(void 0);
@@ -3044,8 +3125,8 @@
       }
     });
     function showDialog() {
-      var _a;
-      (_a = get(dialog)) == null ? void 0 : _a.showModal();
+      var _a2;
+      (_a2 = get(dialog)) == null ? void 0 : _a2.showModal();
       $$props.scrollToElm.scrollIntoView({
         behavior: "smooth",
         block: "start",
@@ -3070,11 +3151,7 @@
           clueDisplay.state = ClueDisplayStates.CorrectResponse;
           break;
         case ClueDisplayStates.CorrectResponse:
-          if (clueDisplay.clue.finalJeopardy) {
-            clueDisplay.state = ClueDisplayStates.FinalResponses;
-          } else {
-            clueDisplay.state = ClueDisplayStates.Clue;
-          }
+          clueDisplay.state = ClueDisplayStates.Clue;
           break;
         default:
           clueDisplay.state = ClueDisplayStates.Clue;
@@ -3090,76 +3167,69 @@
     var div_2 = sibling(div_1, 2);
     var node = sibling(div_2, 2);
     {
-      var consequent_1 = ($$anchor2) => {
+      var consequent_2 = ($$anchor2) => {
         var div_3 = root_1$1();
         var node_1 = child(div_3);
         each(node_1, 17, () => clueDisplay.clue.response.responders, (responder) => responder.player, ($$anchor3, responder) => {
           var div_4 = root_2$1();
-          var text = child(div_4, true);
+          var text$1 = child(div_4);
+          var node_2 = sibling(text$1);
+          {
+            var consequent = ($$anchor4) => {
+              var text_1 = text();
+              template_effect(($0) => set_text(text_1, `- $${$0 ?? ""}`), [
+                () => clueDisplay.clue.dailyDoubleWager.toLocaleString()
+              ]);
+              append($$anchor4, text_1);
+            };
+            if_block(node_2, ($$render) => {
+              if (clueDisplay.clue.dailyDoubleWager) $$render(consequent);
+            });
+          }
           reset(div_4);
           template_effect(() => {
             set_attribute(div_4, "data-state", get(responder).correct ? "correct" : "incorrect");
-            set_text(text, get(responder).player);
+            set_text(text$1, `${get(responder).player ?? ""} `);
           });
           append($$anchor3, div_4);
         });
-        var node_2 = sibling(node_1, 2);
+        var node_3 = sibling(node_1, 2);
         {
-          var consequent = ($$anchor3) => {
-            var div_5 = root_3$1();
+          var consequent_1 = ($$anchor3) => {
+            var div_5 = root_4();
             append($$anchor3, div_5);
           };
-          if_block(node_2, ($$render) => {
-            if (get(tripleStumper)) $$render(consequent);
+          if_block(node_3, ($$render) => {
+            if (get(tripleStumper)) $$render(consequent_1);
           });
         }
         reset(div_3);
         append($$anchor2, div_3);
       };
       if_block(node, ($$render) => {
-        if (!clueDisplay.clue.finalJeopardy && clueDisplay.state == ClueDisplayStates.CorrectResponse) $$render(consequent_1);
+        if (!clueDisplay.clue.finalJeopardy && clueDisplay.state == ClueDisplayStates.CorrectResponse) $$render(consequent_2);
       });
     }
     var div_6 = sibling(node, 2);
     var div_7 = child(div_6);
     var div_8 = sibling(div_7, 2);
-    var node_3 = child(div_8);
-    html(node_3, () => clueDisplay.clue.clueHTML);
-    reset(div_8);
-    var div_9 = sibling(div_8, 2);
-    var text_1 = child(div_9);
-    var div_10 = sibling(text_1);
-    var node_4 = sibling(child(div_10), 2);
-    each(node_4, 17, () => clueDisplay.clue.response.comments, index, ($$anchor2, comment2) => {
-      next();
-      var fragment = root_4();
-      var text_2 = first_child(fragment);
-      next();
-      template_effect(() => set_text(text_2, `${get(comment2) ?? ""} `));
-      append($$anchor2, fragment);
-    });
-    reset(div_10);
-    reset(div_9);
-    var div_11 = sibling(div_9, 2);
-    var div_12 = child(div_11);
-    var node_5 = child(div_12);
-    each(node_5, 17, () => clueDisplay.clue.response.responders, (responder) => responder.player, ($$anchor2, responder) => {
+    var node_4 = child(div_8);
+    html(node_4, () => clueDisplay.clue.clueHTML);
+    var div_9 = sibling(node_4, 2);
+    var div_10 = sibling(child(div_9), 2);
+    each(div_10, 21, () => clueDisplay.clue.response.responders, (responder) => responder.player, ($$anchor2, responder) => {
       var fragment_1 = root_5();
-      var div_13 = first_child(fragment_1);
-      var text_3 = child(div_13, true);
-      reset(div_13);
-      var div_14 = sibling(div_13, 2);
-      var text_4 = child(div_14);
-      reset(div_14);
-      var div_15 = sibling(div_14, 2);
-      var text_5 = child(div_15, true);
-      reset(div_15);
+      var div_11 = first_child(fragment_1);
+      var text_2 = child(div_11, true);
+      reset(div_11);
+      var div_12 = sibling(div_11, 2);
+      var text_3 = child(div_12);
+      reset(div_12);
       template_effect(
         ($0) => {
-          set_attribute(div_13, "data-state", get(responder).correct ? "correct" : "incorrect");
-          set_text(text_3, get(responder).player);
-          set_text(text_4, `$${$0 ?? ""}`);
-          set_text(text_5, get(responder).response);
+          set_attribute(div_11, "data-state", get(responder).correct ? "correct" : "incorrect");
+          set_text(text_2, get(responder).player);
+          set_text(text_3, `$${$0 ?? ""}`);
         },
         [
           () => get(responder).wager.toLocaleString()
@@ -3167,18 +3237,51 @@
       );
       append($$anchor2, fragment_1);
     });
-    var node_6 = sibling(node_5, 2);
-    {
-      var consequent_2 = ($$anchor2) => {
-        var div_16 = root_6();
-        append($$anchor2, div_16);
-      };
-      if_block(node_6, ($$render) => {
-        if (get(tripleStumper)) $$render(consequent_2);
-      });
-    }
-    reset(div_12);
-    reset(div_11);
+    reset(div_10);
+    reset(div_9);
+    reset(div_8);
+    var div_13 = sibling(div_8, 2);
+    var text_4 = child(div_13);
+    var div_14 = sibling(text_4);
+    var node_5 = sibling(child(div_14), 2);
+    each(node_5, 17, () => clueDisplay.clue.response.comments, index, ($$anchor2, comment2) => {
+      next();
+      var fragment_2 = root_6();
+      var text_5 = first_child(fragment_2);
+      next();
+      template_effect(() => set_text(text_5, `${get(comment2) ?? ""} `));
+      append($$anchor2, fragment_2);
+    });
+    reset(div_14);
+    var div_15 = sibling(div_14, 2);
+    var div_16 = sibling(child(div_15), 2);
+    each(div_16, 21, () => clueDisplay.clue.response.responders, (responder) => responder.player, ($$anchor2, responder) => {
+      var fragment_3 = root_7();
+      var div_17 = first_child(fragment_3);
+      var text_6 = child(div_17, true);
+      reset(div_17);
+      var div_18 = sibling(div_17, 2);
+      var text_7 = child(div_18);
+      reset(div_18);
+      var div_19 = sibling(div_18, 2);
+      var text_8 = child(div_19, true);
+      reset(div_19);
+      template_effect(
+        ($0) => {
+          set_attribute(div_17, "data-state", get(responder).correct ? "correct" : "incorrect");
+          set_text(text_6, get(responder).player);
+          set_text(text_7, `$${$0 ?? ""}`);
+          set_text(text_8, get(responder).response);
+        },
+        [
+          () => get(responder).wager.toLocaleString()
+        ]
+      );
+      append($$anchor2, fragment_3);
+    });
+    reset(div_16);
+    reset(div_15);
+    reset(div_13);
     reset(div_6);
     reset(div);
     reset(dialog_1);
@@ -3188,10 +3291,11 @@
       div_2.hidden = clueDisplay.clue.response.comments.length == 0 || clueDisplay.state != ClueDisplayStates.CorrectResponse;
       div_7.hidden = clueDisplay.state != ClueDisplayStates.DailyDouble;
       div_8.hidden = clueDisplay.state != ClueDisplayStates.Clue;
-      div_9.hidden = clueDisplay.state != ClueDisplayStates.CorrectResponse;
-      set_text(text_1, `${clueDisplay.clue.response.correctResponse ?? ""} `);
-      div_10.hidden = clueDisplay.clue.response.comments.length == 0 || !get(showExtra);
-      div_11.hidden = clueDisplay.state != ClueDisplayStates.FinalResponses;
+      div_9.hidden = !clueDisplay.clue.finalJeopardy;
+      div_13.hidden = clueDisplay.state != ClueDisplayStates.CorrectResponse;
+      set_text(text_4, `${clueDisplay.clue.response.correctResponse ?? ""} `);
+      div_14.hidden = clueDisplay.clue.response.comments.length == 0 || !get(showExtra);
+      div_15.hidden = !clueDisplay.clue.finalJeopardy;
     });
     event("close", dialog_1, onCloseDialog);
     event("mouseenter", div_6, () => set(showExtra, true));
@@ -3212,7 +3316,7 @@
     var div = first_child(fragment);
     var a = child(div);
     var h1 = sibling(a, 2);
-    var text = child(h1, true);
+    var text2 = child(h1, true);
     reset(h1);
     var a_1 = sibling(h1, 2);
     reset(div);
@@ -3282,7 +3386,7 @@
     reset(div_3);
     template_effect(() => {
       set_attribute(a, "href", `showgame.php?game_id=${$$props.gameData.id - 1}`);
-      set_text(text, $$props.gameData.title);
+      set_text(text2, $$props.gameData.title);
       set_attribute(a_1, "href", `showgame.php?game_id=${$$props.gameData.id + 1}`);
       set_text(text_1, $$props.gameData.comments);
     });
