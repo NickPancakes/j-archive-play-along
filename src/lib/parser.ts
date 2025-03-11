@@ -236,7 +236,7 @@ function parseCategory(roundNum: number, categoryNum: number, clues: OptionalClu
 function parseFinalRoundTable(roundNum: number, tableElm: Element): CategoryData[] {
     const tbodyElm = tableElm.querySelector("tbody");
     if (!tbodyElm) {
-        throw new Error("Could not find  in round element");
+        throw new Error("Could not find tbody in round element");
     }
 
     const rowElms = Array.from(tbodyElm.children);

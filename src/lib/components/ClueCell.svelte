@@ -62,7 +62,7 @@
 
   .value_text {
     font-family: "Swiss911 Cm BT", "Open Sans", helvetica, arial, verdana, sans-serif;
-    font-size: clamp(1rem, 7cqmin, 12rem);
+    font-size: clamp(1rem, 6.5cqmin, 12rem);
     background-color: var(--clue-screen-blue);
     color: var(--font-yellow);
     text-shadow: 0.1em 0.1em 0px #000000;

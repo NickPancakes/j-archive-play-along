@@ -50,7 +50,7 @@
     place-content: center;
     grid-auto-flow: column dense;
     grid-template-columns: repeat(6, minmax(0, 1fr));
-    grid-template-rows: repeat(1, minmax(0, 0.9fr)) repeat(5, minmax(0, 1fr));
+    grid-template-rows: repeat(6, minmax(0, 1fr));
   }
 
   div.final_board {
@@ -80,7 +80,7 @@
 
   div.score_block {
     height: 100%;
-    width: 50%;
+    width: 90%;
     border-width: 0.2rem;
     border-style: outset;
     background-color: var(--clue-screen-blue);
@@ -93,7 +93,7 @@
     place-items: center;
     text-align: center;
     font-family: "Swiss911 Cm BT", "Open Sans", helvetica, arial, verdana, sans-serif;
-    font-size: clamp(0.5rem, 3.5cqmin, 10rem);
+    font-size: clamp(0.25rem, 3cqmin, 10rem);
 
     display: grid;
     gap: 0.1rem;
@@ -105,7 +105,7 @@
   div.score_block_title {
     grid-row: 1;
     grid-column: 1 / -1;
-    font-size: clamp(1rem, 4cqmin, 12rem);
+    font-size: clamp(0.5rem, 3cqmin, 12rem);
     font-weight: bold;
   }
 
