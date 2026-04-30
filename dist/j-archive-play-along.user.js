@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         j-archive-play-along
 // @namespace    https://github.com/NickPancakes/j-archive-play-along
-// @version      0.1.2
+// @version      0.1.3
 // @author       NickPancakes
 // @description  Transforms J! Archive games UI to play along.
 // @iconURL      https://www.google.com/s2/favicons?sz=16&domain=j-archive.com
