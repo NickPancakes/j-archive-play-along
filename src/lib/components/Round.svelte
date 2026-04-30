@@ -4,22 +4,27 @@
   import { type RoundData, type ClueData } from "$lib/types.ts";
   import { noop } from "$lib/utils.ts";
   import { showModal } from "$lib/state.svelte.ts";
+  import { onMount } from "svelte";
 
   let { round }: { round: RoundData } = $props();
 
-  const finalRound = round.categories[0].clues.length == 1;
-  const boardClasses = finalRound ? "final_board" : "board";
-  const categoryOnClick = finalRound
-    ? () => {
-        showModal(round.categories[0].clues[0] as ClueData);
-      }
-    : noop;
+  let boardClasses = $state("board");
+  const isFinalRound = () => round.categories[0].clues.length == 1;
+  const categoryOnClick = () => {
+    if (isFinalRound()) {
+      showModal(round.categories[0].clues[0] as ClueData);
+    }
+  };
+
+  onMount(() => {
+    boardClasses = isFinalRound() ? "final_board" : "board";
+  });
 </script>
 
 <div class={boardClasses} role="grid">
   {#each round.categories as category (category.categoryNum)}
     <CategoryCell {category} onclick={categoryOnClick} />
-    {#if !finalRound}
+    {#if !isFinalRound()}
       {#each category.clues as clue}
         <ClueCell {clue} />
       {/each}

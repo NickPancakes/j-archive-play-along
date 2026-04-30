@@ -1,6 +1,7 @@
 <script lang="ts">
   import { type CategoryData } from "$lib/types.ts";
   import { noop } from "$lib/utils.ts";
+  import { onMount } from "svelte";
 
   interface Props {
     category: CategoryData;
@@ -10,7 +11,11 @@
   let { category, onclick = noop }: Props = $props();
 
   let showComment = $state(false);
-  const categoryNameClasses = category.clues.length == 1 ? "category_name final" : "category_name";
+  let categoryNameClasses = $state("category_name");
+
+  onMount(() => {
+    categoryNameClasses = category.clues.length == 1 ? "category_name final" : "category_name";
+  });
 </script>
 
 <div
