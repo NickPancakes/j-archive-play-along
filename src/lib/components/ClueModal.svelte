@@ -195,7 +195,7 @@
   .clue {
     text-transform: uppercase;
     font-family: "ITC Korinna Std", "Libre Baskerville", "Times New Roman", serif;
-    font-size: clamp(1rem, 7vmin, 9rem);
+    font-size: clamp(1rem, 6.5vmin, 8.5rem);
     text-shadow: 0.3rem 0.3rem 0px #000000;
   }
 
@@ -203,7 +203,7 @@
     text-transform: uppercase;
     color: var(--aqua-blue);
     font-family: "ITC Korinna Std", "Libre Baskerville", "Times New Roman", serif;
-    font-size: clamp(1rem, 7vmin, 9rem);
+    font-size: clamp(1rem, 6.5vmin, 8.5rem);
     text-shadow: 0.3rem 0.3rem 0px #000000;
   }
 

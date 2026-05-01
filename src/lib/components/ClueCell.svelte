@@ -3,6 +3,8 @@
   import { showModal } from "$lib/state.svelte.ts";
 
   let { clue }: { clue: OptionalClueData } = $props();
+
+  let read: boolean = $state(false);
 </script>
 
 <button
@@ -10,12 +12,17 @@
   style:grid-row={clue.clueNum + 2}
   style:grid-column={clue.categoryNum + 1}
   onclick={() => {
-    if ("clueHTML" in clue) {
-      showModal(clue as ClueData);
+    if (read) {
+      read = false;
+    } else {
+      if ("clueHTML" in clue) {
+        showModal(clue as ClueData);
+      }
+      read = true;
     }
   }}
 >
-  {#if "clueHTML" in clue}
+  {#if !read && "clueHTML" in clue}
     {@const clueData = clue as ClueData}
     <div class="order_text">
       {clueData.playOrder}
